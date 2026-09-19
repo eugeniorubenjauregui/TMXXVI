@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<section id="tm-contacto" style="background:#fff;padding:clamp(84px,10vw,148px) 0">
+  <div style="max-width:900px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
+    <h2 data-split style="font-size:clamp(28px,3.6vw,46px);font-weight:300;line-height:1.13;letter-spacing:-.028em;color:#141414;margin:0;max-width:14ch">Hablemos de tu negocio.</h2>
+    <div data-rv style="margin:26px 0 clamp(44px,5vw,60px);max-width:60ch">
+      <p style="font-size:clamp(16px,1.3vw,18px);line-height:1.68;color:rgba(20,20,20,.68);margin:0">Cuéntanos qué quieres resolver, mejorar o construir.</p>
+      <p style="font-size:clamp(16px,1.3vw,18px);line-height:1.68;color:rgba(20,20,20,.68);margin:16px 0 0">Nuestro equipo revisará tu caso para entender el contexto y definir si podemos ayudarte y por dónde tiene sentido empezar.</p>
+    </div>
+
+    <p data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:#2E8C52;border-bottom:1px solid #2E8C52;padding-bottom:7px;margin:0 0 clamp(26px,3vw,34px)">¿EN QUÉ PODEMOS AYUDARTE?</p>
+    <div style="position:relative;margin-bottom:clamp(44px,5vw,60px)">
+    <div id="tm-glow" aria-hidden="true"></div>
+    <div data-rv role="group" aria-label="¿En qué podemos ayudarte?" style="position:relative;z-index:1;display:grid;gap:1px;background:rgba(20,20,20,.1);border:1px solid rgba(20,20,20,.12)">
+      <label data-opt="0" style="background:#fff;padding:17px clamp(18px,2.2vw,26px);display:flex;align-items:center;gap:16px;cursor:pointer;font-size:15.5px;color:rgba(20,20,20,.85)"><input type="checkbox" name="need" style="accent-color:#2E8C52;width:17px;height:17px;flex:none;margin:0"><span>Strategy &amp; Advisory · Consultoría y estrategia</span></label>
+      <label data-opt="1" style="background:#fff;padding:17px clamp(18px,2.2vw,26px);display:flex;align-items:center;gap:16px;cursor:pointer;font-size:15.5px;color:rgba(20,20,20,.85)"><input type="checkbox" name="need" style="accent-color:#2E8C52;width:17px;height:17px;flex:none;margin:0"><span>AI &amp; Custom Solutions · Agentes de IA y tecnología a medida</span></label>
+      <label data-opt="2" style="background:#fff;padding:17px clamp(18px,2.2vw,26px);display:flex;align-items:center;gap:16px;cursor:pointer;font-size:15.5px;color:rgba(20,20,20,.85)"><input type="checkbox" name="need" style="accent-color:#2E8C52;width:17px;height:17px;flex:none;margin:0"><span>Commerce Solutions · Commerce, integraciones y omnicanalidad</span></label>
+      <label data-opt="3" style="background:#fff;padding:17px clamp(18px,2.2vw,26px);display:flex;align-items:center;gap:16px;cursor:pointer;font-size:15.5px;color:rgba(20,20,20,.85)"><input type="checkbox" name="need" style="accent-color:#2E8C52;width:17px;height:17px;flex:none;margin:0"><span>Retail Growth · SEO, GEO, AEO, CRO y Paid Media</span></label>
+      <label data-opt="4" style="background:#fff;padding:17px clamp(18px,2.2vw,26px);display:flex;align-items:center;gap:16px;cursor:pointer;font-size:15.5px;color:rgba(20,20,20,.85)"><input type="checkbox" name="need" style="accent-color:#2E8C52;width:17px;height:17px;flex:none;margin:0"><span>Cloud &amp; Data · Infraestructura cloud y datos</span></label>
+      <label data-opt="5" style="background:#fff;padding:17px clamp(18px,2.2vw,26px);display:flex;align-items:center;gap:16px;cursor:pointer;font-size:15.5px;color:rgba(20,20,20,.85)"><input type="checkbox" name="need" style="accent-color:#2E8C52;width:17px;height:17px;flex:none;margin:0"><span>Aún no lo tengo claro</span></label>
+    </div>
+    </div>
+
+    <p data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:#2E8C52;border-bottom:1px solid #2E8C52;padding-bottom:7px;margin:0 0 clamp(26px,3vw,34px)">CUÉNTANOS SOBRE TI</p>
+    <div id="tm-form" data-rv style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px">
+      <div style="display:flex;flex-direction:column;gap:9px"><label for="q1" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Nombre y apellido</label><input id="q1" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
+      <div style="display:flex;flex-direction:column;gap:9px"><label for="q2" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Empresa</label><input id="q2" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
+      <div style="display:flex;flex-direction:column;gap:9px"><label for="q3" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Cargo</label><input id="q3" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
+      <div style="display:flex;flex-direction:column;gap:9px"><label for="q4" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Correo corporativo</label><input id="q4" type="email" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
+      <div style="display:flex;flex-direction:column;gap:9px"><label for="q5" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">País</label><input id="q5" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
+      <div style="display:flex;flex-direction:column;gap:9px"><label for="q6" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">¿Cómo nos conociste?</label>
+        <select id="q6" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414">
+          <option value=""></option>
+          <option>Redes sociales</option>
+          <optgroup label="Motores de IA"><option>ChatGPT</option><option>Claude</option></optgroup>
+          <option>Búsqueda en Google</option>
+          <option>Referido</option>
+          <option>Otro</option>
+        </select>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:9px;grid-column:1/-1;margin-top:8px"><label for="q7" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Cuéntanos brevemente qué necesitas resolver</label><textarea id="q7" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414;resize:vertical;min-height:150px"></textarea></div>
+      <div style="grid-column:1/-1"><button data-mag type="button" style="font:inherit;display:inline-flex;align-items:center;padding:16px 30px;background:var(--tm-accent);color:#141414;font-size:15px;font-weight:500;border:1px solid var(--tm-accent);cursor:pointer">Enviar solicitud</button></div>
+    </div>
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;pick&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:null,&quot;tsType&quot;:&quot;number | null&quot;,&quot;min&quot;:0,&quot;max&quot;:5}}">
+class Component extends DCLogic {
+  componentDidMount(){ this.preselect(); this.glow(); }
+  componentDidUpdate(){ this.preselect(); }
+  componentWillUnmount(){ this._glow && this._glow(); }
+
+  glow(){
+    const token = (this._gToken = (this._gToken || 0) + 1);
+    if(this._glow){ this._glow(); this._glow = null; }
+    import('./js/mount-graphic.js').then(({ mountGraphic })=>{
+      if(token !== this._gToken) return;
+      this._glow = mountGraphic('#tm-glow', ()=> import('./js/mesh-gradient.js'), 'initEdgeGlow',
+        { tone: 'inicio', opacity: 0.14 });
+    });
+  }
+  preselect(){
+    const i = this.props.pick;
+    if(i === undefined || i === null || i === '') return;
+    const el = document.querySelector('[data-opt="'+i+'"] input');
+    if(el) el.checked = true;
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<header id="tm-hdr" style="position:sticky;top:0;z-index:100;background:rgba(20,20,20,.74);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.08)">
+  <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px);height:78px;display:flex;align-items:center;justify-content:space-between;gap:28px">
+    <a href="index.html" style="display:flex;align-items:center;white-space:nowrap"><img src="./images/logo-tita-media.png" alt="TITA Media" style="height:48px;width:auto;display:block"></a>
+    <nav id="tm-nav" style="display:flex;align-items:center;gap:28px">
+      <a href="index.html" style="font-size:14px;font-weight:400;color:rgba(255,255,255,.8)">Inicio</a>
+      <div id="tm-dd" style="position:relative">
+        <button id="tm-ddbtn" aria-expanded="false" style="font:inherit;font-size:14px;font-weight:400;color:rgba(255,255,255,.8);background:none;border:0;padding:6px 0;cursor:pointer;display:flex;align-items:center;gap:7px">Soluciones <span style="font-size:9px;opacity:.7">▼</span></button>
+        <span id="tm-bridge" aria-hidden="true" style="position:absolute;top:100%;left:-22px;width:min(660px,86vw);height:20px"></span>
+        <div id="tm-drop" style="position:absolute;top:calc(100% + 18px);left:-22px;width:min(660px,86vw);background:#0B0C0C;border:1px solid rgba(255,255,255,.1);padding:14px;display:none;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px">
+          <a href="strategy-advisory.html" style="padding:15px 16px;color:#fff" data-cursor="EXPLORAR"><strong style="display:block;font-size:14.5px;font-weight:500;margin-bottom:4px;color:#fff">Strategy &amp; Advisory</strong><span style="display:block;font-size:13px;line-height:1.45;color:rgba(255,255,255,.55)">Consultoría y estrategia para retail.</span></a>
+          <a href="ai-custom-solutions.html" style="padding:15px 16px;color:#fff" data-cursor="EXPLORAR"><strong style="display:block;font-size:14.5px;font-weight:500;margin-bottom:4px;color:#fff">AI &amp; Custom Solutions</strong><span style="display:block;font-size:13px;line-height:1.45;color:rgba(255,255,255,.55)">Agentes de IA y tecnología a medida.</span></a>
+          <a href="commerce-solutions.html" style="padding:15px 16px;color:#fff" data-cursor="EXPLORAR"><strong style="display:block;font-size:14.5px;font-weight:500;margin-bottom:4px;color:#fff">Commerce Solutions</strong><span style="display:block;font-size:13px;line-height:1.45;color:rgba(255,255,255,.55)">Ecommerce, B2B, integraciones y omnicanalidad.</span></a>
+          <a href="retail-growth.html" style="padding:15px 16px;color:#fff" data-cursor="EXPLORAR"><strong style="display:block;font-size:14.5px;font-weight:500;margin-bottom:4px;color:#fff">Retail Growth</strong><span style="display:block;font-size:13px;line-height:1.45;color:rgba(255,255,255,.55)">SEO, GEO, AEO, CRO y Paid Media.</span></a>
+          <a href="cloud-data.html" style="padding:15px 16px;color:#fff" data-cursor="EXPLORAR"><strong style="display:block;font-size:14.5px;font-weight:500;margin-bottom:4px;color:#fff">Cloud &amp; Data</strong><span style="display:block;font-size:13px;line-height:1.45;color:rgba(255,255,255,.55)">Infraestructura cloud y plataformas de datos.</span></a>
+          <div style="grid-column:1/-1;margin-top:10px;padding:16px 16px 4px;border-top:1px solid rgba(255,255,255,.1);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px">
+            <span style="font-size:13px;color:rgba(255,255,255,.55)">¿No sabes por dónde empezar? Cuéntanos qué necesitas resolver.</span>
+            <a href="#tm-contacto" style="font-size:13.5px;font-weight:500;color:var(--tm-accent);border-bottom:1px solid var(--tm-accent);padding-bottom:3px">Hablemos</a>
+          </div>
+        </div>
+      </div>
+      <a href="#" style="font-size:14px;font-weight:400;color:rgba(255,255,255,.8)">Soluciones IA</a>
+      <a href="#" style="font-size:14px;font-weight:400;color:rgba(255,255,255,.8)">Nosotros</a>
+      <a href="#" style="font-size:14px;font-weight:400;color:rgba(255,255,255,.8)">TITA News</a>
+      <a href="#" style="font-size:14px;font-weight:400;color:rgba(255,255,255,.8)">Contacto</a>
+      <a id="tm-cta" href="#tm-contacto" style="display:inline-flex;align-items:center;padding:13px 26px;background:var(--tm-accent);color:#141414;font-size:14px;font-weight:500;border:1px solid var(--tm-accent)">Hablemos</a>
+    </nav>
+    <button id="tm-burger" aria-label="Menú" style="display:none;font:inherit;font-size:20px;line-height:1;color:#fff;background:none;border:0;cursor:pointer">☰</button>
+  </div>
+</header>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  componentDidMount(){ this.unwrap(); this._iv = setInterval(()=>this.unwrap(), 600); }
+  componentWillUnmount(){ clearInterval(this._iv); }
+
+  // el header es sticky, pero su contenedor de montaje mide lo mismo que el header:
+  // sin recorrido dentro del contenedor, sticky no tiene nada a lo que pegarse.
+  // display:contents disuelve el contenedor y deja al header como hijo directo
+  // del bloque que hace scroll.
+  unwrap(){
+    const h = document.querySelector('#tm-hdr');
+    const w = h && h.parentElement;
+    if(w && w !== document.body && getComputedStyle(w).display !== 'contents'){
+      w.style.display = 'contents';
+    }
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://titamedia.com/sitemap.xml

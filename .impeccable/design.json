@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-18T22:32:26Z",
+  "title": "Design System: Tita Media",
+  "extensions": {
+    "colorMeta": {
+      "rizoma-verde": { "role": "primary", "displayName": "Verde Rizoma", "canonical": "#80E593", "tonalRamp": ["#0d3f16", "#177028", "#21a039", "#2bd14a", "#59dd72", "#89e79b", "#b9f1c4", "#eafbed"] },
+      "corriente-cian": { "role": "secondary", "displayName": "Cian Corriente", "canonical": "#52C7CF", "tonalRamp": ["#11393c", "#1d656a", "#2a9097", "#37bcc5", "#62ccd3", "#90dbe0", "#bdeaed", "#ebf9f9"] },
+      "canvas-ink": { "role": "neutral", "displayName": "Canvas Ink", "canonical": "#141414", "tonalRamp": ["#262626", "#434343", "#616161", "#7e7e7e", "#9b9b9b", "#b8b8b8", "#d5d5d5", "#f2f2f2"] },
+      "canvas-ink-deep": { "role": "neutral", "displayName": "Canvas Ink Deep", "canonical": "#0B0C0C" },
+      "panel-ink": { "role": "neutral", "displayName": "Panel Ink", "canonical": "#1A1A1A" },
+      "surface-quiet": { "role": "neutral", "displayName": "Surface Quiet", "canonical": "#F2F4F3", "tonalRamp": ["#232926", "#3e4943", "#586961", "#73887e", "#92a39b", "#b2beb8", "#d2d9d5", "#f1f3f2"] },
+      "teal-quiet": { "role": "accent", "displayName": "Teal Quiet", "canonical": "#17747C" },
+      "text-on-dark": { "role": "neutral", "displayName": "Text on Dark", "canonical": "#ffffff" },
+      "text-on-dark-muted": { "role": "neutral", "displayName": "Text on Dark, Muted", "canonical": "rgba(255,255,255,0.72)" },
+      "text-on-dark-faint": { "role": "neutral", "displayName": "Text on Dark, Faint", "canonical": "rgba(255,255,255,0.42)" },
+      "line-on-dark": { "role": "neutral", "displayName": "Line on Dark", "canonical": "rgba(255,255,255,0.1)" },
+      "text-on-light-muted": { "role": "neutral", "displayName": "Text on Light, Muted", "canonical": "#4A524E" },
+      "text-on-light-faint": { "role": "neutral", "displayName": "Text on Light, Faint", "canonical": "#6A716D" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Titular único del hero por página." },
+      "headline": { "displayName": "Headline", "purpose": "Titulares de sección (h2)." },
+      "body": { "displayName": "Body", "purpose": "Párrafos de contenido, máx. ~62ch." },
+      "label": { "displayName": "Label", "purpose": "Eyebrows, columnas de footer, nombres de nodo, contadores — mono en mayúsculas, nunca prosa." },
+      "action": { "displayName": "Action", "purpose": "Texto de botones/CTA — voz editorial (Be Vietnam Pro), deliberadamente distinta del Label mono." }
+    },
+    "shadows": [
+      { "name": "signal-glow", "value": "0 0 8px 1px rgba(128,229,147,.6), 0 0 12px 2px rgba(128,229,147,.4), inset 0 0 8px 1px rgba(128,229,147,.6)", "purpose": "Pulso de 'sistema encendido' en hover de un CTA primario (animación tmglow). No es elevación física, es una señal." },
+      { "name": "floating-action", "value": "0 6px 26px rgba(0,0,0,.4)", "purpose": "Reservada exclusivamente al botón flotante de WhatsApp — el único elemento que de verdad flota sobre el contenido." }
+    ],
+    "motion": [
+      { "name": "ease-standard", "value": "cubic-bezier(.22,.61,.36,1)", "purpose": "Easing por defecto para reveals, acordeones y el glow de CTA." },
+      { "name": "reveal-duration", "value": "0.8s", "purpose": "Duración del fade+translateY de entrada de bloques (data-rv)." },
+      { "name": "glow-duration", "value": "1.6s", "purpose": "Ciclo del pulso Signal Glow en CTAs, infinito mientras el hover se mantiene." }
+    ],
+    "breakpoints": [
+      { "name": "tablet", "value": "1080px" },
+      { "name": "mobile", "value": "640px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "CTA principal — fondo Verde Rizoma, radio 0, pulso Signal Glow en hover.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\">Hablemos de tu operación</a>",
+      "css": "@keyframes ds-glow{0%{box-shadow:inset 0 0 0 1px #80E593,0 0 0 0 #80E593}50%{box-shadow:inset 0 0 8px 1px rgba(128,229,147,.6),0 0 12px 2px rgba(128,229,147,.4)}100%{box-shadow:inset 0 0 0 1px #80E593,0 0 0 0 rgba(128,229,147,0)}} .ds-btn-primary{display:inline-flex;align-items:center;gap:12px;padding:16px 30px;background:#80E593;color:#141414;font-family:'Be Vietnam Pro',system-ui,sans-serif;font-size:15px;font-weight:500;text-decoration:none;border:1px solid #80E593;border-radius:0;transition:box-shadow .3s ease} .ds-btn-primary:hover,.ds-btn-primary:focus-visible{animation:ds-glow 1.6s ease-in-out infinite} .ds-btn-primary:focus-visible{outline:2px solid #80E593;outline-offset:3px}"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "CTA secundario sobre fondo oscuro — transparente con borde blanco.",
+      "html": "<a class=\"ds-btn-ghost\" href=\"#\">Conocer soluciones de IA</a>",
+      "css": ".ds-btn-ghost{display:inline-flex;align-items:center;gap:12px;padding:16px 30px;background:transparent;color:#ffffff;font-family:'Be Vietnam Pro',system-ui,sans-serif;font-size:15px;font-weight:500;text-decoration:none;border:1px solid #ffffff;border-radius:0} .ds-btn-ghost:focus-visible{outline:2px solid #80E593;outline-offset:3px}"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Campo de formulario plano — fondo Canvas Ink, borde hairline, sin radio.",
+      "html": "<div class=\"ds-field\"><label for=\"ds-name\">Nombre y apellido</label><input id=\"ds-name\" type=\"text\"></div>",
+      "css": ".ds-field{display:flex;flex-direction:column;gap:9px;font-family:'Be Vietnam Pro',system-ui,sans-serif} .ds-field label{font-size:13.5px;font-weight:500;color:rgba(255,255,255,.8)} .ds-field input{font:inherit;font-size:15px;padding:14px 15px;background:#141414;border:1px solid rgba(255,255,255,.14);border-radius:0;color:#fff} .ds-field input:focus-visible{outline:2px solid #80E593;outline-offset:3px}"
+    },
+    {
+      "name": "Eyebrow Label",
+      "kind": "custom",
+      "refersTo": "label",
+      "description": "Etiqueta mono trackeada en mayúsculas, con subrayado de acento — abre casi toda sección de contenido.",
+      "html": "<p class=\"ds-eyebrow\">SOLUCIONES PARA RETAIL</p>",
+      "css": ".ds-eyebrow{display:inline-block;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11.5px;letter-spacing:.14em;color:#80E593;border-bottom:1px solid #80E593;padding-bottom:7px;text-transform:uppercase;margin:0}"
+    },
+    {
+      "name": "Accordion Row",
+      "kind": "custom",
+      "refersTo": "card-accordion",
+      "description": "Fila de solución — número mono + título + ícono '+' que gira; un degradado sutil aloja el diagrama generativo que sangra por la derecha.",
+      "html": "<div class=\"ds-acc\"><button class=\"ds-acc-head\"><span class=\"ds-acc-n\">01</span><span class=\"ds-acc-t\">Strategy &amp; Advisory<small>Definimos qué transformar, dónde invertir y qué hacer primero.</small></span><span class=\"ds-acc-plus\">+</span></button></div>",
+      "css": ".ds-acc{border-bottom:1px solid rgba(255,255,255,.12);background:#141414} .ds-acc-head{font:inherit;width:100%;background:linear-gradient(90deg,#141414 0%,#181919 100%);border:0;padding:30px 0;cursor:pointer;display:grid;grid-template-columns:64px minmax(0,1fr) 34px;gap:24px;align-items:baseline;text-align:left;color:#fff} .ds-acc-n{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11.5px;letter-spacing:.14em;color:rgba(255,255,255,.62)} .ds-acc-t{display:block;font-size:24px;font-weight:300;letter-spacing:-.022em;color:#fff;line-height:1.2} .ds-acc-t small{display:block;font-size:15.5px;font-weight:400;color:rgba(255,255,255,.6);margin-top:9px} .ds-acc-plus{justify-self:end;font-size:22px;font-weight:200;color:#80E593;line-height:1;transition:transform .4s cubic-bezier(.22,.61,.36,1)} .ds-acc-head[aria-expanded=\"true\"] .ds-acc-plus{transform:rotate(45deg)}"
+    },
+    {
+      "name": "Contextual Cursor",
+      "kind": "custom",
+      "refersTo": "cursor",
+      "description": "Cursor circular custom que sigue el puntero y muestra una etiqueta mono corta según sobre qué elemento flota — la firma de interacción del sistema.",
+      "html": "<div class=\"ds-cursor\" style=\"opacity:1;transform:scale(1)\"><span>EXPLORAR</span></div>",
+      "css": ".ds-cursor{position:fixed;top:40%;left:50%;z-index:300;pointer-events:none;display:flex;align-items:center;justify-content:center;width:84px;height:84px;margin:-42px 0 0 -42px;border-radius:50%;background:#80E593;color:#141414;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:10px;font-weight:500;letter-spacing:.14em;transition:opacity .2s,transform .3s cubic-bezier(.22,.61,.36,1)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "El Rizoma Operativo",
+    "overview": "Tita Media se presenta como una red sin jerarquía, no como una torre de servicios apilados: cinco soluciones enredadas entre sí y con la operación del cliente, igual que el diagrama que abre el hero. El sistema visual traduce esa idea a una consola oscura de precisión — casi sin ornamento, casi sin sombra, donde cada acento de color es una señal deliberada y no decoración. Todo lo demás — bordes duros, tipografía ligera, etiquetas mono en mayúsculas — existe para que esa señal se lea sin ruido.\n\nLa atmósfera es precisa y contenida: confianza técnica silenciosa. El fondo oscuro (#141414) no es 'tema oscuro' como preferencia estética; es el lienzo neutro sobre el que los dos acentos de marca (verde rizoma, cian corriente) y los gráficos generativos (red, sistema solar, filamentos) hacen todo el trabajo expresivo. El único quiebre deliberado a superficie clara (#F2F4F3) funciona como una pausa editorial dentro de la consola — el sistema respira una vez, con el mismo rigor tipográfico, antes de volver al canvas oscuro.",
+    "keyCharacteristics": [
+      "Fondo oscuro por defecto, con una única superficie clara reservada para el 'momento de pausa' reflexivo del contenido.",
+      "Cero radio en todo lo rectangular; el círculo se reserva exclusivamente para marcadores puntuales (nodos, cursor, FAB).",
+      "Casi sin sombra: la profundidad se transmite con transparencia y líneas, no con elevación.",
+      "Mono en mayúsculas trackeado como firma tipográfica de 'dato/etiqueta/sistema', nunca como cuerpo de texto.",
+      "Los gráficos generativos (rizoma, sistema solar, campos neuronales) son la firma visual del sistema, no una decoración de hero aislada."
+    ],
+    "rules": [
+      { "name": "The Two-Accent Rule", "body": "Verde Rizoma es acción; Cian Corriente es dato/sistema en movimiento. Un mismo componente no usa los dos como si fueran intercambiables.", "section": "colors" },
+      { "name": "The Borrowed Neutral Rule", "body": "No hay una escala de grises independiente: los 'neutros' son variaciones del mismo negro verdoso (#141414/#0B0C0C/#1A1A1A) y de opacidad de blanco.", "section": "colors" },
+      { "name": "The Mono-Is-System Rule", "body": "IBM Plex Mono en mayúsculas significa siempre etiqueta/dato/coordenada, nunca contenido narrativo.", "section": "typography" },
+      { "name": "The One Container Rule", "body": "Todo el contenido de texto vive dentro del mismo contenedor de 1240px; solo los fondos generativos tienen permiso para sangrar a los bordes de la ventana.", "section": "layout" },
+      { "name": "The Flat-By-Default Rule", "body": "Ningún botón, card, input o panel lleva box-shadow en reposo. La única excepción de sombra en reposo es el FAB de WhatsApp.", "section": "elevation" },
+      { "name": "The Hard Edge Rule", "body": "Contenedores y controles tienen esquina recta; marcadores puntuales son círculo perfecto. No hay estado intermedio.", "section": "shapes" }
+    ],
+    "dos": [
+      "Do usar radio 0 en todo lo rectangular; reservar el círculo perfecto para marcadores puntuales.",
+      "Do usar IBM Plex Mono en mayúsculas solo para etiquetas/datos, nunca para prosa.",
+      "Do mantener Verde Rizoma como único color de acción y Cian Corriente como único color de dato en movimiento.",
+      "Do dejar que los gráficos generativos sangren fuera del contenedor de texto con máscaras de degradado; el texto siempre respeta el contenedor de 1240px."
+    ],
+    "donts": [
+      "Don't agregar box-shadow en reposo a botones, cards o inputs.",
+      "Don't introducir un gris neutro fuera de la familia #141414/#0B0C0C/#1A1A1A + opacidades de blanco.",
+      "Don't usar Teal Quiet (#17747C) sobre fondo oscuro, ni Verde Rizoma/Cian Corriente como texto de cuerpo sobre la superficie clara.",
+      "Don't rellenar los bloques de logos con placeholders inventados más allá de los ya confirmados en PRODUCT.md."
+    ]
+  }
+}
