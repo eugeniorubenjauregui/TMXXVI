@@ -1,0 +1,677 @@
+#!/usr/bin/env node
+// Generador estático del blog "Noticias" — trae los posts de WordPress y escribe
+// HTML plano (listado paginado + un archivo por post) para que el sitio deployado
+// nunca vuelva a hablarle a WordPress en runtime. Ver la sección correspondiente
+// en CLAUDE.md antes de tocar este archivo o el HTML que produce.
+//
+// Uso: node scripts/generate-blog.mjs   (Node >=18, sin dependencias — fetch/fs nativos)
+//
+// Archivos que este script POSEE y sobrescribe en cada corrida (no editar a mano):
+//   - noticias.html            (listado, página 1)
+//   - noticias/pagina-N.html   (listado, páginas siguientes)
+//   - noticias/<slug>.html     (un archivo por post)
+//   - sitemap.xml              (regenerado completo)
+//
+// Si el markup de SiteHeader.dc.html / SiteFooter.dc.html cambia, hay que reflejar
+// el cambio también en HEADER_HTML/FOOTER_HTML de este script y volver a correrlo.
+
+import { writeFile, mkdir, rm } from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const ROOT = path.resolve(__dirname, '..');
+const NOTICIAS_DIR = path.join(ROOT, 'noticias');
+
+const SITE = 'https://titamedia.com';
+const WP_API = `${SITE}/wp-json/wp/v2/posts`;
+const PER_PAGE = 9;
+const LOGO_URL = `${SITE}/images/logo-tita-media.png`;
+
+// ---------------------------------------------------------------------------
+// WordPress fetch
+// ---------------------------------------------------------------------------
+
+async function fetchAllPosts() {
+  const posts = [];
+  let page = 1;
+  let totalPages = 1;
+  do {
+    const url = `${WP_API}?per_page=100&_embed=1&page=${page}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`WP fetch falló (${res.status}) en ${url}`);
+    totalPages = parseInt(res.headers.get('x-wp-totalpages') || '1', 10) || 1;
+    posts.push(...(await res.json()));
+    page++;
+  } while (page <= totalPages);
+  // Orden explícito por fecha desc (WP ya lo hace, pero lo garantizamos).
+  posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+  return posts;
+}
+
+// ---------------------------------------------------------------------------
+// Texto: decodificar entidades, quitar tags, truncar, escapar
+// ---------------------------------------------------------------------------
+
+const NAMED_ENTITIES = {
+  amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ',
+  hellip: '…', mdash: '—', ndash: '–', rsquo: '’', lsquo: '‘',
+  rdquo: '”', ldquo: '“', copy: '©', reg: '®', trade: '™'
+};
+
+function decodeEntities(str) {
+  return String(str || '').replace(/&(#x?[0-9a-f]+|[a-z]+);/gi, (m, ent) => {
+    if (ent[0] === '#') {
+      const isHex = ent[1] === 'x' || ent[1] === 'X';
+      const code = isHex ? parseInt(ent.slice(2), 16) : parseInt(ent.slice(1), 10);
+      return Number.isFinite(code) ? String.fromCodePoint(code) : m;
+    }
+    const key = ent.toLowerCase();
+    return Object.prototype.hasOwnProperty.call(NAMED_ENTITIES, key) ? NAMED_ENTITIES[key] : m;
+  });
+}
+
+function stripTags(html) {
+  return String(html || '').replace(/<[^>]+>/g, '');
+}
+
+function decodeHtmlText(html) {
+  return decodeEntities(stripTags(html)).replace(/\s+/g, ' ').trim();
+}
+
+function truncate(text, max) {
+  if (text.length <= max) return text;
+  return text.slice(0, max).replace(/\s+\S*$/, '') + '…';
+}
+
+function cleanExcerpt(html, max = 150) {
+  const withoutTrailingLink = String(html || '').replace(/<a[^>]*>[^<]*<\/a>\s*$/, '');
+  return truncate(decodeHtmlText(withoutTrailingLink), max);
+}
+
+function escapeHtml(str) {
+  return String(str || '').replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
+
+// JSON-LD seguro para pegar dentro de <script type="application/ld+json">:
+// escapamos "<" para que un valor con "</script>" nunca rompa el tag.
+function jsonLdScript(obj) {
+  return JSON.stringify(obj, null, 2).replace(/</g, '\\u003c');
+}
+
+// ---------------------------------------------------------------------------
+// Sanitización del cuerpo (contenido de confianza — CMS propio de la empresa —
+// pero igual aplicamos hardening básico antes de pegarlo como HTML crudo)
+// ---------------------------------------------------------------------------
+
+function sanitizeContent(html) {
+  let out = String(html || '');
+  out = out.replace(/<script[\s\S]*?<\/script>/gi, '');
+  out = out.replace(/\s+on[a-z]+\s*=\s*"(?:[^"\\]|\\.)*"/gi, '');
+  out = out.replace(/\s+on[a-z]+\s*=\s*'(?:[^'\\]|\\.)*'/gi, '');
+  out = out.replace(/(href|src)\s*=\s*"(\s*javascript:[^"]*)"/gi, '$1="#"');
+  out = out.replace(/(href|src)\s*=\s*'(\s*javascript:[^']*)'/gi, "$1='#'");
+  out = out.replace(/<img(?![^>]*\bloading=)([^>]*)>/gi, '<img loading="lazy"$1>');
+  return out;
+}
+
+// ---------------------------------------------------------------------------
+// Post crudo de WP -> objeto plano que usan las plantillas
+// ---------------------------------------------------------------------------
+
+const dateFmt = new Intl.DateTimeFormat('es-CO', { day: 'numeric', month: 'short', year: 'numeric' });
+
+function extractPost(wp) {
+  const embedded = wp._embedded || {};
+  const media = (embedded['wp:featuredmedia'] || [])[0];
+  const sizes = media && media.media_details && media.media_details.sizes;
+  const bestListSize = sizes && (sizes.medium_large || sizes.medium);
+  const listImage = (bestListSize && bestListSize.source_url) || (media && media.source_url) || null;
+  const heroImage = (media && media.source_url) || listImage;
+  const terms = (embedded['wp:term'] || [])[0] || [];
+  const category = terms[0] ? decodeHtmlText(terms[0].name) : '';
+  const title = decodeHtmlText(wp.title?.rendered || '');
+  const dateObj = new Date(wp.date);
+  const modifiedObj = new Date(wp.modified || wp.date);
+
+  return {
+    id: wp.id,
+    slug: wp.slug,
+    title,
+    excerpt: cleanExcerpt(wp.excerpt?.rendered || ''),
+    contentHtml: sanitizeContent(wp.content?.rendered || ''),
+    listImage,
+    heroImage,
+    imageAlt: (media && media.alt_text) || title,
+    category,
+    categoryLabel: category || 'TITA NEWS',
+    dateLabel: dateFmt.format(dateObj),
+    dateIso: dateObj.toISOString(),
+    modifiedIso: modifiedObj.toISOString()
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Plantillas compartidas (header/footer calcados de index.html + SiteHeader.dc.html,
+// adaptados para vivir sin dc-import — ver "Decisión de arquitectura" en el plan)
+// ---------------------------------------------------------------------------
+
+const BASE_STYLE = `:root{--tm-accent:#80E593;--tm-accent2:#52C7CF;--tm-ink:#141414;--tm-ink-deep:#0B0C0C;--tm-panel:#1A1A1A}
+*{box-sizing:border-box}
+body{margin:0;background:var(--tm-ink);font-family:'Be Vietnam Pro',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--tm-accent);text-decoration:none}
+a:hover{color:var(--tm-accent2)}
+::selection{background:var(--tm-accent);color:#141414}
+:focus-visible{outline:2px solid var(--tm-accent);outline-offset:3px}
+[data-motion] [data-rv]{opacity:0;transform:translateY(20px);transition:opacity .8s cubic-bezier(.22,.61,.36,1),transform .8s cubic-bezier(.22,.61,.36,1)}
+[data-motion] [data-rv][data-in]{opacity:1;transform:none}
+[data-ln]{display:block;overflow:hidden;padding-bottom:.04em}
+[data-motion] [data-ln]>span{display:block;transform:translateY(112%);transition:transform .95s cubic-bezier(.19,.72,.28,1)}
+[data-motion] [data-ln][data-in]>span{transform:none}
+#tmcur{position:fixed;top:0;left:0;z-index:300;pointer-events:none;display:flex;align-items:center;justify-content:center;width:84px;height:84px;margin:-42px 0 0 -42px;border-radius:50%;background:var(--tm-accent);color:#141414;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.14em;opacity:0;transform:scale(.3);transition:opacity .2s,transform .3s cubic-bezier(.22,.61,.36,1)}
+#tmcur[data-on]{opacity:1;transform:scale(1)}
+.tm-news-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.11)}
+[data-news-card]{background:var(--tm-ink);display:flex;flex-direction:column}
+[data-news-thumb]{display:block;position:relative;aspect-ratio:16/10;overflow:hidden;background-color:#101111;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.05) 0 2px,transparent 2px 10px)}
+[data-news-thumb] img{width:100%;height:100%;object-fit:cover;display:block}
+[data-news-fallback]{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;color:rgba(255,255,255,.5);text-align:center;padding:0 16px}
+[data-news-body]{padding:clamp(22px,2.6vw,30px);display:flex;flex-direction:column;gap:12px;flex:1}
+.tm-post-body{font-size:clamp(15.5px,1.2vw,18px);line-height:1.68;color:rgba(255,255,255,.82)}
+.tm-post-body h2{font-size:clamp(22px,2.4vw,30px);font-weight:400;letter-spacing:-.015em;color:#fff;margin:clamp(36px,4vw,52px) 0 18px}
+.tm-post-body h3{font-size:clamp(19px,1.8vw,23px);font-weight:500;letter-spacing:-.01em;color:#fff;margin:clamp(30px,3.4vw,42px) 0 14px}
+.tm-post-body p{margin:0 0 22px}
+.tm-post-body a{color:var(--tm-accent);text-decoration:underline;text-underline-offset:2px}
+.tm-post-body ul,.tm-post-body ol{margin:0 0 22px;padding-left:1.3em}
+.tm-post-body li{margin:0 0 10px}
+.tm-post-body img{max-width:100%;height:auto;display:block;margin:clamp(28px,3vw,40px) auto}
+.tm-post-body blockquote{margin:clamp(28px,3vw,40px) 0;padding:4px 0 4px clamp(20px,2.4vw,28px);border-left:2px solid var(--tm-accent);color:rgba(255,255,255,.68);font-style:italic}
+.tm-post-body figure{margin:clamp(28px,3vw,40px) 0}
+.tm-post-body figcaption{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.06em;color:rgba(255,255,255,.5);margin-top:10px}
+.tm-pagination{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-top:clamp(48px,6vw,72px);padding-top:clamp(28px,3vw,36px);border-top:1px solid rgba(255,255,255,.1);flex-wrap:wrap}
+.tm-pagination a{font-size:14px;font-weight:500;color:#fff;border:1px solid rgba(255,255,255,.3);padding:12px 22px}
+.tm-pagination a:hover{color:var(--tm-accent);border-color:var(--tm-accent)}
+.tm-pagination span{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.1em;color:rgba(255,255,255,.5)}
+@media(max-width:1080px){#tm-burger{display:flex!important}#tm-nav{display:none!important;position:fixed;inset:78px 0 auto 0;flex-direction:column;align-items:stretch;gap:0;background:var(--tm-ink-deep);padding:12px clamp(24px,5vw,88px) 32px;border-bottom:1px solid rgba(255,255,255,.1);max-height:calc(100vh - 78px);overflow:auto}#tm-nav[data-open]{display:flex!important}#tm-nav>a,#tm-nav>div>button{padding:16px 0!important;border-bottom:1px solid rgba(255,255,255,.07);width:100%;text-align:left}#tm-bridge{display:none!important}#tm-drop{position:static!important;width:auto!important;border:0!important;padding:4px 0 12px!important;grid-template-columns:minmax(0,1fr)!important}#tm-cta{margin-top:18px;justify-content:center;border-bottom:0!important}#tm-form{grid-template-columns:minmax(0,1fr)!important}.tm-news-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:640px){.tm-news-grid{grid-template-columns:minmax(0,1fr)!important}}`;
+
+function headerHtml(upBase) {
+  return `<header id="tm-hdr" style="position:sticky;top:0;z-index:100;background:rgba(20,20,20,.74);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.08)">
+  <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px);height:78px;display:flex;align-items:center;justify-content:space-between;gap:28px">
+    <a href="${upBase}index.html" style="display:flex;align-items:center;white-space:nowrap"><img src="${upBase}images/logo-tita-media.png" alt="TITA Media" style="height:48px;width:auto;display:block"></a>
+    <nav id="tm-nav" style="display:flex;align-items:center;gap:28px">
+      <a href="${upBase}index.html" style="font-size:14px;font-weight:400;color:rgba(255,255,255,.8)">Inicio</a>
+      <div id="tm-dd" style="position:relative">
+        <button id="tm-ddbtn" aria-expanded="false" style="font:inherit;font-size:14px;font-weight:400;color:rgba(255,255,255,.8);background:none;border:0;padding:6px 0;cursor:pointer;display:flex;align-items:center;gap:7px">Soluciones <span style="font-size:9px;opacity:.7">▼</span></button>
+        <span id="tm-bridge" aria-hidden="true" style="position:absolute;top:100%;left:-22px;width:min(660px,86vw);height:20px"></span>
+        <div id="tm-drop" style="position:absolute;top:calc(100% + 18px);left:-22px;width:min(660px,86vw);background:var(--tm-ink-deep);border:1px solid rgba(255,255,255,.1);padding:14px;display:none;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px">
+          <a href="${upBase}strategy-advisory.html" style="padding:15px 16px;color:#fff" data-cursor="EXPLORAR"><strong style="display:block;font-size:14.5px;font-weight:500;margin-bottom:4px;color:#fff">Strategy &amp; Advisory</strong><span style="display:block;font-size:13px;line-height:1.45;color:rgba(255,255,255,.55)">Consultoría y estrategia para retail.</span></a>
+          <a href="${upBase}ai-custom-solutions.html" style="padding:15px 16px;color:#fff" data-cursor="EXPLORAR"><strong style="display:block;font-size:14.5px;font-weight:500;margin-bottom:4px;color:#fff">AI &amp; Custom Solutions</strong><span style="display:block;font-size:13px;line-height:1.45;color:rgba(255,255,255,.55)">Agentes de IA y tecnología a medida.</span></a>
+          <a href="${upBase}commerce-solutions.html" style="padding:15px 16px;color:#fff" data-cursor="EXPLORAR"><strong style="display:block;font-size:14.5px;font-weight:500;margin-bottom:4px;color:#fff">Commerce Solutions</strong><span style="display:block;font-size:13px;line-height:1.45;color:rgba(255,255,255,.55)">Ecommerce, B2B, integraciones y omnicanalidad.</span></a>
+          <a href="${upBase}retail-growth.html" style="padding:15px 16px;color:#fff" data-cursor="EXPLORAR"><strong style="display:block;font-size:14.5px;font-weight:500;margin-bottom:4px;color:#fff">Retail Growth</strong><span style="display:block;font-size:13px;line-height:1.45;color:rgba(255,255,255,.55)">SEO, GEO, AEO, CRO y Paid Media.</span></a>
+          <a href="${upBase}cloud-data.html" style="padding:15px 16px;color:#fff" data-cursor="EXPLORAR"><strong style="display:block;font-size:14.5px;font-weight:500;margin-bottom:4px;color:#fff">Cloud &amp; Data</strong><span style="display:block;font-size:13px;line-height:1.45;color:rgba(255,255,255,.55)">Infraestructura cloud y plataformas de datos.</span></a>
+          <div style="grid-column:1/-1;margin-top:10px;padding:16px 16px 4px;border-top:1px solid rgba(255,255,255,.1);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px">
+            <span style="font-size:13px;color:rgba(255,255,255,.55)">¿No sabes por dónde empezar? Cuéntanos qué necesitas resolver.</span>
+            <a href="#tm-contacto" style="font-size:13.5px;font-weight:500;color:var(--tm-accent);border-bottom:1px solid var(--tm-accent);padding-bottom:3px">Hablemos</a>
+          </div>
+        </div>
+      </div>
+      <a href="#" style="font-size:14px;font-weight:400;color:rgba(255,255,255,.8)">Soluciones IA</a>
+      <a href="#" style="font-size:14px;font-weight:400;color:rgba(255,255,255,.8)">Nosotros</a>
+      <a href="${upBase}noticias.html" style="font-size:14px;font-weight:400;color:rgba(255,255,255,.8)">TITA News</a>
+      <a href="#" style="font-size:14px;font-weight:400;color:rgba(255,255,255,.8)">Contacto</a>
+      <a id="tm-cta" href="#tm-contacto" style="display:inline-flex;align-items:center;padding:13px 26px;background:var(--tm-accent);color:#141414;font-size:14px;font-weight:500;border:1px solid var(--tm-accent)">Hablemos</a>
+    </nav>
+    <button id="tm-burger" aria-label="Menú" style="display:none;font:inherit;font-size:20px;line-height:1;color:#fff;background:none;border:0;cursor:pointer">☰</button>
+  </div>
+</header>`;
+}
+
+function contactSectionHtml() {
+  return `<section id="tm-contacto" style="background:var(--tm-panel);padding:clamp(84px,10vw,148px) 0">
+  <div style="max-width:900px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
+    <h2 data-split style="font-size:clamp(28px,3.6vw,46px);font-weight:300;line-height:1.13;letter-spacing:-.028em;color:#fff;margin:0;max-width:14ch">Hablemos de tu negocio.</h2>
+    <div data-rv style="margin:26px 0 clamp(44px,5vw,60px);max-width:60ch">
+      <p style="font-size:clamp(16px,1.3vw,18px);line-height:1.68;color:rgba(255,255,255,.72);margin:0">Cuéntanos qué quieres resolver, mejorar o construir.</p>
+      <p style="font-size:clamp(16px,1.3vw,18px);line-height:1.68;color:rgba(255,255,255,.72);margin:16px 0 0">Nuestro equipo revisará tu caso para entender el contexto y definir si podemos ayudarte y por dónde tiene sentido empezar.</p>
+    </div>
+    <p data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:var(--tm-accent);border-bottom:1px solid var(--tm-accent);padding-bottom:7px;margin:0 0 clamp(26px,3vw,34px)">¿EN QUÉ PODEMOS AYUDARTE?</p>
+    <div data-rv role="group" aria-label="¿En qué podemos ayudarte?" style="display:grid;gap:1px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.1);margin-bottom:clamp(44px,5vw,60px)">
+      <label style="background:var(--tm-panel);padding:17px clamp(18px,2.2vw,26px);display:flex;align-items:center;gap:16px;cursor:pointer;font-size:15.5px;color:rgba(255,255,255,.85)"><input type="checkbox" name="need" style="accent-color:#80E593;width:17px;height:17px;flex:none;margin:0"><span>Strategy &amp; Advisory · Consultoría y estrategia</span></label>
+      <label style="background:var(--tm-panel);padding:17px clamp(18px,2.2vw,26px);display:flex;align-items:center;gap:16px;cursor:pointer;font-size:15.5px;color:rgba(255,255,255,.85)"><input type="checkbox" name="need" style="accent-color:#80E593;width:17px;height:17px;flex:none;margin:0"><span>AI &amp; Custom Solutions · Agentes de IA y tecnología a medida</span></label>
+      <label style="background:var(--tm-panel);padding:17px clamp(18px,2.2vw,26px);display:flex;align-items:center;gap:16px;cursor:pointer;font-size:15.5px;color:rgba(255,255,255,.85)"><input type="checkbox" name="need" style="accent-color:#80E593;width:17px;height:17px;flex:none;margin:0"><span>Commerce Solutions · Commerce, integraciones y omnicanalidad</span></label>
+      <label style="background:var(--tm-panel);padding:17px clamp(18px,2.2vw,26px);display:flex;align-items:center;gap:16px;cursor:pointer;font-size:15.5px;color:rgba(255,255,255,.85)"><input type="checkbox" name="need" style="accent-color:#80E593;width:17px;height:17px;flex:none;margin:0"><span>Retail Growth · SEO, GEO, AEO, CRO y Paid Media</span></label>
+      <label style="background:var(--tm-panel);padding:17px clamp(18px,2.2vw,26px);display:flex;align-items:center;gap:16px;cursor:pointer;font-size:15.5px;color:rgba(255,255,255,.85)"><input type="checkbox" name="need" style="accent-color:#80E593;width:17px;height:17px;flex:none;margin:0"><span>Cloud &amp; Data · Infraestructura cloud y datos</span></label>
+      <label style="background:var(--tm-panel);padding:17px clamp(18px,2.2vw,26px);display:flex;align-items:center;gap:16px;cursor:pointer;font-size:15.5px;color:rgba(255,255,255,.85)"><input type="checkbox" name="need" checked style="accent-color:#80E593;width:17px;height:17px;flex:none;margin:0"><span>Aún no lo tengo claro</span></label>
+    </div>
+    <p data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:var(--tm-accent);border-bottom:1px solid var(--tm-accent);padding-bottom:7px;margin:0 0 clamp(26px,3vw,34px)">CUÉNTANOS SOBRE TI</p>
+    <div id="tm-form" data-rv style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px">
+      <div style="display:flex;flex-direction:column;gap:9px"><label for="q1" style="font-size:13.5px;font-weight:500;color:rgba(255,255,255,.8)">Nombre y apellido</label><input id="q1" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:var(--tm-ink);border:1px solid rgba(255,255,255,.14);color:#fff"></div>
+      <div style="display:flex;flex-direction:column;gap:9px"><label for="q2" style="font-size:13.5px;font-weight:500;color:rgba(255,255,255,.8)">Empresa</label><input id="q2" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:var(--tm-ink);border:1px solid rgba(255,255,255,.14);color:#fff"></div>
+      <div style="display:flex;flex-direction:column;gap:9px"><label for="q3" style="font-size:13.5px;font-weight:500;color:rgba(255,255,255,.8)">Cargo</label><input id="q3" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:var(--tm-ink);border:1px solid rgba(255,255,255,.14);color:#fff"></div>
+      <div style="display:flex;flex-direction:column;gap:9px"><label for="q4" style="font-size:13.5px;font-weight:500;color:rgba(255,255,255,.8)">Correo corporativo</label><input id="q4" type="email" style="font:inherit;font-size:15px;padding:14px 15px;background:var(--tm-ink);border:1px solid rgba(255,255,255,.14);color:#fff"></div>
+      <div style="display:flex;flex-direction:column;gap:9px"><label for="q5" style="font-size:13.5px;font-weight:500;color:rgba(255,255,255,.8)">País</label><input id="q5" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:var(--tm-ink);border:1px solid rgba(255,255,255,.14);color:#fff"></div>
+      <div style="display:flex;flex-direction:column;gap:9px"><label for="q6" style="font-size:13.5px;font-weight:500;color:rgba(255,255,255,.8)">¿Cómo nos conociste?</label>
+        <select id="q6" style="font:inherit;font-size:15px;padding:14px 15px;background:var(--tm-ink);border:1px solid rgba(255,255,255,.14);color:#fff">
+          <option value=""></option>
+          <option>Redes sociales</option>
+          <optgroup label="Motores de IA"><option>ChatGPT</option><option>Claude</option></optgroup>
+          <option>Búsqueda en Google</option>
+          <option>Referido</option>
+          <option>Otro</option>
+        </select>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:9px;grid-column:1/-1;margin-top:8px"><label for="q7" style="font-size:13.5px;font-weight:500;color:rgba(255,255,255,.8)">Cuéntanos brevemente qué necesitas resolver</label><textarea id="q7" style="font:inherit;font-size:15px;padding:14px 15px;background:var(--tm-ink);border:1px solid rgba(255,255,255,.14);color:#fff;resize:vertical;min-height:150px"></textarea></div>
+      <div style="grid-column:1/-1"><button type="button" style="font:inherit;display:inline-flex;align-items:center;padding:16px 30px;background:var(--tm-accent);color:#141414;font-size:15px;font-weight:500;border:1px solid var(--tm-accent);cursor:pointer">Enviar solicitud</button></div>
+    </div>
+  </div>
+</section>`;
+}
+
+function footerHtml(upBase) {
+  return `<footer style="position:relative;isolation:isolate;overflow:hidden;background:var(--tm-ink);border-top:1px solid rgba(255,255,255,.1);padding-top:clamp(60px,7vw,90px)">
+  <div id="tm-ftr-mesh" aria-hidden="true"></div>
+  <div style="position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
+    <div id="tm-ftr-grid" style="display:grid;grid-template-columns:1.7fr 1fr 1.25fr;gap:clamp(32px,4vw,52px);padding-bottom:clamp(44px,5vw,60px)">
+      <div>
+        <a href="${upBase}index.html" style="display:block;margin-bottom:20px"><img src="${upBase}images/logo-tita-media.png" alt="TITA Media" style="height:34px;width:auto;display:block"></a>
+        <p style="font-size:15.5px;line-height:1.65;color:rgba(255,255,255,.66);max-width:38ch;margin:0">Soluciones de tecnología, comercio, datos, growth e inteligencia artificial para retail.</p>
+        <div style="display:grid;gap:12px;margin-top:clamp(28px,3.5vw,38px);padding-top:clamp(24px,3vw,30px);border-top:1px solid rgba(255,255,255,.1)">
+          <p style="font-size:17px;font-weight:400;letter-spacing:-.01em;color:#fff;margin:0">Tecnología que tiene que mover un resultado.</p>
+          <p style="font-size:14.5px;color:rgba(255,255,255,.6);line-height:1.9;margin:0">Ventas.<i style="font-style:normal;color:var(--tm-accent);padding:0 5px">·</i>Conversión.<i style="font-style:normal;color:var(--tm-accent);padding:0 5px">·</i>Eficiencia.<i style="font-style:normal;color:var(--tm-accent);padding:0 5px">·</i>Disponibilidad.<i style="font-style:normal;color:var(--tm-accent);padding:0 5px">·</i>Velocidad.<i style="font-style:normal;color:var(--tm-accent);padding:0 5px">·</i>Precisión.</p>
+        </div>
+      </div>
+      <div>
+        <h4 style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:400;letter-spacing:.14em;color:var(--tm-accent);margin:0 0 20px">SOLUCIONES</h4>
+        <ul style="list-style:none;display:grid;gap:13px;margin:0;padding:0">
+          <li><a href="${upBase}strategy-advisory.html" style="font-size:15px;color:rgba(255,255,255,.72)">Strategy &amp; Advisory</a></li>
+          <li><a href="${upBase}ai-custom-solutions.html" style="font-size:15px;color:rgba(255,255,255,.72)">AI &amp; Custom Solutions</a></li>
+          <li><a href="${upBase}commerce-solutions.html" style="font-size:15px;color:rgba(255,255,255,.72)">Commerce Solutions</a></li>
+          <li><a href="${upBase}retail-growth.html" style="font-size:15px;color:rgba(255,255,255,.72)">Retail Growth</a></li>
+          <li><a href="${upBase}cloud-data.html" style="font-size:15px;color:rgba(255,255,255,.72)">Cloud &amp; Data</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:400;letter-spacing:.14em;color:var(--tm-accent);margin:0 0 20px">CONTACTO</h4>
+        <p style="margin:0"><a href="mailto:cuentanos@titamedia.com" style="font-size:15px;color:var(--tm-accent)">cuentanos@titamedia.com</a></p>
+        <address style="font-style:normal;font-size:14.5px;line-height:1.62;color:rgba(255,255,255,.66);margin-top:18px">Carrera 16 #93A - 16<br>Bogotá, Colombia</address>
+        <address style="font-style:normal;font-size:14.5px;line-height:1.62;color:rgba(255,255,255,.66);margin-top:14px">Av. Paseo de la Reforma 26, col. Juárez<br>Ciudad de México D.F, México</address>
+      </div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;padding-bottom:clamp(40px,5vw,56px)">
+      <a href="#" aria-label="LinkedIn" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.7)"><svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.75-2.05C20.6 8.65 22 11 22 14.4V21h-4v-5.9c0-1.4-.03-3.2-1.95-3.2s-2.25 1.52-2.25 3.1V21H9z"></path></svg></a>
+      <a href="#" aria-label="Instagram" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.7)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" style="width:18px;height:18px"><rect x="2.5" y="2.5" width="19" height="19" rx="5.4"></rect><circle cx="12" cy="12" r="4.2"></circle><circle cx="17.6" cy="6.4" r="1.2" fill="currentColor" stroke="none"></circle></svg></a>
+      <a href="#" aria-label="Facebook" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.7)"><svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.45 2.89h-2.33v6.99A10 10 0 0 0 22 12z"></path></svg></a>
+      <a href="#" aria-label="YouTube" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.7)"><svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M23.5 6.9a3 3 0 0 0-2.12-2.13C19.5 4.25 12 4.25 12 4.25s-7.5 0-9.38.52A3 3 0 0 0 .5 6.9 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.1 3 3 0 0 0 2.12 2.13c1.88.52 9.38.52 9.38.52s7.5 0 9.38-.52a3 3 0 0 0 2.12-2.13A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.1zM9.6 15.6V8.4l6.2 3.6z"></path></svg></a>
+      <a href="#" aria-label="TikTok" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.7)"><svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M16.3 2h-3.1v13.6a2.6 2.6 0 1 1-2.6-2.6c.27 0 .53.04.77.12v-3.2a5.9 5.9 0 0 0-.77-.05 5.8 5.8 0 1 0 5.8 5.8V9.06a7 7 0 0 0 4.1 1.32V7.24a3.94 3.94 0 0 1-4.2-4.02V2z"></path></svg></a>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,.1);padding:24px 0;display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;font-size:13.5px;color:rgba(255,255,255,.48)">
+      <span>Colombia · Latinoamérica</span>
+      <span>© 2026 TITA MEDIA · Outstanding Performance</span>
+    </div>
+  </div>
+</footer>
+
+<a href="https://wa.me/" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp" style="position:fixed;right:clamp(16px,3vw,32px);bottom:clamp(16px,3vw,32px);z-index:150;width:54px;height:54px;border-radius:50%;background:var(--tm-accent);color:#141414;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 26px rgba(0,0,0,.4)">
+  <svg viewBox="0 0 24 24" fill="currentColor" style="width:27px;height:27px"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.64-2.05-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.6-.92-2.2-.24-.58-.48-.5-.67-.5h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.01-1.04 2.47s1.06 2.87 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35zM12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.86 9.86 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm0 18.15h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.83 2.42a8.19 8.19 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.24 8.23z"></path></svg>
+</a>`;
+}
+
+// Component script compartido por todas las páginas generadas: motion + mesh de
+// hero + mesh de footer. Nada de fetch/estado — todo el contenido ya es estático.
+function componentScript({ heroMeshTone }) {
+  return `class Component extends DCLogic {
+  componentDidMount(){ this.start(0); this.mesh(); this.ftrMesh(); }
+  componentDidUpdate(){ if(this._stop){ this._stop(); this._stop = null; } this.start(0); }
+  componentWillUnmount(){ this._stop && this._stop(); this._mesh && this._mesh(); this._ftrMesh && this._ftrMesh(); }
+
+  mesh(){
+    const token = (this._mToken = (this._mToken || 0) + 1);
+    if(this._mesh){ this._mesh(); this._mesh = null; }
+    import('./js/mount-graphic.js').then(({ mountGraphic })=>{
+      if(token !== this._mToken) return;
+      this._mesh = mountGraphic('#tm-mesh', ()=> import('./js/mesh-gradient.js'), 'initMeshGradient',
+        { tone: '${heroMeshTone}', motion: this.props.motion });
+    });
+  }
+  ftrMesh(){
+    const token = (this._fToken = (this._fToken || 0) + 1);
+    if(this._ftrMesh){ this._ftrMesh(); this._ftrMesh = null; }
+    import('./js/mount-graphic.js').then(({ mountGraphic })=>{
+      if(token !== this._fToken) return;
+      this._ftrMesh = mountGraphic('#tm-ftr-mesh', ()=> import('./js/mesh-gradient.js'), 'initMeshGradient',
+        { tone: 'inicio', spread: 'full', intensity: 0.8 });
+    });
+  }
+  start(tries){
+    if(document.querySelector('#tm-hdr') && document.querySelector('#tm-contacto')){
+      import('./js/site-motion.js').then(m=>{
+        this._stop = m.initMotion({ accent: '#80E593', motion: true, contextualCursor: true });
+      });
+      return;
+    }
+    if(tries < 60) requestAnimationFrame(()=>this.start(tries+1));
+  }
+}`;
+}
+
+function pageShell({ headHtml, bodyHtml, heroMeshTone }) {
+  return `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+${headHtml}
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics="">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@200;300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+${BASE_STYLE}
+</style>
+</helmet>
+
+<div id="tm-root" style="background:var(--tm-ink);overflow-x:clip">
+
+<div id="tm-prog" style="position:fixed;top:0;left:0;height:2px;width:0;background:var(--tm-accent);z-index:200"></div>
+<div id="tmcur"><span id="tmcur-l"></span></div>
+<div id="tm-trans" style="position:fixed;inset:0;z-index:250;background:var(--tm-ink-deep);opacity:0;pointer-events:none;display:flex;align-items:center;justify-content:center"><span id="tm-transline" style="display:block;height:1px;width:0;background:var(--tm-accent)"></span></div>
+
+${bodyHtml}
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+${componentScript({ heroMeshTone })}
+</script>
+</body>
+</html>
+`;
+}
+
+// ---------------------------------------------------------------------------
+// Tarjetas de listado + paginación
+// ---------------------------------------------------------------------------
+
+function cardHtml(post, siblingPrefix) {
+  const href = `${siblingPrefix}${post.slug}.html`;
+  return `<article data-rv style="background:var(--tm-ink);display:flex;flex-direction:column">
+  <a href="${href}" data-cursor="LEER MÁS" data-news-thumb>
+    ${post.listImage ? `<img src="${post.listImage}" alt="${escapeHtml(post.imageAlt)}" loading="lazy">` : ''}
+    <span data-news-fallback>${escapeHtml(post.categoryLabel)}</span>
+  </a>
+  <div data-news-body>
+    <p style="margin:0;display:flex;align-items:center;gap:10px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em">
+      ${post.category ? `<span style="color:var(--tm-accent)">${escapeHtml(post.category.toUpperCase())}</span><span style="color:rgba(255,255,255,.3)">·</span>` : ''}
+      <span style="color:rgba(255,255,255,.5)">${escapeHtml(post.dateLabel)}</span>
+    </p>
+    <h3 style="font-size:clamp(18px,1.6vw,21px);font-weight:500;letter-spacing:-.01em;color:#fff;margin:0;line-height:1.32">${escapeHtml(post.title)}</h3>
+    <p style="font-size:14.5px;line-height:1.62;color:rgba(255,255,255,.68);margin:0;flex:1">${escapeHtml(post.excerpt)}</p>
+    <a href="${href}" data-cursor="LEER MÁS" style="margin-top:6px;font-size:14px;font-weight:500;color:var(--tm-accent);border-bottom:1px solid var(--tm-accent);padding-bottom:3px;align-self:flex-start">Leer más</a>
+  </div>
+</article>`;
+}
+
+function paginationHtml({ pageNum, totalPages, upBase, siblingPrefix }) {
+  const hrefFor = (n) => (n === 1 ? `${upBase}noticias.html` : `${siblingPrefix}pagina-${n}.html`);
+  const prev = pageNum > 1 ? `<a href="${hrefFor(pageNum - 1)}">← Anterior</a>` : '<span></span>';
+  const next = pageNum < totalPages ? `<a href="${hrefFor(pageNum + 1)}">Siguiente →</a>` : '<span></span>';
+  return `<div class="tm-pagination">
+  ${prev}
+  <span>Página ${pageNum} de ${totalPages}</span>
+  ${next}
+</div>`;
+}
+
+// ---------------------------------------------------------------------------
+// Página de listado (raíz = página 1, o noticias/pagina-N.html)
+// ---------------------------------------------------------------------------
+
+function listingPage({ pageNum, totalPages, posts }) {
+  const isRoot = pageNum === 1;
+  const upBase = isRoot ? '' : '../';
+  const siblingPrefix = isRoot ? 'noticias/' : '';
+  const canonical = isRoot ? `${SITE}/noticias.html` : `${SITE}/noticias/pagina-${pageNum}.html`;
+  const titleSuffix = isRoot ? '' : ` — Página ${pageNum}`;
+  const title = `Noticias${titleSuffix} | Tita Media`;
+  const description = 'Noticias, análisis y casos sobre IA, ecommerce y transformación digital del retail en Latinoamérica. Todas las publicaciones del blog de Tita Media.';
+
+  const breadcrumbItems = [
+    { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${SITE}/` },
+    { '@type': 'ListItem', position: 2, name: 'Noticias', item: `${SITE}/noticias.html` }
+  ];
+  if (!isRoot) breadcrumbItems.push({ '@type': 'ListItem', position: 3, name: `Página ${pageNum}`, item: canonical });
+  const breadcrumbLd = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: breadcrumbItems };
+
+  const headHtml = `<title>${escapeHtml(title)}</title>
+<meta name="description" content="${escapeHtml(description)}">
+<link rel="canonical" href="${canonical}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Tita Media">
+<meta property="og:locale" content="es_CO">
+<meta property="og:title" content="${escapeHtml(title)}">
+<meta property="og:description" content="${escapeHtml(description)}">
+<meta property="og:url" content="${canonical}">
+<meta property="og:image" content="${LOGO_URL}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${escapeHtml(title)}">
+<meta name="twitter:description" content="${escapeHtml(description)}">
+<meta name="twitter:image" content="${LOGO_URL}">
+<script type="application/ld+json">
+${jsonLdScript(breadcrumbLd)}
+</script>
+<script src="${upBase}support.js"></script>`;
+
+  const heroCopy = isRoot
+    ? `<h1 data-split style="font-size:clamp(32px,4.3vw,54px);font-weight:300;line-height:1.07;letter-spacing:-.032em;color:#fff;margin:0;max-width:20ch;text-wrap:pretty">Lo último que estamos leyendo, probando y construyendo en retail digital.</h1>
+    <p data-rv style="font-size:clamp(15.5px,1.2vw,18px);line-height:1.68;color:rgba(255,255,255,.72);margin:26px 0 0;max-width:62ch">Análisis, casos y noticias sobre IA, ecommerce y transformación digital, publicadas por el equipo de Tita Media.</p>`
+    : `<h1 data-split style="font-size:clamp(28px,3.6vw,44px);font-weight:300;line-height:1.1;letter-spacing:-.028em;color:#fff;margin:0;max-width:20ch;text-wrap:pretty">Noticias — página ${pageNum}</h1>`;
+
+  const bodyHtml = `${headerHtml(upBase)}
+
+<section style="padding:clamp(70px,9vw,124px) 0 clamp(56px,7vw,92px);position:relative;isolation:isolate;overflow:hidden">
+  <div id="tm-mesh" aria-hidden="true"></div>
+  <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px);position:relative;z-index:1">
+    <nav aria-label="Ruta" data-rv style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.58);margin:0 0 34px"><a href="${upBase}index.html" style="color:rgba(255,255,255,.58)">INICIO</a> <span style="padding:0 8px;color:var(--tm-accent)">/</span> ${isRoot ? 'NOTICIAS' : `<a href="${upBase}noticias.html" style="color:rgba(255,255,255,.58)">NOTICIAS</a> <span style="padding:0 8px;color:var(--tm-accent)">/</span> PÁGINA ${pageNum}`}</nav>
+    <p data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.2em;color:var(--tm-accent);margin:0 0 30px">TITA NEWS · IA, ECOMMERCE Y RETAIL EN LATAM</p>
+    ${heroCopy}
+  </div>
+</section>
+
+<div style="height:1px;background:rgba(255,255,255,.09)"></div>
+
+<section style="padding:clamp(80px,10vw,140px) 0">
+  <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
+    <div class="tm-news-grid">
+      ${posts.map((p) => cardHtml(p, siblingPrefix)).join('\n      ')}
+    </div>
+    ${paginationHtml({ pageNum, totalPages, upBase, siblingPrefix })}
+  </div>
+</section>
+
+${contactSectionHtml()}
+${footerHtml(upBase)}`;
+
+  return pageShell({ headHtml, bodyHtml, heroMeshTone: 'inicio' });
+}
+
+// ---------------------------------------------------------------------------
+// Página de post individual (siempre en noticias/<slug>.html)
+// ---------------------------------------------------------------------------
+
+function postPage(post) {
+  const upBase = '../';
+  const canonical = `${SITE}/noticias/${post.slug}.html`;
+  const title = `${post.title} | Tita Media`;
+  const ogImage = post.heroImage || LOGO_URL;
+
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${SITE}/` },
+      { '@type': 'ListItem', position: 2, name: 'Noticias', item: `${SITE}/noticias.html` },
+      { '@type': 'ListItem', position: 3, name: post.title, item: canonical }
+    ]
+  };
+  const articleLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.excerpt,
+    image: [ogImage],
+    datePublished: post.dateIso,
+    dateModified: post.modifiedIso,
+    author: { '@type': 'Organization', name: 'Tita Media', url: `${SITE}/` },
+    publisher: { '@type': 'Organization', name: 'Tita Media', logo: { '@type': 'ImageObject', url: LOGO_URL } },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': canonical }
+  };
+
+  const headHtml = `<title>${escapeHtml(title)}</title>
+<meta name="description" content="${escapeHtml(post.excerpt)}">
+<link rel="canonical" href="${canonical}">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Tita Media">
+<meta property="og:locale" content="es_CO">
+<meta property="og:title" content="${escapeHtml(post.title)}">
+<meta property="og:description" content="${escapeHtml(post.excerpt)}">
+<meta property="og:url" content="${canonical}">
+<meta property="og:image" content="${ogImage}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${escapeHtml(post.title)}">
+<meta name="twitter:description" content="${escapeHtml(post.excerpt)}">
+<meta name="twitter:image" content="${ogImage}">
+<script type="application/ld+json">
+${jsonLdScript(breadcrumbLd)}
+</script>
+<script type="application/ld+json">
+${jsonLdScript(articleLd)}
+</script>
+<script src="${upBase}support.js"></script>`;
+
+  const bodyHtml = `${headerHtml(upBase)}
+
+<section style="padding:clamp(70px,9vw,124px) 0 clamp(50px,6vw,80px);position:relative;isolation:isolate;overflow:hidden">
+  <div id="tm-mesh" aria-hidden="true"></div>
+  <div style="max-width:900px;margin:0 auto;padding:0 clamp(24px,5vw,88px);position:relative;z-index:1">
+    <nav aria-label="Ruta" data-rv style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.58);margin:0 0 30px"><a href="${upBase}index.html" style="color:rgba(255,255,255,.58)">INICIO</a> <span style="padding:0 8px;color:var(--tm-accent)">/</span> <a href="${upBase}noticias.html" style="color:rgba(255,255,255,.58)">NOTICIAS</a></nav>
+    <p data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.18em;color:var(--tm-accent);margin:0 0 22px">${escapeHtml(post.categoryLabel.toUpperCase())} · ${escapeHtml(post.dateLabel)}</p>
+    <h1 data-split style="font-size:clamp(28px,3.6vw,46px);font-weight:300;line-height:1.16;letter-spacing:-.026em;color:#fff;margin:0;text-wrap:pretty">${escapeHtml(post.title)}</h1>
+  </div>
+</section>
+
+${post.heroImage ? `<div data-rv style="max-width:1100px;margin:0 auto clamp(48px,6vw,72px);padding:0 clamp(24px,5vw,88px)"><img src="${post.heroImage}" alt="${escapeHtml(post.imageAlt)}" loading="lazy" style="width:100%;height:auto;display:block;border:1px solid rgba(255,255,255,.1)"></div>` : ''}
+
+<section style="padding:0 0 clamp(80px,10vw,120px)">
+  <div style="max-width:740px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
+    <article class="tm-post-body">
+      ${post.contentHtml}
+    </article>
+    <div data-rv style="margin-top:clamp(40px,5vw,56px);padding-top:clamp(24px,3vw,32px);border-top:1px solid rgba(255,255,255,.1)">
+      <a href="${upBase}noticias.html" style="font-size:14px;font-weight:500;color:#fff;border-bottom:1px solid rgba(255,255,255,.3);padding-bottom:3px">← Volver a Noticias</a>
+    </div>
+  </div>
+</section>
+
+${contactSectionHtml()}
+${footerHtml(upBase)}`;
+
+  return pageShell({ headHtml, bodyHtml, heroMeshTone: 'inicio' });
+}
+
+// ---------------------------------------------------------------------------
+// sitemap.xml
+// ---------------------------------------------------------------------------
+
+function sitemapXml({ posts, totalPages }) {
+  const today = new Date().toISOString().slice(0, 10);
+  const urls = [
+    { loc: `${SITE}/`, lastmod: today, changefreq: 'monthly', priority: '1.0' },
+    { loc: `${SITE}/strategy-advisory.html`, lastmod: today, changefreq: 'monthly', priority: '0.8' },
+    { loc: `${SITE}/ai-custom-solutions.html`, lastmod: today, changefreq: 'monthly', priority: '0.8' },
+    { loc: `${SITE}/commerce-solutions.html`, lastmod: today, changefreq: 'monthly', priority: '0.8' },
+    { loc: `${SITE}/retail-growth.html`, lastmod: today, changefreq: 'monthly', priority: '0.8' },
+    { loc: `${SITE}/cloud-data.html`, lastmod: today, changefreq: 'monthly', priority: '0.8' },
+    { loc: `${SITE}/noticias.html`, lastmod: today, changefreq: 'weekly', priority: '0.8' }
+  ];
+  for (let n = 2; n <= totalPages; n++) {
+    urls.push({ loc: `${SITE}/noticias/pagina-${n}.html`, lastmod: today, changefreq: 'weekly', priority: '0.4' });
+  }
+  for (const p of posts) {
+    urls.push({
+      loc: `${SITE}/noticias/${p.slug}.html`,
+      lastmod: p.modifiedIso.slice(0, 10),
+      changefreq: 'monthly',
+      priority: '0.6'
+    });
+  }
+  const body = urls
+    .map((u) => `  <url>\n    <loc>${u.loc}</loc>\n    <lastmod>${u.lastmod}</lastmod>\n    <changefreq>${u.changefreq}</changefreq>\n    <priority>${u.priority}</priority>\n  </url>`)
+    .join('\n');
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${body}\n</urlset>\n`;
+}
+
+// ---------------------------------------------------------------------------
+// Main
+// ---------------------------------------------------------------------------
+
+async function main() {
+  console.log('Trayendo posts de WordPress…');
+  const rawPosts = await fetchAllPosts();
+  console.log(`  ${rawPosts.length} posts encontrados.`);
+
+  const posts = rawPosts.map(extractPost);
+
+  const collisions = posts.filter((p) => /^pagina-\d+$/.test(p.slug));
+  if (collisions.length) {
+    throw new Error(
+      `Slug(s) en colisión con el patrón de paginación "pagina-N": ${collisions.map((c) => c.slug).join(', ')}. ` +
+      'Ajustar el esquema de nombres antes de continuar.'
+    );
+  }
+
+  const noImage = posts.filter((p) => !p.listImage).map((p) => p.slug);
+
+  // Reset de la carpeta /noticias/ para no dejar archivos huérfanos de posts borrados en WP.
+  await rm(NOTICIAS_DIR, { recursive: true, force: true });
+  await mkdir(NOTICIAS_DIR, { recursive: true });
+
+  const totalPages = Math.max(1, Math.ceil(posts.length / PER_PAGE));
+
+  console.log(`Generando ${totalPages} página(s) de listado…`);
+  for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
+    const pagePosts = posts.slice((pageNum - 1) * PER_PAGE, pageNum * PER_PAGE);
+    const html = listingPage({ pageNum, totalPages, posts: pagePosts });
+    const dest = pageNum === 1
+      ? path.join(ROOT, 'noticias.html')
+      : path.join(NOTICIAS_DIR, `pagina-${pageNum}.html`);
+    await writeFile(dest, html, 'utf8');
+  }
+
+  console.log(`Generando ${posts.length} página(s) de post…`);
+  for (const post of posts) {
+    const html = postPage(post);
+    await writeFile(path.join(NOTICIAS_DIR, `${post.slug}.html`), html, 'utf8');
+  }
+
+  console.log('Regenerando sitemap.xml…');
+  await writeFile(path.join(ROOT, 'sitemap.xml'), sitemapXml({ posts, totalPages }), 'utf8');
+
+  console.log('\nListo.');
+  console.log(`  Posts: ${posts.length}`);
+  console.log(`  Páginas de listado: ${totalPages}`);
+  console.log(`  Archivos en /noticias/: ${posts.length + (totalPages - 1)}`);
+  if (noImage.length) {
+    console.log(`  Posts sin imagen destacada (usan el placeholder): ${noImage.length}`);
+    console.log(`    ${noImage.join(', ')}`);
+  }
+}
+
+main().catch((err) => {
+  console.error('generate-blog.mjs falló:', err);
+  process.exit(1);
+});
