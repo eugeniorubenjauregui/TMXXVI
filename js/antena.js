@@ -3,8 +3,10 @@
    salen del domo hacia afuera. Alrededor, anillos de emisión que se expanden y
    se apagan — la noticia que se propaga.
 
-   Mismo lenguaje que rhizome.js: trazo fino blanco para la estructura, acento
-   para la energía, fondo transparente. Todo son líneas; no hay sólidos.
+   Mismo lenguaje que rhizome.js y la Two-Accent Rule de DESIGN.md: la
+   estructura (celosía, domo, collar) es Verde Rizoma — el origen, la acción.
+   Las descargas son Cian Corriente — el dato viajando. Nunca al revés, y
+   nunca mezclados en el mismo elemento.
 
    initAntena(host, { accent, motion, tint }) -> dispose() */
 
@@ -26,7 +28,7 @@ export function initAntena(host, opts = {}) {
   const still = opts.motion === false ||
     (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const accent = opts.accent || '#80E593';
-  const tint = opts.tint || '#8FD9FF';
+  const tint = opts.tint || '#52C7CF';
 
   let stopped = false, raf = 0, ro = null, io = null, visible = true, disposer = null;
 
@@ -91,8 +93,7 @@ export function initAntena(host, opts = {}) {
     for (let i = 0; i < sPos.length / 3; i++) {
       const y = sPos[i * 3 + 1];
       const t = Math.max(0, Math.min(1, y / H));
-      const c = new THREE.Color(1, 1, 1).lerp(A, t * 0.45);
-      sCol.set([c.r, c.g, c.b, 0.2 + t * 0.32], i * 4);
+      sCol.set([A.r, A.g, A.b, 0.2 + t * 0.32], i * 4);
     }
     sGeo.setAttribute('color', new THREE.BufferAttribute(sCol, 4));
     const structure = new THREE.LineSegments(sGeo, new THREE.LineBasicMaterial({
@@ -116,7 +117,7 @@ export function initAntena(host, opts = {}) {
     }
     domeGeo.setAttribute('position', new THREE.Float32BufferAttribute(domePos, 3));
     const dome = new THREE.LineSegments(domeGeo, new THREE.LineBasicMaterial({
-      color: 0xffffff, transparent: true, opacity: 0.42, depthWrite: false
+      color: A, transparent: true, opacity: 0.42, depthWrite: false
     }));
     world.add(dome);
 
@@ -132,7 +133,7 @@ export function initAntena(host, opts = {}) {
     const collarGeo = new THREE.BufferGeometry();
     collarGeo.setAttribute('position', new THREE.Float32BufferAttribute(cPos, 3));
     world.add(new THREE.LineSegments(collarGeo, new THREE.LineBasicMaterial({
-      color: 0xffffff, transparent: true, opacity: 0.26, depthWrite: false
+      color: A, transparent: true, opacity: 0.26, depthWrite: false
     })));
 
     /* ---------- descargas ---------- */
@@ -154,7 +155,6 @@ export function initAntena(host, opts = {}) {
       life: 0,
       dur: rand(0.3, 0.7),
       wait: rand(0, 1.1),
-      warm: Math.random() < 0.3,
       seed: Math.random() * 100
     });
     const B = Array.from({ length: MAX_BOLT }, newBolt);
@@ -177,7 +177,7 @@ export function initAntena(host, opts = {}) {
             b.z * u
           ]);
         }
-        const col = b.warm ? T : A;
+        const col = T;
         for (let s = 0; s < SEG_BOLT - 1; s++) {
           const taper = 1 - s / (SEG_BOLT - 1);
           const al = Math.min(0.92, k * (0.3 + taper * 1.0));

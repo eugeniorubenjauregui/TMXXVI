@@ -358,7 +358,7 @@ function componentScript({ heroMeshTone, heroGraphic = 'mesh' }) {
     import('./js/mount-graphic.js').then(({ mountGraphic })=>{
       if(token !== this._aToken) return;
       this._antenna = mountGraphic('#tm-antena', ()=> import('./js/antena.js'), 'initAntena',
-        { accent: '#80E593', tint: '#8FD9FF', motion: this.props.motion });
+        { accent: '#80E593', tint: '#52C7CF', motion: this.props.motion });
     });
   }` : '';
   const antennaMount = heroGraphic === 'antenna' ? ' this.antenna();' : '';
