@@ -67,11 +67,14 @@ The same hardcoded `+ ".dc.html"` suffix is why the 3 shared components can't be
 
 The hero/solution graphics are separate ES modules, dynamically `import()`-ed at runtime by the page's inline `Component` logic (see the `mesh()`, `solar()`, `neural()`, and the per-solution accordion handler in `index.html`'s script block) via the shared `mountGraphic()` helper in `mount-graphic.js`. That helper re-mounts a graphic if its host node gets replaced and tears down the old instance first — don't bypass it with a raw `import()` + manual DOM append.
 
+Because the `import()` only fires once the Component mounts, every page's real `<head>` also carries `<link rel="modulepreload">` for the three.js CDN build plus that page's own hero module(s), so the browser starts fetching them in parallel with everything else instead of waiting for React to mount first. Add the matching `modulepreload` line(s) whenever a page's hero graphic set changes.
+
 Current modules and what they render, all using three.js loaded from a CDN URL (`unpkg`/`jsdelivr`, no local copy):
 - `rhizome.js` / `solar-system.js` — the two alternate hero visualizations (draggable network vs. orbiting solar system), selected by the `heroLayout` prop.
 - `mesh-gradient.js` — CSS-only background blob mesh (`initMeshGradient`) plus an unrelated `initEdgeGlow` helper for form borders.
 - `neural-field.js` (SVG, no three.js) / `pause-field.js` (three.js) — the two alternate "pause" background textures, selected by the `pauseGraphic` prop.
 - `sol-graphics.js` — the small inline diagrams inside the solutions accordion (`initCommerceGraphic`, `initRetailGraphic`, `initCloudGraphic`), keyed off which accordion row is open.
+- `broadcast-antenna.js` (three.js) — antenna + expanding signal rings, the hero signature graphic for the blog's listing/category pages (mounted on `#tm-mesh` by `scripts/generate-blog.mjs`'s `componentScript({ heroGraphic: 'antenna' })`); individual post pages keep the regular `mesh-gradient.js` background. Like every module here, `#tm-mesh` itself has no size/position of its own — the module mounted on it has to set that (see `host.style.cssText` at the top of `initBroadcastAntenna`), or `mountGraphic`'s `resize()` fallback formula inflates the canvas to a nonsense height.
 
 The 5 other pages each lazy-load their own set of graphic modules the same way: `card-beam.js` (Strategy & Advisory, AI & Custom Solutions, Commerce Solutions), `priority-field.js`/`priority-matrix.js` (Strategy & Advisory), `agent-sphere.js`/`agent-geo.js`/`agent-swarm.js` (AI & Custom Solutions, picked by a `kind` prop; `agent-geo.js` needs GSAP, loaded from CDN in that page's `<head>`), `commerce-ring.js`/`commerce-flow.js` (Commerce Solutions), `growth-vortex.js`/`growth-funnel.js` (Retail Growth), `cloud-waves.js`/`cloud-river.js`/`cloud-scale.js` (Cloud & Data). When adding a new page, check the script block's `import('./*.js')` calls rather than assuming a fixed set.
 

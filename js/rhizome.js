@@ -418,8 +418,14 @@ export function initRhizome(host, opts = {}) {
         n.fx += -n.x * CENTER * n.m;
         n.fy += -n.y * CENTER * n.m;
         const BX = 1.04, BY = 0.74;
-        if (Math.abs(n.x) > BX) n.fx -= Math.sign(n.x) * (Math.abs(n.x) - BX) * 0.9 * n.m;
-        if (Math.abs(n.y) > BY) n.fy -= Math.sign(n.y) * (Math.abs(n.y) - BY) * 0.9 * n.m;
+        // el correctivo de borde es proporcional al desborde: si algo (una caída
+        // de fps, un frame con dt grande) empuja un nodo bien lejos del límite,
+        // la fuerza de vuelta también crece sin techo y con el integrador
+        // explícito eso diverge (rebota cada vez más lejos en vez de asentarse).
+        // Se limita cuánto desborde "cuenta" para que el correctivo nunca supere
+        // un empujón razonable, sea cual sea la distancia real.
+        if (Math.abs(n.x) > BX) n.fx -= Math.sign(n.x) * Math.min(Math.abs(n.x) - BX, 0.3) * 0.9 * n.m;
+        if (Math.abs(n.y) > BY) n.fy -= Math.sign(n.y) * Math.min(Math.abs(n.y) - BY, 0.3) * 0.9 * n.m;
         // deriva lenta: el trazo nunca queda del todo quieto
         if (n.kind >= 2) {
           n.fx += Math.sin(t * 0.5 + i * 1.7) * 0.0022;
@@ -493,21 +499,39 @@ export function initRhizome(host, opts = {}) {
       marks.map(m => {
         const n = nodes[hubs[m.i]];
         const sc = toScreen(n.x, n.y - 0.2, n.z);
-        m.sx = sc[0]; m.sy = sc[1];
+        // el des-colisionador tiene que trabajar sobre la MISMA posición que
+        // termina en pantalla: si calculaba sobre sc[0] crudo y el render de
+        // más abajo lo clampeaba al borde (right ? w-6 : w-100), dos chips que
+        // el proyector ponía lejos podían terminar pegadas al mismo borde sin
+        // que el des-colisionador se enterara — de ahí las superposiciones.
+        const right = sc[0] > w * 0.6;
+        m.right = right;
+        m.sx = Math.min(Math.max(sc[0], right ? padL + 100 : padL + 6), right ? w - 6 : w - 100);
+        // mismo motivo que sx: si el des-colisionador empuja "yy" más allá de lo
+        // que el render final permite (12..h-12), el clamp de abajo puede volver
+        // a juntar dos chips que el des-colisionador ya había separado.
+        m.sy = Math.min(Math.max(sc[1], 12), h - 12);
         return m;
       }).sort((a, b) => a.sy - b.sy).forEach(m => {
-        let yy = m.sy;
-        for (const p of seen) {
-          if (Math.abs(yy - p.y) < 17 && Math.abs(m.sx - p.x) < 190) yy = p.y + 18;
+        // empuja hacia abajo hasta no chocar con ninguna chip ya ubicada — un solo
+        // pase con un salto menor a la altura real de la chip (23px) dejaba
+        // superposiciones residuales cuando 2+ etiquetas caían cerca; ahora repite
+        // hasta estabilizar y el salto (28px) sí excede esa altura.
+        let yy = m.sy, moved = true;
+        while (moved) {
+          moved = false;
+          for (const p of seen) {
+            if (Math.abs(yy - p.y) < 28 && Math.abs(m.sx - p.x) < 210) { yy = p.y + 28; moved = true; }
+          }
         }
         seen.push({ x: m.sx, y: yy });
         m.sy = yy;
       });
 
       marks.forEach(m => {
-        const right = m.sx > w * 0.6;
-        m.b.style.left = Math.round(Math.min(Math.max(m.sx, right ? padL + 100 : padL + 6), right ? w - 6 : w - 100)) + 'px';
-        m.b.style.top = Math.round(Math.min(Math.max(m.sy, 12), h - 12)) + 'px';
+        const right = m.right;
+        m.b.style.left = Math.round(m.sx) + 'px';
+        m.b.style.top = Math.round(m.sy) + 'px';
         m.b.style.transform = right ? 'translate(-100%,-50%)' : 'translate(0,-50%)';
         m.b.style.flexDirection = right ? 'row-reverse' : 'row';
         const target = (hover && hover !== m ? 0.45 : 1) * clamp01(k * 1.6 - 0.2);

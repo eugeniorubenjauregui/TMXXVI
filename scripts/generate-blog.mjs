@@ -344,9 +344,17 @@ function footerHtml(upBase) {
 </a>`;
 }
 
-// Component script compartido por todas las páginas generadas: motion + mesh de
+// Component script compartido por todas las páginas generadas: motion + gráfico de
 // hero + mesh de footer. Nada de fetch/estado — todo el contenido ya es estático.
-function componentScript({ heroMeshTone }) {
+// `heroGraphic` decide qué se monta en #tm-mesh: 'mesh' (mismo fondo del resto del
+// sitio, usado en los posts) o 'antenna' (antena + ondas, firma de las páginas de
+// listado — ver broadcast-antenna.js).
+function componentScript({ heroMeshTone, heroGraphic = 'mesh' }) {
+  const heroMountJs = heroGraphic === 'antenna'
+    ? `this._mesh = mountGraphic('#tm-mesh', ()=> import('./js/broadcast-antenna.js'), 'initBroadcastAntenna',
+        { accent2: '#52C7CF', motion: this.props.motion });`
+    : `this._mesh = mountGraphic('#tm-mesh', ()=> import('./js/mesh-gradient.js'), 'initMeshGradient',
+        { tone: '${heroMeshTone}', motion: this.props.motion });`;
   return `class Component extends DCLogic {
   componentDidMount(){ this.start(0); this.mesh(); this.ftrMesh(); }
   componentDidUpdate(){ if(this._stop){ this._stop(); this._stop = null; } this.start(0); }
@@ -357,8 +365,7 @@ function componentScript({ heroMeshTone }) {
     if(this._mesh){ this._mesh(); this._mesh = null; }
     import('./js/mount-graphic.js').then(({ mountGraphic })=>{
       if(token !== this._mToken) return;
-      this._mesh = mountGraphic('#tm-mesh', ()=> import('./js/mesh-gradient.js'), 'initMeshGradient',
-        { tone: '${heroMeshTone}', motion: this.props.motion });
+      ${heroMountJs}
     });
   }
   ftrMesh(){
@@ -382,7 +389,21 @@ function componentScript({ heroMeshTone }) {
 }`;
 }
 
-function pageShell({ headHtml, bodyHtml, heroMeshTone }) {
+// Hints de precarga para el gráfico del hero: el módulo (y three.js, si aplica)
+// recién se piden cuando el Component monta, así que sin esto hay un pop-in
+// perceptible. mesh-gradient.js es CSS puro (sin three.js) — no tiene sentido
+// precargar el CDN de three.js ahí.
+function preloadLinks(upBase, heroGraphic) {
+  if (heroGraphic === 'antenna') {
+    return `<link rel="modulepreload" href="https://unpkg.com/three@0.160.0/build/three.module.js" crossorigin>
+<link rel="modulepreload" href="${upBase}js/mount-graphic.js">
+<link rel="modulepreload" href="${upBase}js/broadcast-antenna.js">`;
+  }
+  return `<link rel="modulepreload" href="${upBase}js/mount-graphic.js">
+<link rel="modulepreload" href="${upBase}js/mesh-gradient.js">`;
+}
+
+function pageShell({ headHtml, bodyHtml, heroMeshTone, heroGraphic = 'mesh' }) {
   return `<!DOCTYPE html>
 <html>
 <head>
@@ -412,7 +433,7 @@ ${bodyHtml}
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script>
-${componentScript({ heroMeshTone })}
+${componentScript({ heroMeshTone, heroGraphic })}
 </script>
 </body>
 </html>
@@ -522,6 +543,7 @@ function listingPage({ pageNum, totalPages, posts, categories, category }) {
 <script type="application/ld+json">
 ${jsonLdScript(breadcrumbLd)}
 </script>
+${preloadLinks(upBase, 'antenna')}
 <script src="${upBase}support.js"></script>`;
 
   let heroCopy;
@@ -577,7 +599,7 @@ ${jsonLdScript(breadcrumbLd)}
 ${contactSectionHtml()}
 ${footerHtml(upBase)}`;
 
-  return pageShell({ headHtml, bodyHtml, heroMeshTone: 'inicio' });
+  return pageShell({ headHtml, bodyHtml, heroMeshTone: 'inicio', heroGraphic: 'antenna' });
 }
 
 // Posts relacionados: primero los de la misma categoría (más recientes primero,
@@ -656,6 +678,7 @@ ${jsonLdScript(breadcrumbLd)}
 <script type="application/ld+json">
 ${jsonLdScript(articleLd)}
 </script>
+${preloadLinks(upBase, 'mesh')}
 <script src="${upBase}support.js"></script>`;
 
   const bodyHtml = `${headerHtml(upBase)}

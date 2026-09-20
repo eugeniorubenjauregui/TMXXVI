@@ -43,6 +43,9 @@
   ]
 }
 </script>
+<link rel="modulepreload" href="https://unpkg.com/three@0.160.0/build/three.module.js" crossorigin>
+<link rel="modulepreload" href="../js/mount-graphic.js">
+<link rel="modulepreload" href="../js/broadcast-antenna.js">
 <script src="../support.js"></script>
 </head>
 <body>
@@ -363,8 +366,8 @@ class Component extends DCLogic {
     if(this._mesh){ this._mesh(); this._mesh = null; }
     import('./js/mount-graphic.js').then(({ mountGraphic })=>{
       if(token !== this._mToken) return;
-      this._mesh = mountGraphic('#tm-mesh', ()=> import('./js/mesh-gradient.js'), 'initMeshGradient',
-        { tone: 'inicio', motion: this.props.motion });
+      this._mesh = mountGraphic('#tm-mesh', ()=> import('./js/broadcast-antenna.js'), 'initBroadcastAntenna',
+        { accent2: '#52C7CF', motion: this.props.motion });
     });
   }
   ftrMesh(){

@@ -36,6 +36,11 @@
   ]
 }
 </script>
+<link rel="modulepreload" href="https://unpkg.com/three@0.160.0/build/three.module.js" crossorigin>
+<link rel="modulepreload" href="./js/mount-graphic.js">
+<link rel="modulepreload" href="./js/mesh-gradient.js">
+<link rel="modulepreload" href="./js/rhizome.js">
+<link rel="modulepreload" href="./js/solar-system.js">
 <script src="./support.js"></script>
 </head>
 <body>
@@ -171,15 +176,15 @@ a:hover{color:var(--tm-accent2)}
           <div><a data-mag href="#tm-contacto" style="display:inline-flex;align-items:center;gap:12px;padding:16px 30px;background:var(--tm-accent);color:#141414;font-size:15px;font-weight:500;border:1px solid var(--tm-accent);transition:box-shadow .3s ease" style-hover="animation:tmglow 1.6s ease-in-out infinite">Hablemos de tu operación</a></div>
         </div>
       </div>
-      <div id="tm-rhizowrap" style="position:relative;z-index:0;min-height:300px">
-        <div id="tm-rhizome" role="group" aria-label="Rizoma de soluciones conectadas a la operación" style="width:134%;margin-left:-34%;aspect-ratio:1/.78;min-height:300px"></div>
+      <div id="tm-rhizowrap" style="position:relative;z-index:0;min-height:360px">
+        <div id="tm-rhizome" role="group" aria-label="Rizoma de soluciones conectadas a la operación" style="width:148%;margin-left:-38%;aspect-ratio:1/.78;min-height:360px"></div>
         <div style="display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:space-between;margin-top:14px;padding-top:13px;border-top:1px solid rgba(255,255,255,.1)">
           <p style="margin:0;font-size:12.5px;line-height:1.5;color:rgba(255,255,255,.62)">Una sola red: cinco soluciones enredadas entre sí y con tu operación.</p>
           <p data-rhizome-hint style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;color:rgba(255,255,255,.62)">ARRASTRA LOS NÚCLEOS</p>
         </div>
       </div>
-      <div id="tm-solarwrap" style="position:relative;min-height:300px">
-        <div id="tm-solar" role="group" aria-label="Sistema de soluciones alrededor de la operación del cliente" style="width:100%;aspect-ratio:540/470;min-height:300px"></div>
+      <div id="tm-solarwrap" style="position:relative;min-height:360px">
+        <div id="tm-solar" role="group" aria-label="Sistema de soluciones alrededor de la operación del cliente" style="width:116%;margin-left:-8%;aspect-ratio:540/470;min-height:360px"></div>
         <div style="display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:space-between;margin-top:14px;padding-top:13px;border-top:1px solid rgba(255,255,255,.1)">
           <p style="margin:0;font-size:12.5px;line-height:1.5;color:rgba(255,255,255,.62)">Tu operación en el centro. Cinco soluciones en órbita y el dato circulando entre ellas.</p>
           <p style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;color:rgba(255,255,255,.62)">PASA EL CURSOR</p>
