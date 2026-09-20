@@ -43,8 +43,9 @@
   ]
 }
 </script>
-<link rel="modulepreload" href="https://unpkg.com/three@0.160.0/build/three.module.js" crossorigin>
 <link rel="modulepreload" href="../js/mount-graphic.js">
+<link rel="modulepreload" href="../js/mesh-gradient.js">
+<link rel="modulepreload" href="https://unpkg.com/three@0.160.0/build/three.module.js" crossorigin>
 <link rel="modulepreload" href="../js/broadcast-antenna.js">
 <script src="../support.js"></script>
 </head>
@@ -99,7 +100,8 @@ article[data-rv]{transition:opacity .35s ease}
 .tm-pagination a:hover{color:var(--tm-accent);border-color:var(--tm-accent)}
 .tm-pagination span{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.1em;color:rgba(255,255,255,.5)}
 @media(max-width:1080px){#tm-burger{display:flex!important}#tm-nav{display:none!important;position:fixed;inset:78px 0 auto 0;flex-direction:column;align-items:stretch;gap:0;background:var(--tm-ink-deep);padding:12px clamp(24px,5vw,88px) 32px;border-bottom:1px solid rgba(255,255,255,.1);max-height:calc(100vh - 78px);overflow:auto}#tm-nav[data-open]{display:flex!important}#tm-nav>a,#tm-nav>div>button{padding:16px 0!important;border-bottom:1px solid rgba(255,255,255,.07);width:100%;text-align:left}#tm-bridge{display:none!important}#tm-drop{position:static!important;width:auto!important;border:0!important;padding:4px 0 12px!important;grid-template-columns:minmax(0,1fr)!important}#tm-cta{margin-top:18px;justify-content:center;border-bottom:0!important}#tm-form{grid-template-columns:minmax(0,1fr)!important}.tm-news-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
-@media(max-width:640px){.tm-news-grid{grid-template-columns:minmax(0,1fr)!important}}
+@media(max-width:900px){#tm-antenna{opacity:.5;width:70%!important;right:-14%!important}}
+@media(max-width:640px){.tm-news-grid{grid-template-columns:minmax(0,1fr)!important}#tm-antenna{display:none}}
 </style>
 </helmet>
 
@@ -141,10 +143,13 @@ article[data-rv]{transition:opacity .35s ease}
 
 <section style="padding:clamp(70px,9vw,124px) 0 clamp(56px,7vw,92px);position:relative;isolation:isolate;overflow:hidden">
   <div id="tm-mesh" aria-hidden="true"></div>
+  <div id="tm-antenna" aria-hidden="true" style="position:absolute;top:-12%;right:-4%;width:56%;height:132%;z-index:0"></div>
   <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px);position:relative;z-index:1">
-    <nav aria-label="Ruta" data-rv style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.58);margin:0 0 34px"><a href="../index.html" style="color:rgba(255,255,255,.58)">INICIO</a> <span style="padding:0 8px;color:var(--tm-accent)">/</span> <a href="../noticias.html" style="color:rgba(255,255,255,.58)">NOTICIAS</a> <span style="padding:0 8px;color:var(--tm-accent)">/</span> EXPERTOS ECOMMERCE</nav>
-    <p data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.2em;color:var(--tm-accent);margin:0 0 30px">TITA NEWS · IA, ECOMMERCE Y RETAIL EN LATAM</p>
-    <h1 data-split style="font-size:clamp(30px,3.9vw,50px);font-weight:300;line-height:1.1;letter-spacing:-.03em;color:#fff;margin:0;max-width:20ch;text-wrap:pretty">Expertos eCommerce</h1>
+    <div style="max-width:640px">
+      <nav aria-label="Ruta" data-rv style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.58);margin:0 0 34px"><a href="../index.html" style="color:rgba(255,255,255,.58)">INICIO</a> <span style="padding:0 8px;color:var(--tm-accent)">/</span> <a href="../noticias.html" style="color:rgba(255,255,255,.58)">NOTICIAS</a> <span style="padding:0 8px;color:var(--tm-accent)">/</span> EXPERTOS ECOMMERCE</nav>
+      <p data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.2em;color:var(--tm-accent);margin:0 0 30px">TITA NEWS · IA, ECOMMERCE Y RETAIL EN LATAM</p>
+      <h1 data-split style="font-size:clamp(30px,3.9vw,50px);font-weight:300;line-height:1.1;letter-spacing:-.03em;color:#fff;margin:0;max-width:20ch;text-wrap:pretty">Expertos eCommerce</h1>
+    </div>
   </div>
 </section>
 
@@ -267,17 +272,27 @@ article[data-rv]{transition:opacity .35s ease}
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  componentDidMount(){ this.start(0); this.mesh(); this.ftrMesh(); }
+  componentDidMount(){ this.start(0); this.mesh(); this.ftrMesh(); this.antenna(); }
   componentDidUpdate(){ if(this._stop){ this._stop(); this._stop = null; } this.start(0); }
-  componentWillUnmount(){ this._stop && this._stop(); this._mesh && this._mesh(); this._ftrMesh && this._ftrMesh(); }
+  componentWillUnmount(){ this._stop && this._stop(); this._mesh && this._mesh(); this._ftrMesh && this._ftrMesh(); this._antenna && this._antenna(); }
 
   mesh(){
     const token = (this._mToken = (this._mToken || 0) + 1);
     if(this._mesh){ this._mesh(); this._mesh = null; }
     import('./js/mount-graphic.js').then(({ mountGraphic })=>{
       if(token !== this._mToken) return;
-      this._mesh = mountGraphic('#tm-mesh', ()=> import('./js/broadcast-antenna.js'), 'initBroadcastAntenna',
-        { accent2: '#52C7CF', motion: this.props.motion });
+      this._mesh = mountGraphic('#tm-mesh', ()=> import('./js/mesh-gradient.js'), 'initMeshGradient',
+        { tone: 'inicio', motion: this.props.motion });
+    });
+  }
+  
+  antenna(){
+    const token = (this._aToken = (this._aToken || 0) + 1);
+    if(this._antenna){ this._antenna(); this._antenna = null; }
+    import('./js/mount-graphic.js').then(({ mountGraphic })=>{
+      if(token !== this._aToken) return;
+      this._antenna = mountGraphic('#tm-antenna', ()=> import('./js/broadcast-antenna.js'), 'initBroadcastAntenna',
+        { accent: '#80E593', accent2: '#52C7CF', motion: this.props.motion });
     });
   }
   ftrMesh(){

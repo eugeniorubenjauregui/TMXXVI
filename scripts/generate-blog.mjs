@@ -220,7 +220,8 @@ article[data-rv]{transition:opacity .35s ease}
 .tm-pagination a:hover{color:var(--tm-accent);border-color:var(--tm-accent)}
 .tm-pagination span{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.1em;color:rgba(255,255,255,.5)}
 @media(max-width:1080px){#tm-burger{display:flex!important}#tm-nav{display:none!important;position:fixed;inset:78px 0 auto 0;flex-direction:column;align-items:stretch;gap:0;background:var(--tm-ink-deep);padding:12px clamp(24px,5vw,88px) 32px;border-bottom:1px solid rgba(255,255,255,.1);max-height:calc(100vh - 78px);overflow:auto}#tm-nav[data-open]{display:flex!important}#tm-nav>a,#tm-nav>div>button{padding:16px 0!important;border-bottom:1px solid rgba(255,255,255,.07);width:100%;text-align:left}#tm-bridge{display:none!important}#tm-drop{position:static!important;width:auto!important;border:0!important;padding:4px 0 12px!important;grid-template-columns:minmax(0,1fr)!important}#tm-cta{margin-top:18px;justify-content:center;border-bottom:0!important}#tm-form{grid-template-columns:minmax(0,1fr)!important}.tm-news-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
-@media(max-width:640px){.tm-news-grid{grid-template-columns:minmax(0,1fr)!important}}`;
+@media(max-width:900px){#tm-antenna{opacity:.5;width:70%!important;right:-14%!important}}
+@media(max-width:640px){.tm-news-grid{grid-template-columns:minmax(0,1fr)!important}#tm-antenna{display:none}}`;
 
 function headerHtml(upBase) {
   return `<header id="tm-hdr" style="position:sticky;top:0;z-index:100;background:rgba(20,20,20,.74);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.08)">
@@ -350,24 +351,33 @@ function footerHtml(upBase) {
 // sitio, usado en los posts) o 'antenna' (antena + ondas, firma de las páginas de
 // listado — ver broadcast-antenna.js).
 function componentScript({ heroMeshTone, heroGraphic = 'mesh' }) {
-  const heroMountJs = heroGraphic === 'antenna'
-    ? `this._mesh = mountGraphic('#tm-mesh', ()=> import('./js/broadcast-antenna.js'), 'initBroadcastAntenna',
-        { accent2: '#52C7CF', motion: this.props.motion });`
-    : `this._mesh = mountGraphic('#tm-mesh', ()=> import('./js/mesh-gradient.js'), 'initMeshGradient',
-        { tone: '${heroMeshTone}', motion: this.props.motion });`;
+  const antennaMethod = heroGraphic === 'antenna' ? `
+  antenna(){
+    const token = (this._aToken = (this._aToken || 0) + 1);
+    if(this._antenna){ this._antenna(); this._antenna = null; }
+    import('./js/mount-graphic.js').then(({ mountGraphic })=>{
+      if(token !== this._aToken) return;
+      this._antenna = mountGraphic('#tm-antenna', ()=> import('./js/broadcast-antenna.js'), 'initBroadcastAntenna',
+        { accent: '#80E593', accent2: '#52C7CF', motion: this.props.motion });
+    });
+  }` : '';
+  const antennaMount = heroGraphic === 'antenna' ? ' this.antenna();' : '';
+  const antennaUnmount = heroGraphic === 'antenna' ? ' this._antenna && this._antenna();' : '';
   return `class Component extends DCLogic {
-  componentDidMount(){ this.start(0); this.mesh(); this.ftrMesh(); }
+  componentDidMount(){ this.start(0); this.mesh(); this.ftrMesh();${antennaMount} }
   componentDidUpdate(){ if(this._stop){ this._stop(); this._stop = null; } this.start(0); }
-  componentWillUnmount(){ this._stop && this._stop(); this._mesh && this._mesh(); this._ftrMesh && this._ftrMesh(); }
+  componentWillUnmount(){ this._stop && this._stop(); this._mesh && this._mesh(); this._ftrMesh && this._ftrMesh();${antennaUnmount} }
 
   mesh(){
     const token = (this._mToken = (this._mToken || 0) + 1);
     if(this._mesh){ this._mesh(); this._mesh = null; }
     import('./js/mount-graphic.js').then(({ mountGraphic })=>{
       if(token !== this._mToken) return;
-      ${heroMountJs}
+      this._mesh = mountGraphic('#tm-mesh', ()=> import('./js/mesh-gradient.js'), 'initMeshGradient',
+        { tone: '${heroMeshTone}', motion: this.props.motion });
     });
   }
+  ${antennaMethod}
   ftrMesh(){
     const token = (this._fToken = (this._fToken || 0) + 1);
     if(this._ftrMesh){ this._ftrMesh(); this._ftrMesh = null; }
@@ -394,13 +404,14 @@ function componentScript({ heroMeshTone, heroGraphic = 'mesh' }) {
 // perceptible. mesh-gradient.js es CSS puro (sin three.js) — no tiene sentido
 // precargar el CDN de three.js ahí.
 function preloadLinks(upBase, heroGraphic) {
+  const base = `<link rel="modulepreload" href="${upBase}js/mount-graphic.js">
+<link rel="modulepreload" href="${upBase}js/mesh-gradient.js">`;
   if (heroGraphic === 'antenna') {
-    return `<link rel="modulepreload" href="https://unpkg.com/three@0.160.0/build/three.module.js" crossorigin>
-<link rel="modulepreload" href="${upBase}js/mount-graphic.js">
+    return `${base}
+<link rel="modulepreload" href="https://unpkg.com/three@0.160.0/build/three.module.js" crossorigin>
 <link rel="modulepreload" href="${upBase}js/broadcast-antenna.js">`;
   }
-  return `<link rel="modulepreload" href="${upBase}js/mount-graphic.js">
-<link rel="modulepreload" href="${upBase}js/mesh-gradient.js">`;
+  return base;
 }
 
 function pageShell({ headHtml, bodyHtml, heroMeshTone, heroGraphic = 'mesh' }) {
@@ -577,10 +588,13 @@ ${preloadLinks(upBase, 'antenna')}
 
 <section style="padding:clamp(70px,9vw,124px) 0 clamp(56px,7vw,92px);position:relative;isolation:isolate;overflow:hidden">
   <div id="tm-mesh" aria-hidden="true"></div>
+  <div id="tm-antenna" aria-hidden="true" style="position:absolute;top:-12%;right:-4%;width:56%;height:132%;z-index:0"></div>
   <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px);position:relative;z-index:1">
-    <nav aria-label="Ruta" data-rv style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.58);margin:0 0 34px">${breadcrumbNav}</nav>
-    <p data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.2em;color:var(--tm-accent);margin:0 0 30px">TITA NEWS · IA, ECOMMERCE Y RETAIL EN LATAM</p>
-    ${heroCopy}
+    <div style="max-width:640px">
+      <nav aria-label="Ruta" data-rv style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.58);margin:0 0 34px">${breadcrumbNav}</nav>
+      <p data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.2em;color:var(--tm-accent);margin:0 0 30px">TITA NEWS · IA, ECOMMERCE Y RETAIL EN LATAM</p>
+      ${heroCopy}
+    </div>
   </div>
 </section>
 
