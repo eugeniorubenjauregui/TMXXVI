@@ -98,6 +98,14 @@ a:hover{color:var(--tm-accent2)}
 #tmcur[data-on]{opacity:1;transform:scale(1)}
 .tm-news-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.11)}
 [data-news-card]{background:var(--tm-ink);display:flex;flex-direction:column}
+article[data-rv]{transition:opacity .35s ease}
+.tm-news-grid:hover>article[data-rv]{opacity:.4}
+.tm-news-grid>article[data-rv]:hover{opacity:1}
+@media(prefers-reduced-motion:reduce){article[data-rv]{transition:none}}
+.tm-cat-filter{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 clamp(36px,4vw,52px)}
+.tm-cat-pill{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.68);border:1px solid rgba(255,255,255,.2);padding:9px 16px;transition:color .25s,border-color .25s,background .25s}
+.tm-cat-pill:hover{color:#fff;border-color:rgba(255,255,255,.5)}
+.tm-cat-pill.is-active{color:#141414;background:var(--tm-accent);border-color:var(--tm-accent)}
 [data-news-thumb]{display:block;position:relative;aspect-ratio:16/10;overflow:hidden;background-color:#101111;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.05) 0 2px,transparent 2px 10px)}
 [data-news-thumb] img{width:100%;height:100%;object-fit:cover;display:block}
 [data-news-fallback]{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;color:rgba(255,255,255,.5);text-align:center;padding:0 16px}
@@ -198,6 +206,58 @@ a:hover{color:var(--tm-accent2)}
   </div>
 </section>
 
+<section style="padding:0 0 clamp(80px,10vw,120px)">
+  <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
+    <p data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:var(--tm-accent);border-bottom:1px solid var(--tm-accent);padding-bottom:7px;margin:0 0 clamp(36px,4vw,52px)">TAMBIÉN TE PUEDE INTERESAR</p>
+    <div class="tm-news-grid">
+      <article data-rv style="background:var(--tm-ink);display:flex;flex-direction:column">
+  <a href="del-grano-a-la-pantalla-la-alianza-integral-entre-vtex-tita-media-y-juan-valdez-cafe.html" data-cursor="LEER MÁS" data-news-thumb>
+    <img src="https://titamedia.com/wp-content/uploads/2024/05/juan_valdez-768x352.jpg" alt="Del Grano a la Pantalla: La Alianza Integral entre VTEX, Tita Media y Juan Valdez Café" loading="lazy">
+    <span data-news-fallback>Casos de Éxito</span>
+  </a>
+  <div data-news-body>
+    <p style="margin:0;display:flex;align-items:center;gap:10px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em">
+      <span style="color:var(--tm-accent)">CASOS DE ÉXITO</span><span style="color:rgba(255,255,255,.3)">·</span>
+      <span style="color:rgba(255,255,255,.5)">9 de may de 2024</span>
+    </p>
+    <h3 style="font-size:clamp(18px,1.6vw,21px);font-weight:500;letter-spacing:-.01em;color:#fff;margin:0;line-height:1.32">Del Grano a la Pantalla: La Alianza Integral entre VTEX, Tita Media y Juan Valdez Café</h3>
+    <p style="font-size:14.5px;line-height:1.62;color:rgba(255,255,255,.68);margin:0;flex:1">Tita Media se enorgullece de presentar una emocionante colaboración entre VTEX, Tita Media y Juan Valdez Café, que promete llevar el incomparable…</p>
+    <a href="del-grano-a-la-pantalla-la-alianza-integral-entre-vtex-tita-media-y-juan-valdez-cafe.html" data-cursor="LEER MÁS" style="margin-top:6px;font-size:14px;font-weight:500;color:var(--tm-accent);border-bottom:1px solid var(--tm-accent);padding-bottom:3px;align-self:flex-start">Leer más</a>
+  </div>
+</article>
+      <article data-rv style="background:var(--tm-ink);display:flex;flex-direction:column">
+  <a href="nike-mercado-pago-vtex-y-tita-media-una-alianza-transformadora-para-el-comercio-digital-en-colombia.html" data-cursor="LEER MÁS" data-news-thumb>
+    <img src="https://titamedia.com/wp-content/uploads/2024/04/1712206175334-768x403.jpeg" alt="Nike, Mercado Pago, VTEX y Tita Media: Una Alianza Transformadora para el Comercio Digital en Colombia" loading="lazy">
+    <span data-news-fallback>Casos de Éxito</span>
+  </a>
+  <div data-news-body>
+    <p style="margin:0;display:flex;align-items:center;gap:10px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em">
+      <span style="color:var(--tm-accent)">CASOS DE ÉXITO</span><span style="color:rgba(255,255,255,.3)">·</span>
+      <span style="color:rgba(255,255,255,.5)">12 de abr de 2024</span>
+    </p>
+    <h3 style="font-size:clamp(18px,1.6vw,21px);font-weight:500;letter-spacing:-.01em;color:#fff;margin:0;line-height:1.32">Nike, Mercado Pago, VTEX y Tita Media: Una Alianza Transformadora para el Comercio Digital en Colombia</h3>
+    <p style="font-size:14.5px;line-height:1.62;color:rgba(255,255,255,.68);margin:0;flex:1">¡El lanzamiento del e-commerce de Nike en Colombia ha sido un acontecimiento trascendental que marca un hito significativo en la evolución del…</p>
+    <a href="nike-mercado-pago-vtex-y-tita-media-una-alianza-transformadora-para-el-comercio-digital-en-colombia.html" data-cursor="LEER MÁS" style="margin-top:6px;font-size:14px;font-weight:500;color:var(--tm-accent);border-bottom:1px solid var(--tm-accent);padding-bottom:3px;align-self:flex-start">Leer más</a>
+  </div>
+</article>
+      <article data-rv style="background:var(--tm-ink);display:flex;flex-direction:column">
+  <a href="caso-de-exito-ux-ui-mario-hernandez.html" data-cursor="LEER MÁS" data-news-thumb>
+    <img src="https://titamedia.com/wp-content/uploads/2023/12/Captura-de-pantalla-2023-12-28-102216-768x311.jpg" alt="Caso de éxito UX UI: Mario Hernandez" loading="lazy">
+    <span data-news-fallback>Casos de Éxito</span>
+  </a>
+  <div data-news-body>
+    <p style="margin:0;display:flex;align-items:center;gap:10px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em">
+      <span style="color:var(--tm-accent)">CASOS DE ÉXITO</span><span style="color:rgba(255,255,255,.3)">·</span>
+      <span style="color:rgba(255,255,255,.5)">28 de dic de 2023</span>
+    </p>
+    <h3 style="font-size:clamp(18px,1.6vw,21px);font-weight:500;letter-spacing:-.01em;color:#fff;margin:0;line-height:1.32">Caso de éxito UX UI: Mario Hernandez</h3>
+    <p style="font-size:14.5px;line-height:1.62;color:rgba(255,255,255,.68);margin:0;flex:1">Migración y renovación de la experiencia de compra en una tienda de lujo totalmente funcional. En Tita comprendemos que la renovación de un…</p>
+    <a href="caso-de-exito-ux-ui-mario-hernandez.html" data-cursor="LEER MÁS" style="margin-top:6px;font-size:14px;font-weight:500;color:var(--tm-accent);border-bottom:1px solid var(--tm-accent);padding-bottom:3px;align-self:flex-start">Leer más</a>
+  </div>
+</article>
+    </div>
+  </div>
+</section>
 <section id="tm-contacto" style="background:var(--tm-panel);padding:clamp(84px,10vw,148px) 0">
   <div style="max-width:900px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
     <h2 data-split style="font-size:clamp(28px,3.6vw,46px);font-weight:300;line-height:1.13;letter-spacing:-.028em;color:#fff;margin:0;max-width:14ch">Hablemos de tu negocio.</h2>

@@ -68,6 +68,14 @@ a:hover{color:var(--tm-accent2)}
 #tmcur[data-on]{opacity:1;transform:scale(1)}
 .tm-news-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.11)}
 [data-news-card]{background:var(--tm-ink);display:flex;flex-direction:column}
+article[data-rv]{transition:opacity .35s ease}
+.tm-news-grid:hover>article[data-rv]{opacity:.4}
+.tm-news-grid>article[data-rv]:hover{opacity:1}
+@media(prefers-reduced-motion:reduce){article[data-rv]{transition:none}}
+.tm-cat-filter{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 clamp(36px,4vw,52px)}
+.tm-cat-pill{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.68);border:1px solid rgba(255,255,255,.2);padding:9px 16px;transition:color .25s,border-color .25s,background .25s}
+.tm-cat-pill:hover{color:#fff;border-color:rgba(255,255,255,.5)}
+.tm-cat-pill.is-active{color:#141414;background:var(--tm-accent);border-color:var(--tm-accent)}
 [data-news-thumb]{display:block;position:relative;aspect-ratio:16/10;overflow:hidden;background-color:#101111;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.05) 0 2px,transparent 2px 10px)}
 [data-news-thumb] img{width:100%;height:100%;object-fit:cover;display:block}
 [data-news-fallback]{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;color:rgba(255,255,255,.5);text-align:center;padding:0 16px}
@@ -141,6 +149,7 @@ a:hover{color:var(--tm-accent2)}
 
 <section style="padding:clamp(80px,10vw,140px) 0">
   <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
+    <div class="tm-cat-filter" data-rv role="group" aria-label="Filtrar por categoría"><a href="../noticias.html" class="tm-cat-pill is-active" aria-current="true">Todas</a><a href="categoria-ecommerce.html" class="tm-cat-pill">Ecommerce</a><a href="categoria-implementaciones.html" class="tm-cat-pill">Implementaciones</a><a href="categoria-agentes-ia.html" class="tm-cat-pill">Agentes IA</a><a href="categoria-informativo.html" class="tm-cat-pill">Informativo</a><a href="categoria-ia.html" class="tm-cat-pill">IA</a><a href="categoria-casos-de-exito.html" class="tm-cat-pill">Casos de Éxito</a><a href="categoria-estrategias-de-ventas-ecommerce.html" class="tm-cat-pill">Estrategias de ventas eCommerce</a><a href="categoria-cro.html" class="tm-cat-pill">CRO</a><a href="categoria-expertos-ecommerce.html" class="tm-cat-pill">Expertos eCommerce</a><a href="categoria-plataformas-ecommerce.html" class="tm-cat-pill">Plataformas eCommerce</a></div>
     <div class="tm-news-grid">
       <article data-rv style="background:var(--tm-ink);display:flex;flex-direction:column">
   <a href="el-delicado-equilibrio-entre-anuncios-pagados-y-seo-en-e-commerce.html" data-cursor="LEER MÁS" data-news-thumb>

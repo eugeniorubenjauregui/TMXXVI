@@ -7,10 +7,11 @@
 // Uso: node scripts/generate-blog.mjs   (Node >=18, sin dependencias — fetch/fs nativos)
 //
 // Archivos que este script POSEE y sobrescribe en cada corrida (no editar a mano):
-//   - noticias.html            (listado, página 1)
-//   - noticias/pagina-N.html   (listado, páginas siguientes)
-//   - noticias/<slug>.html     (un archivo por post)
-//   - sitemap.xml              (regenerado completo)
+//   - noticias.html                        (listado "todas", página 1)
+//   - noticias/pagina-N.html               (listado "todas", páginas siguientes)
+//   - noticias/categoria-<slug>[-pagina-N].html  (listado filtrado por categoría)
+//   - noticias/<slug>.html                 (un archivo por post)
+//   - sitemap.xml                          (regenerado completo)
 //
 // Si el markup de SiteHeader.dc.html / SiteFooter.dc.html cambia, hay que reflejar
 // el cambio también en HEADER_HTML/FOOTER_HTML de este script y volver a correrlo.
@@ -132,6 +133,7 @@ function extractPost(wp) {
   const heroImage = (media && media.source_url) || listImage;
   const terms = (embedded['wp:term'] || [])[0] || [];
   const category = terms[0] ? decodeHtmlText(terms[0].name) : '';
+  const categorySlug = terms[0] ? terms[0].slug : '';
   const title = decodeHtmlText(wp.title?.rendered || '');
   const dateObj = new Date(wp.date);
   const modifiedObj = new Date(wp.modified || wp.date);
@@ -146,11 +148,27 @@ function extractPost(wp) {
     heroImage,
     imageAlt: (media && media.alt_text) || title,
     category,
+    categorySlug,
     categoryLabel: category || 'TITA NEWS',
     dateLabel: dateFmt.format(dateObj),
     dateIso: dateObj.toISOString(),
     modifiedIso: modifiedObj.toISOString()
   };
+}
+
+// Agrupa los posts por su categoría principal (la primera de wp:term). Devuelve
+// un array ordenado por cantidad de posts desc (empate: alfabético) — es el
+// orden en que aparecen los pills de filtro.
+const UNCATEGORIZED_SLUGS = new Set(['sin-categoria', 'uncategorized', 'uncategorized-en']);
+
+function buildCategoryIndex(posts) {
+  const bySlug = new Map();
+  for (const p of posts) {
+    if (!p.categorySlug || UNCATEGORIZED_SLUGS.has(p.categorySlug)) continue;
+    if (!bySlug.has(p.categorySlug)) bySlug.set(p.categorySlug, { slug: p.categorySlug, name: p.category, posts: [] });
+    bySlug.get(p.categorySlug).posts.push(p);
+  }
+  return [...bySlug.values()].sort((a, b) => b.posts.length - a.posts.length || a.name.localeCompare(b.name));
 }
 
 // ---------------------------------------------------------------------------
@@ -174,6 +192,14 @@ a:hover{color:var(--tm-accent2)}
 #tmcur[data-on]{opacity:1;transform:scale(1)}
 .tm-news-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.11)}
 [data-news-card]{background:var(--tm-ink);display:flex;flex-direction:column}
+article[data-rv]{transition:opacity .35s ease}
+.tm-news-grid:hover>article[data-rv]{opacity:.4}
+.tm-news-grid>article[data-rv]:hover{opacity:1}
+@media(prefers-reduced-motion:reduce){article[data-rv]{transition:none}}
+.tm-cat-filter{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 clamp(36px,4vw,52px)}
+.tm-cat-pill{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.68);border:1px solid rgba(255,255,255,.2);padding:9px 16px;transition:color .25s,border-color .25s,background .25s}
+.tm-cat-pill:hover{color:#fff;border-color:rgba(255,255,255,.5)}
+.tm-cat-pill.is-active{color:#141414;background:var(--tm-accent);border-color:var(--tm-accent)}
 [data-news-thumb]{display:block;position:relative;aspect-ratio:16/10;overflow:hidden;background-color:#101111;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.05) 0 2px,transparent 2px 10px)}
 [data-news-thumb] img{width:100%;height:100%;object-fit:cover;display:block}
 [data-news-fallback]{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;color:rgba(255,255,255,.5);text-align:center;padding:0 16px}
@@ -416,8 +442,7 @@ function cardHtml(post, siblingPrefix) {
 </article>`;
 }
 
-function paginationHtml({ pageNum, totalPages, upBase, siblingPrefix }) {
-  const hrefFor = (n) => (n === 1 ? `${upBase}noticias.html` : `${siblingPrefix}pagina-${n}.html`);
+function paginationHtml({ pageNum, totalPages, hrefFor }) {
   const prev = pageNum > 1 ? `<a href="${hrefFor(pageNum - 1)}">← Anterior</a>` : '<span></span>';
   const next = pageNum < totalPages ? `<a href="${hrefFor(pageNum + 1)}">Siguiente →</a>` : '<span></span>';
   return `<div class="tm-pagination">
@@ -427,24 +452,57 @@ function paginationHtml({ pageNum, totalPages, upBase, siblingPrefix }) {
 </div>`;
 }
 
+// Fila de pills "Todas" + una por categoría (solo categorías con posts). Son
+// links reales a páginas generadas — no hay filtro por JS, cada categoría es
+// su propia página estática paginada (mismo motivo que el resto del blog:
+// URLs indexables, cero estado en el navegador).
+function categoryFilterHtml({ categories, activeSlug, upBase, siblingPrefix }) {
+  const allActive = !activeSlug;
+  const pills = [
+    `<a href="${upBase}noticias.html" class="tm-cat-pill${allActive ? ' is-active' : ''}"${allActive ? ' aria-current="true"' : ''}>Todas</a>`,
+    ...categories.map((c) => {
+      const active = activeSlug === c.slug;
+      const href = `${siblingPrefix}categoria-${c.slug}.html`;
+      return `<a href="${href}" class="tm-cat-pill${active ? ' is-active' : ''}"${active ? ' aria-current="true"' : ''}>${escapeHtml(c.name)}</a>`;
+    })
+  ];
+  return `<div class="tm-cat-filter" data-rv role="group" aria-label="Filtrar por categoría">${pills.join('')}</div>`;
+}
+
 // ---------------------------------------------------------------------------
-// Página de listado (raíz = página 1, o noticias/pagina-N.html)
+// Página de listado — sirve tanto para "todas" (raíz = página 1, o
+// noticias/pagina-N.html) como para una categoría (noticias/categoria-X.html,
+// noticias/categoria-X-pagina-N.html) pasando `category: {slug, name}`.
 // ---------------------------------------------------------------------------
 
-function listingPage({ pageNum, totalPages, posts }) {
-  const isRoot = pageNum === 1;
+function listingPage({ pageNum, totalPages, posts, categories, category }) {
+  const isRoot = !category && pageNum === 1;
   const upBase = isRoot ? '' : '../';
   const siblingPrefix = isRoot ? 'noticias/' : '';
-  const canonical = isRoot ? `${SITE}/noticias.html` : `${SITE}/noticias/pagina-${pageNum}.html`;
-  const titleSuffix = isRoot ? '' : ` — Página ${pageNum}`;
-  const title = `Noticias${titleSuffix} | Tita Media`;
-  const description = 'Noticias, análisis y casos sobre IA, ecommerce y transformación digital del retail en Latinoamérica. Todas las publicaciones del blog de Tita Media.';
+  const fileStem = category ? `categoria-${category.slug}` : null;
+
+  const hrefFor = (n) => {
+    if (!category) return n === 1 ? `${upBase}noticias.html` : `${siblingPrefix}pagina-${n}.html`;
+    return `${siblingPrefix}${fileStem}${n === 1 ? '' : `-pagina-${n}`}.html`;
+  };
+  const canonical = category
+    ? `${SITE}/noticias/${fileStem}${pageNum === 1 ? '' : `-pagina-${pageNum}`}.html`
+    : (isRoot ? `${SITE}/noticias.html` : `${SITE}/noticias/pagina-${pageNum}.html`);
+
+  const titleBase = category ? `Noticias · ${category.name}` : 'Noticias';
+  const titleSuffix = pageNum === 1 ? '' : ` — Página ${pageNum}`;
+  const title = `${titleBase}${titleSuffix} | Tita Media`;
+  const description = category
+    ? `Publicaciones de Tita Media en la categoría ${category.name}: IA, ecommerce y transformación digital del retail en Latinoamérica.`
+    : 'Noticias, análisis y casos sobre IA, ecommerce y transformación digital del retail en Latinoamérica. Todas las publicaciones del blog de Tita Media.';
 
   const breadcrumbItems = [
     { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${SITE}/` },
     { '@type': 'ListItem', position: 2, name: 'Noticias', item: `${SITE}/noticias.html` }
   ];
-  if (!isRoot) breadcrumbItems.push({ '@type': 'ListItem', position: 3, name: `Página ${pageNum}`, item: canonical });
+  let pos = 3;
+  if (category) breadcrumbItems.push({ '@type': 'ListItem', position: pos++, name: category.name, item: `${SITE}/noticias/categoria-${category.slug}.html` });
+  if (pageNum > 1) breadcrumbItems.push({ '@type': 'ListItem', position: pos++, name: `Página ${pageNum}`, item: canonical });
   const breadcrumbLd = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: breadcrumbItems };
 
   const headHtml = `<title>${escapeHtml(title)}</title>
@@ -466,17 +524,39 @@ ${jsonLdScript(breadcrumbLd)}
 </script>
 <script src="${upBase}support.js"></script>`;
 
-  const heroCopy = isRoot
-    ? `<h1 data-split style="font-size:clamp(32px,4.3vw,54px);font-weight:300;line-height:1.07;letter-spacing:-.032em;color:#fff;margin:0;max-width:20ch;text-wrap:pretty">Lo último que estamos leyendo, probando y construyendo en retail digital.</h1>
-    <p data-rv style="font-size:clamp(15.5px,1.2vw,18px);line-height:1.68;color:rgba(255,255,255,.72);margin:26px 0 0;max-width:62ch">Análisis, casos y noticias sobre IA, ecommerce y transformación digital, publicadas por el equipo de Tita Media.</p>`
-    : `<h1 data-split style="font-size:clamp(28px,3.6vw,44px);font-weight:300;line-height:1.1;letter-spacing:-.028em;color:#fff;margin:0;max-width:20ch;text-wrap:pretty">Noticias — página ${pageNum}</h1>`;
+  let heroCopy;
+  if (category && pageNum === 1) {
+    heroCopy = `<h1 data-split style="font-size:clamp(30px,3.9vw,50px);font-weight:300;line-height:1.1;letter-spacing:-.03em;color:#fff;margin:0;max-width:20ch;text-wrap:pretty">${escapeHtml(category.name)}</h1>`;
+  } else if (category) {
+    heroCopy = `<h1 data-split style="font-size:clamp(28px,3.6vw,44px);font-weight:300;line-height:1.1;letter-spacing:-.028em;color:#fff;margin:0;max-width:20ch;text-wrap:pretty">${escapeHtml(category.name)} — página ${pageNum}</h1>`;
+  } else if (isRoot) {
+    heroCopy = `<h1 data-split style="font-size:clamp(32px,4.3vw,54px);font-weight:300;line-height:1.07;letter-spacing:-.032em;color:#fff;margin:0;max-width:20ch;text-wrap:pretty">Lo último que estamos leyendo, probando y construyendo en retail digital.</h1>
+    <p data-rv style="font-size:clamp(15.5px,1.2vw,18px);line-height:1.68;color:rgba(255,255,255,.72);margin:26px 0 0;max-width:62ch">Análisis, casos y noticias sobre IA, ecommerce y transformación digital, publicadas por el equipo de Tita Media.</p>`;
+  } else {
+    heroCopy = `<h1 data-split style="font-size:clamp(28px,3.6vw,44px);font-weight:300;line-height:1.1;letter-spacing:-.028em;color:#fff;margin:0;max-width:20ch;text-wrap:pretty">Noticias — página ${pageNum}</h1>`;
+  }
+
+  const crumbSep = ' <span style="padding:0 8px;color:var(--tm-accent)">/</span> ';
+  const crumbs = [`<a href="${upBase}index.html" style="color:rgba(255,255,255,.58)">INICIO</a>`];
+  if (isRoot) {
+    crumbs.push('NOTICIAS');
+  } else {
+    crumbs.push(`<a href="${upBase}noticias.html" style="color:rgba(255,255,255,.58)">NOTICIAS</a>`);
+    if (category) {
+      crumbs.push(pageNum === 1
+        ? escapeHtml(category.name.toUpperCase())
+        : `<a href="${siblingPrefix}${fileStem}.html" style="color:rgba(255,255,255,.58)">${escapeHtml(category.name.toUpperCase())}</a>`);
+    }
+    if (pageNum > 1) crumbs.push(`PÁGINA ${pageNum}`);
+  }
+  const breadcrumbNav = crumbs.join(crumbSep);
 
   const bodyHtml = `${headerHtml(upBase)}
 
 <section style="padding:clamp(70px,9vw,124px) 0 clamp(56px,7vw,92px);position:relative;isolation:isolate;overflow:hidden">
   <div id="tm-mesh" aria-hidden="true"></div>
   <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px);position:relative;z-index:1">
-    <nav aria-label="Ruta" data-rv style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.58);margin:0 0 34px"><a href="${upBase}index.html" style="color:rgba(255,255,255,.58)">INICIO</a> <span style="padding:0 8px;color:var(--tm-accent)">/</span> ${isRoot ? 'NOTICIAS' : `<a href="${upBase}noticias.html" style="color:rgba(255,255,255,.58)">NOTICIAS</a> <span style="padding:0 8px;color:var(--tm-accent)">/</span> PÁGINA ${pageNum}`}</nav>
+    <nav aria-label="Ruta" data-rv style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.58);margin:0 0 34px">${breadcrumbNav}</nav>
     <p data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.2em;color:var(--tm-accent);margin:0 0 30px">TITA NEWS · IA, ECOMMERCE Y RETAIL EN LATAM</p>
     ${heroCopy}
   </div>
@@ -486,10 +566,11 @@ ${jsonLdScript(breadcrumbLd)}
 
 <section style="padding:clamp(80px,10vw,140px) 0">
   <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
+    ${categoryFilterHtml({ categories, activeSlug: category?.slug, upBase, siblingPrefix })}
     <div class="tm-news-grid">
       ${posts.map((p) => cardHtml(p, siblingPrefix)).join('\n      ')}
     </div>
-    ${paginationHtml({ pageNum, totalPages, upBase, siblingPrefix })}
+    ${paginationHtml({ pageNum, totalPages, hrefFor })}
   </div>
 </section>
 
@@ -499,11 +580,35 @@ ${footerHtml(upBase)}`;
   return pageShell({ headHtml, bodyHtml, heroMeshTone: 'inicio' });
 }
 
+// Posts relacionados: primero los de la misma categoría (más recientes primero,
+// ya vienen ordenados así), completando con los más recientes del resto si la
+// categoría no alcanza para `count` — así la sección nunca queda vacía o a medias.
+function pickRelated(post, allPosts, count = 3) {
+  const sameCategory = post.categorySlug
+    ? allPosts.filter((p) => p.slug !== post.slug && p.categorySlug === post.categorySlug)
+    : [];
+  if (sameCategory.length >= count) return sameCategory.slice(0, count);
+  const rest = allPosts.filter((p) => p.slug !== post.slug && !sameCategory.includes(p));
+  return [...sameCategory, ...rest].slice(0, count);
+}
+
+function relatedPostsHtml(related) {
+  if (!related.length) return '';
+  return `<section style="padding:0 0 clamp(80px,10vw,120px)">
+  <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
+    <p data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:var(--tm-accent);border-bottom:1px solid var(--tm-accent);padding-bottom:7px;margin:0 0 clamp(36px,4vw,52px)">TAMBIÉN TE PUEDE INTERESAR</p>
+    <div class="tm-news-grid">
+      ${related.map((p) => cardHtml(p, '')).join('\n      ')}
+    </div>
+  </div>
+</section>`;
+}
+
 // ---------------------------------------------------------------------------
 // Página de post individual (siempre en noticias/<slug>.html)
 // ---------------------------------------------------------------------------
 
-function postPage(post) {
+function postPage(post, related) {
   const upBase = '../';
   const canonical = `${SITE}/noticias/${post.slug}.html`;
   const title = `${post.title} | Tita Media`;
@@ -577,6 +682,7 @@ ${post.heroImage ? `<div data-rv style="max-width:1100px;margin:0 auto clamp(48p
   </div>
 </section>
 
+${relatedPostsHtml(related)}
 ${contactSectionHtml()}
 ${footerHtml(upBase)}`;
 
@@ -587,7 +693,7 @@ ${footerHtml(upBase)}`;
 // sitemap.xml
 // ---------------------------------------------------------------------------
 
-function sitemapXml({ posts, totalPages }) {
+function sitemapXml({ posts, totalPages, categories, categoryPageCount }) {
   const today = new Date().toISOString().slice(0, 10);
   const urls = [
     { loc: `${SITE}/`, lastmod: today, changefreq: 'monthly', priority: '1.0' },
@@ -600,6 +706,13 @@ function sitemapXml({ posts, totalPages }) {
   ];
   for (let n = 2; n <= totalPages; n++) {
     urls.push({ loc: `${SITE}/noticias/pagina-${n}.html`, lastmod: today, changefreq: 'weekly', priority: '0.4' });
+  }
+  for (const cat of categories) {
+    const catTotalPages = categoryPageCount[cat.slug] || 1;
+    for (let n = 1; n <= catTotalPages; n++) {
+      const loc = n === 1 ? `${SITE}/noticias/categoria-${cat.slug}.html` : `${SITE}/noticias/categoria-${cat.slug}-pagina-${n}.html`;
+      urls.push({ loc, lastmod: today, changefreq: 'weekly', priority: '0.5' });
+    }
   }
   for (const p of posts) {
     urls.push({
@@ -626,13 +739,15 @@ async function main() {
 
   const posts = rawPosts.map(extractPost);
 
-  const collisions = posts.filter((p) => /^pagina-\d+$/.test(p.slug));
+  const collisions = posts.filter((p) => /^pagina-\d+$/.test(p.slug) || p.slug.startsWith('categoria-'));
   if (collisions.length) {
     throw new Error(
-      `Slug(s) en colisión con el patrón de paginación "pagina-N": ${collisions.map((c) => c.slug).join(', ')}. ` +
+      `Slug(s) en colisión con el esquema de nombres de listado ("pagina-N" / "categoria-*"): ${collisions.map((c) => c.slug).join(', ')}. ` +
       'Ajustar el esquema de nombres antes de continuar.'
     );
   }
+
+  const categoriesIndex = buildCategoryIndex(posts);
 
   const noImage = posts.filter((p) => !p.listImage).map((p) => p.slug);
 
@@ -645,26 +760,49 @@ async function main() {
   console.log(`Generando ${totalPages} página(s) de listado…`);
   for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
     const pagePosts = posts.slice((pageNum - 1) * PER_PAGE, pageNum * PER_PAGE);
-    const html = listingPage({ pageNum, totalPages, posts: pagePosts });
+    const html = listingPage({ pageNum, totalPages, posts: pagePosts, categories: categoriesIndex });
     const dest = pageNum === 1
       ? path.join(ROOT, 'noticias.html')
       : path.join(NOTICIAS_DIR, `pagina-${pageNum}.html`);
     await writeFile(dest, html, 'utf8');
   }
 
+  console.log(`Generando páginas de categoría (${categoriesIndex.length} categorías)…`);
+  const categoryPageCount = {};
+  for (const cat of categoriesIndex) {
+    const catTotalPages = Math.max(1, Math.ceil(cat.posts.length / PER_PAGE));
+    categoryPageCount[cat.slug] = catTotalPages;
+    for (let pageNum = 1; pageNum <= catTotalPages; pageNum++) {
+      const pagePosts = cat.posts.slice((pageNum - 1) * PER_PAGE, pageNum * PER_PAGE);
+      const html = listingPage({
+        pageNum,
+        totalPages: catTotalPages,
+        posts: pagePosts,
+        categories: categoriesIndex,
+        category: { slug: cat.slug, name: cat.name }
+      });
+      const filename = pageNum === 1 ? `categoria-${cat.slug}.html` : `categoria-${cat.slug}-pagina-${pageNum}.html`;
+      await writeFile(path.join(NOTICIAS_DIR, filename), html, 'utf8');
+    }
+  }
+
   console.log(`Generando ${posts.length} página(s) de post…`);
   for (const post of posts) {
-    const html = postPage(post);
+    const related = pickRelated(post, posts, 3);
+    const html = postPage(post, related);
     await writeFile(path.join(NOTICIAS_DIR, `${post.slug}.html`), html, 'utf8');
   }
 
   console.log('Regenerando sitemap.xml…');
-  await writeFile(path.join(ROOT, 'sitemap.xml'), sitemapXml({ posts, totalPages }), 'utf8');
+  await writeFile(path.join(ROOT, 'sitemap.xml'), sitemapXml({ posts, totalPages, categories: categoriesIndex, categoryPageCount }), 'utf8');
 
+  const totalCategoryPages = Object.values(categoryPageCount).reduce((a, b) => a + b, 0);
   console.log('\nListo.');
   console.log(`  Posts: ${posts.length}`);
-  console.log(`  Páginas de listado: ${totalPages}`);
-  console.log(`  Archivos en /noticias/: ${posts.length + (totalPages - 1)}`);
+  console.log(`  Categorías con posts: ${categoriesIndex.length}`);
+  console.log(`  Páginas de listado "todas": ${totalPages}`);
+  console.log(`  Páginas de listado por categoría: ${totalCategoryPages}`);
+  console.log(`  Archivos en /noticias/: ${posts.length + (totalPages - 1) + totalCategoryPages}`);
   if (noImage.length) {
     console.log(`  Posts sin imagen destacada (usan el placeholder): ${noImage.length}`);
     console.log(`    ${noImage.join(', ')}`);
