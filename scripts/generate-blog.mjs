@@ -219,9 +219,8 @@ article[data-rv]{transition:opacity .35s ease}
 .tm-pagination a{font-size:14px;font-weight:500;color:#fff;border:1px solid rgba(255,255,255,.3);padding:12px 22px}
 .tm-pagination a:hover{color:var(--tm-accent);border-color:var(--tm-accent)}
 .tm-pagination span{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.1em;color:rgba(255,255,255,.5)}
-@media(max-width:1080px){#tm-burger{display:flex!important}#tm-nav{display:none!important;position:fixed;inset:78px 0 auto 0;flex-direction:column;align-items:stretch;gap:0;background:var(--tm-ink-deep);padding:12px clamp(24px,5vw,88px) 32px;border-bottom:1px solid rgba(255,255,255,.1);max-height:calc(100vh - 78px);overflow:auto}#tm-nav[data-open]{display:flex!important}#tm-nav>a,#tm-nav>div>button{padding:16px 0!important;border-bottom:1px solid rgba(255,255,255,.07);width:100%;text-align:left}#tm-bridge{display:none!important}#tm-drop{position:static!important;width:auto!important;border:0!important;padding:4px 0 12px!important;grid-template-columns:minmax(0,1fr)!important}#tm-cta{margin-top:18px;justify-content:center;border-bottom:0!important}#tm-form{grid-template-columns:minmax(0,1fr)!important}.tm-news-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
-@media(max-width:900px){#tm-antenna{opacity:.5;width:70%!important;right:-14%!important}}
-@media(max-width:640px){.tm-news-grid{grid-template-columns:minmax(0,1fr)!important}#tm-antenna{display:none}}`;
+@media(max-width:1080px){#tm-burger{display:flex!important}#tm-nav{display:none!important;position:fixed;inset:78px 0 auto 0;flex-direction:column;align-items:stretch;gap:0;background:var(--tm-ink-deep);padding:12px clamp(24px,5vw,88px) 32px;border-bottom:1px solid rgba(255,255,255,.1);max-height:calc(100vh - 78px);overflow:auto}#tm-nav[data-open]{display:flex!important}#tm-nav>a,#tm-nav>div>button{padding:16px 0!important;border-bottom:1px solid rgba(255,255,255,.07);width:100%;text-align:left}#tm-bridge{display:none!important}#tm-drop{position:static!important;width:auto!important;border:0!important;padding:4px 0 12px!important;grid-template-columns:minmax(0,1fr)!important}#tm-cta{margin-top:18px;justify-content:center;border-bottom:0!important}#tm-form{grid-template-columns:minmax(0,1fr)!important}.tm-news-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}#tm-nhero{grid-template-columns:minmax(0,1fr)!important}#tm-antena{height:340px!important}}
+@media(max-width:640px){.tm-news-grid{grid-template-columns:minmax(0,1fr)!important}}`;
 
 function headerHtml(upBase) {
   return `<header id="tm-hdr" style="position:sticky;top:0;z-index:100;background:rgba(20,20,20,.74);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.08)">
@@ -347,9 +346,10 @@ function footerHtml(upBase) {
 
 // Component script compartido por todas las páginas generadas: motion + gráfico de
 // hero + mesh de footer. Nada de fetch/estado — todo el contenido ya es estático.
-// `heroGraphic` decide qué se monta en #tm-mesh: 'mesh' (mismo fondo del resto del
-// sitio, usado en los posts) o 'antenna' (antena + ondas, firma de las páginas de
-// listado — ver broadcast-antenna.js).
+// `heroGraphic` decide el hero: 'mesh' (fondo mesh-gradient de siempre en #tm-mesh,
+// usado en posts y en las páginas de paginación/categoría) o 'antenna' (la torre de
+// antena.js en su propia caja #tm-antena, solo en la página raíz del listado — ver
+// "Noticias Hero.dc.html" / antena.js, traídos del proyecto de Claude Design).
 function componentScript({ heroMeshTone, heroGraphic = 'mesh' }) {
   const antennaMethod = heroGraphic === 'antenna' ? `
   antenna(){
@@ -357,17 +357,23 @@ function componentScript({ heroMeshTone, heroGraphic = 'mesh' }) {
     if(this._antenna){ this._antenna(); this._antenna = null; }
     import('./js/mount-graphic.js').then(({ mountGraphic })=>{
       if(token !== this._aToken) return;
-      this._antenna = mountGraphic('#tm-antenna', ()=> import('./js/broadcast-antenna.js'), 'initBroadcastAntenna',
-        { accent: '#80E593', accent2: '#52C7CF', motion: this.props.motion });
+      this._antenna = mountGraphic('#tm-antena', ()=> import('./js/antena.js'), 'initAntena',
+        { accent: '#80E593', tint: '#8FD9FF', motion: this.props.motion });
     });
   }` : '';
+  // La página con antena no lleva #tm-mesh en el markup (el hero diseñado en
+  // Claude Design es fondo plano + la caja de la torre, sin mesh-gradient) —
+  // así que ahí mesh() ni se llama, en vez de dejar un poll-forever sobre un
+  // selector que nunca va a existir.
   const antennaMount = heroGraphic === 'antenna' ? ' this.antenna();' : '';
   const antennaUnmount = heroGraphic === 'antenna' ? ' this._antenna && this._antenna();' : '';
+  const meshMount = heroGraphic === 'antenna' ? '' : ' this.mesh();';
+  const meshUnmount = heroGraphic === 'antenna' ? '' : ' this._mesh && this._mesh();';
   return `class Component extends DCLogic {
-  componentDidMount(){ this.start(0); this.mesh(); this.ftrMesh();${antennaMount} }
+  componentDidMount(){ this.start(0);${meshMount} this.ftrMesh();${antennaMount} }
   componentDidUpdate(){ if(this._stop){ this._stop(); this._stop = null; } this.start(0); }
-  componentWillUnmount(){ this._stop && this._stop(); this._mesh && this._mesh(); this._ftrMesh && this._ftrMesh();${antennaUnmount} }
-
+  componentWillUnmount(){ this._stop && this._stop();${meshUnmount} this._ftrMesh && this._ftrMesh();${antennaUnmount} }
+${heroGraphic === 'antenna' ? '' : `
   mesh(){
     const token = (this._mToken = (this._mToken || 0) + 1);
     if(this._mesh){ this._mesh(); this._mesh = null; }
@@ -376,7 +382,7 @@ function componentScript({ heroMeshTone, heroGraphic = 'mesh' }) {
       this._mesh = mountGraphic('#tm-mesh', ()=> import('./js/mesh-gradient.js'), 'initMeshGradient',
         { tone: '${heroMeshTone}', motion: this.props.motion });
     });
-  }
+  }`}
   ${antennaMethod}
   ftrMesh(){
     const token = (this._fToken = (this._fToken || 0) + 1);
@@ -404,14 +410,13 @@ function componentScript({ heroMeshTone, heroGraphic = 'mesh' }) {
 // perceptible. mesh-gradient.js es CSS puro (sin three.js) — no tiene sentido
 // precargar el CDN de three.js ahí.
 function preloadLinks(upBase, heroGraphic) {
-  const base = `<link rel="modulepreload" href="${upBase}js/mount-graphic.js">
-<link rel="modulepreload" href="${upBase}js/mesh-gradient.js">`;
   if (heroGraphic === 'antenna') {
-    return `${base}
+    return `<link rel="modulepreload" href="${upBase}js/mount-graphic.js">
 <link rel="modulepreload" href="https://unpkg.com/three@0.160.0/build/three.module.js" crossorigin>
-<link rel="modulepreload" href="${upBase}js/broadcast-antenna.js">`;
+<link rel="modulepreload" href="${upBase}js/antena.js">`;
   }
-  return base;
+  return `<link rel="modulepreload" href="${upBase}js/mount-graphic.js">
+<link rel="modulepreload" href="${upBase}js/mesh-gradient.js">`;
 }
 
 function pageShell({ headHtml, bodyHtml, heroMeshTone, heroGraphic = 'mesh' }) {
@@ -554,7 +559,7 @@ function listingPage({ pageNum, totalPages, posts, categories, category }) {
 <script type="application/ld+json">
 ${jsonLdScript(breadcrumbLd)}
 </script>
-${preloadLinks(upBase, 'antenna')}
+${preloadLinks(upBase, isRoot ? 'antenna' : 'mesh')}
 <script src="${upBase}support.js"></script>`;
 
   let heroCopy;
@@ -584,19 +589,43 @@ ${preloadLinks(upBase, 'antenna')}
   }
   const breadcrumbNav = crumbs.join(crumbSep);
 
-  const bodyHtml = `${headerHtml(upBase)}
-
-<section style="padding:clamp(70px,9vw,124px) 0 clamp(56px,7vw,92px);position:relative;isolation:isolate;overflow:hidden">
-  <div id="tm-mesh" aria-hidden="true"></div>
-  <div id="tm-antenna" aria-hidden="true" style="position:absolute;top:-12%;right:-4%;width:56%;height:132%;z-index:0"></div>
-  <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px);position:relative;z-index:1">
-    <div style="max-width:640px">
-      <nav aria-label="Ruta" data-rv style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.58);margin:0 0 34px">${breadcrumbNav}</nav>
+  const heroTextBlock = `<nav aria-label="Ruta" data-rv style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.58);margin:0 0 34px">${breadcrumbNav}</nav>
       <p data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.2em;color:var(--tm-accent);margin:0 0 30px">TITA NEWS · IA, ECOMMERCE Y RETAIL EN LATAM</p>
-      ${heroCopy}
+      ${heroCopy}`;
+
+  // La torre (antena.js, traída del proyecto de Claude Design — Noticias Hero.dc.html)
+  // solo va en la página raíz del listado: es la pieza vistosa/de firma, no tiene
+  // sentido repetirla (con su propio contexto three.js + interacción de arrastre)
+  // en cada una de las ~38 páginas de paginación/categoría.
+  const heroSection = isRoot
+    ? `<section style="background:var(--tm-ink);padding:clamp(70px,8vw,120px) 0 clamp(50px,6vw,80px)">
+  <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
+    <div id="tm-nhero" style="display:grid;grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr);gap:clamp(36px,5vw,68px);align-items:center">
+      <div style="position:relative;z-index:2">
+        ${heroTextBlock}
+      </div>
+      <div data-rv>
+        <div id="tm-antena" aria-hidden="true" style="position:relative;height:clamp(360px,42vw,520px);border:1px solid rgba(255,255,255,.1);background:linear-gradient(180deg,var(--tm-ink) 0%,#101111 100%);overflow:hidden"></div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:space-between;margin-top:14px;padding-top:13px;border-top:1px solid rgba(255,255,255,.1)">
+          <p style="margin:0;font-size:12.5px;line-height:1.5;color:rgba(255,255,255,.62)">Una torre que transmite: la señal sale del domo y se propaga.</p>
+          <p style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;color:rgba(255,255,255,.62)">ARRASTRA PARA GIRAR</p>
+        </div>
+      </div>
     </div>
   </div>
-</section>
+</section>`
+    : `<section style="padding:clamp(70px,9vw,124px) 0 clamp(56px,7vw,92px);position:relative;isolation:isolate;overflow:hidden">
+  <div id="tm-mesh" aria-hidden="true"></div>
+  <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px);position:relative;z-index:1">
+    <div style="max-width:640px">
+      ${heroTextBlock}
+    </div>
+  </div>
+</section>`;
+
+  const bodyHtml = `${headerHtml(upBase)}
+
+${heroSection}
 
 <div style="height:1px;background:rgba(255,255,255,.09)"></div>
 
@@ -613,7 +642,7 @@ ${preloadLinks(upBase, 'antenna')}
 ${contactSectionHtml()}
 ${footerHtml(upBase)}`;
 
-  return pageShell({ headHtml, bodyHtml, heroMeshTone: 'inicio', heroGraphic: 'antenna' });
+  return pageShell({ headHtml, bodyHtml, heroMeshTone: 'inicio', heroGraphic: isRoot ? 'antenna' : 'mesh' });
 }
 
 // Posts relacionados: primero los de la misma categoría (más recientes primero,
