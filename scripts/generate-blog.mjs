@@ -137,13 +137,16 @@ function extractPost(wp) {
   const title = decodeHtmlText(wp.title?.rendered || '');
   const dateObj = new Date(wp.date);
   const modifiedObj = new Date(wp.modified || wp.date);
+  const contentHtml = sanitizeContent(wp.content?.rendered || '');
+  const wordCount = decodeHtmlText(contentHtml).split(/\s+/).filter(Boolean).length;
 
   return {
     id: wp.id,
     slug: wp.slug,
     title,
     excerpt: cleanExcerpt(wp.excerpt?.rendered || ''),
-    contentHtml: sanitizeContent(wp.content?.rendered || ''),
+    contentHtml,
+    wordCount,
     listImage,
     heroImage,
     imageAlt: (media && media.alt_text) || title,
@@ -169,6 +172,29 @@ function buildCategoryIndex(posts) {
     bySlug.get(p.categorySlug).posts.push(p);
   }
   return [...bySlug.values()].sort((a, b) => b.posts.length - a.posts.length || a.name.localeCompare(b.name));
+}
+
+// Copy curado a mano por categoría (keyed por slug de WP, no por nombre — el
+// nombre puede tildarse/editarse en WP sin romper esto). Sirve dos veces: como
+// meta description de la página de categoría y como párrafo visible debajo del
+// H1 — sin esto, las 10 páginas de categoría solo se distinguen por el H1 y las
+// tarjetas, contenido bastante fino a ojos de un crawler. Si WordPress agrega
+// una categoría nueva que no está acá, cae al genérico (no rompe el build).
+const CATEGORY_COPY = {
+  'agentes-ia': 'Agentes de inteligencia artificial en retail y ecommerce: cómo se diseñan, qué deciden y qué resultados reales dan en Latinoamérica.',
+  'casos-de-exito': 'Resultados concretos de marcas de retail y ecommerce que trabajan con Tita Media: qué se implementó y qué números lo respaldan.',
+  cro: 'Optimización de conversión para ecommerce: qué mueve checkout, fichas de producto y experiencia de compra, con datos reales.',
+  ecommerce: 'Noticias, tendencias y análisis del comercio electrónico en Latinoamérica: plataformas, operación, checkout y logística.',
+  'estrategias-de-ventas-ecommerce': 'Tácticas comerciales para vender más en ecommerce: fechas clave, growth, retención y decisiones que impactan en ventas.',
+  'expertos-ecommerce': 'Miradas y análisis de especialistas en comercio electrónico sobre lo que está cambiando en el retail digital.',
+  ia: 'Inteligencia artificial aplicada al retail: SEO/GEO, agentes y automatización, con foco en lo que ya funciona en operaciones reales.',
+  implementaciones: 'Proyectos de implementación de plataformas de comercio e integraciones: lo aprendido operando VTEX, Shopify y otros ecosistemas.',
+  informativo: 'Actualizaciones de plataforma, novedades y contexto de la industria del retail y el ecommerce en Latinoamérica.',
+  'plataformas-ecommerce': 'Comparativas de plataformas de comercio electrónico: VTEX, Shopify, commercetools y cómo elegir la correcta para tu negocio.'
+};
+function categoryDescription(category) {
+  return CATEGORY_COPY[category.slug] ||
+    `Publicaciones de Tita Media sobre ${category.name}: análisis, casos y noticias de retail digital en Latinoamérica.`;
 }
 
 // ---------------------------------------------------------------------------
@@ -524,9 +550,12 @@ function listingPage({ pageNum, totalPages, posts, categories, category }) {
   const titleBase = category ? `Noticias · ${category.name}` : 'Noticias';
   const titleSuffix = pageNum === 1 ? '' : ` — Página ${pageNum}`;
   const title = `${titleBase}${titleSuffix} | Tita Media`;
-  const description = category
-    ? `Publicaciones de Tita Media en la categoría ${category.name}: IA, ecommerce y transformación digital del retail en Latinoamérica.`
+  const baseDescription = category
+    ? categoryDescription(category)
     : 'Noticias, análisis y casos sobre IA, ecommerce y transformación digital del retail en Latinoamérica. Todas las publicaciones del blog de Tita Media.';
+  // Meta description distinta por página paginada — si no, Google ve el mismo
+  // texto en las 16+ páginas de "todas" (y en cada tanda de categoría).
+  const description = pageNum > 1 ? `${baseDescription} Página ${pageNum}.` : baseDescription;
 
   const breadcrumbItems = [
     { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${SITE}/` },
@@ -536,6 +565,20 @@ function listingPage({ pageNum, totalPages, posts, categories, category }) {
   if (category) breadcrumbItems.push({ '@type': 'ListItem', position: pos++, name: category.name, item: `${SITE}/noticias/categoria-${category.slug}.html` });
   if (pageNum > 1) breadcrumbItems.push({ '@type': 'ListItem', position: pos++, name: `Página ${pageNum}`, item: canonical });
   const breadcrumbLd = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: breadcrumbItems };
+
+  // ItemList de los posts de ESTA página — la posición sigue la numeración global
+  // de la colección (offset por página), no reinicia en 1 cada vez, siguiendo la
+  // convención de schema.org para listados paginados.
+  const itemListLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListElement: posts.map((p, i) => ({
+      '@type': 'ListItem',
+      position: (pageNum - 1) * PER_PAGE + i + 1,
+      url: `${SITE}/noticias/${p.slug}.html`,
+      name: p.title
+    }))
+  };
 
   const headHtml = `<title>${escapeHtml(title)}</title>
 <meta name="description" content="${escapeHtml(description)}">
@@ -554,12 +597,16 @@ function listingPage({ pageNum, totalPages, posts, categories, category }) {
 <script type="application/ld+json">
 ${jsonLdScript(breadcrumbLd)}
 </script>
+<script type="application/ld+json">
+${jsonLdScript(itemListLd)}
+</script>
 ${preloadLinks(upBase, isRoot ? 'antenna' : 'mesh')}
 <script src="${upBase}support.js"></script>`;
 
   let heroCopy;
   if (category && pageNum === 1) {
-    heroCopy = `<h1 data-split style="font-size:clamp(30px,3.9vw,50px);font-weight:300;line-height:1.1;letter-spacing:-.03em;color:#fff;margin:0;max-width:20ch;text-wrap:pretty">${escapeHtml(category.name)}</h1>`;
+    heroCopy = `<h1 data-split style="font-size:clamp(30px,3.9vw,50px);font-weight:300;line-height:1.1;letter-spacing:-.03em;color:#fff;margin:0;max-width:20ch;text-wrap:pretty">${escapeHtml(category.name)}</h1>
+    <p data-rv style="font-size:clamp(15.5px,1.2vw,18px);line-height:1.68;color:rgba(255,255,255,.72);margin:22px 0 0;max-width:62ch">${escapeHtml(categoryDescription(category))}</p>`;
   } else if (category) {
     heroCopy = `<h1 data-split style="font-size:clamp(28px,3.6vw,44px);font-weight:300;line-height:1.1;letter-spacing:-.028em;color:#fff;margin:0;max-width:20ch;text-wrap:pretty">${escapeHtml(category.name)} — página ${pageNum}</h1>`;
   } else if (isRoot) {
@@ -692,6 +739,9 @@ function postPage(post, related) {
     image: [ogImage],
     datePublished: post.dateIso,
     dateModified: post.modifiedIso,
+    inLanguage: 'es-CO',
+    ...(post.category ? { articleSection: post.category } : {}),
+    ...(post.wordCount ? { wordCount: post.wordCount } : {}),
     author: { '@type': 'Organization', name: 'Tita Media', url: `${SITE}/` },
     publisher: { '@type': 'Organization', name: 'Tita Media', logo: { '@type': 'ImageObject', url: LOGO_URL } },
     mainEntityOfPage: { '@type': 'WebPage', '@id': canonical }
