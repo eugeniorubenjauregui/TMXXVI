@@ -38,6 +38,7 @@
 }
 </script>
 <link rel="modulepreload" href="js/mount-graphic.js">
+<link rel="modulepreload" href="js/mesh-gradient.js">
 <link rel="modulepreload" href="https://unpkg.com/three@0.160.0/build/three.module.js" crossorigin>
 <link rel="modulepreload" href="js/antena.js">
 <script src="support.js"></script>
@@ -133,9 +134,10 @@ article[data-rv]{transition:opacity .35s ease}
   </div>
 </header>
 
-<section style="background:var(--tm-ink);padding:clamp(70px,8vw,120px) 0 clamp(50px,6vw,80px)">
-  <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
-    <div id="tm-nhero" style="display:grid;grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr);gap:clamp(36px,5vw,68px);align-items:center">
+<section style="position:relative;isolation:isolate;overflow:hidden;padding:clamp(70px,8vw,120px) 0 clamp(32px,4vw,48px)">
+  <div id="tm-mesh" aria-hidden="true"></div>
+  <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px);position:relative;z-index:1">
+    <div id="tm-nhero" style="display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:clamp(36px,5vw,68px);align-items:center">
       <div style="position:relative;z-index:2">
         <nav aria-label="Ruta" data-rv style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.58);margin:0 0 34px"><a href="index.html" style="color:rgba(255,255,255,.58)">INICIO</a> <span style="padding:0 8px;color:var(--tm-accent)">/</span> NOTICIAS</nav>
       <p data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.2em;color:var(--tm-accent);margin:0 0 30px">TITA NEWS · IA, ECOMMERCE Y RETAIL EN LATAM</p>
@@ -143,7 +145,7 @@ article[data-rv]{transition:opacity .35s ease}
     <p data-rv style="font-size:clamp(15.5px,1.2vw,18px);line-height:1.68;color:rgba(255,255,255,.72);margin:26px 0 0;max-width:62ch">Análisis, casos y noticias sobre IA, ecommerce y transformación digital, publicadas por el equipo de Tita Media.</p>
       </div>
       <div data-rv>
-        <div id="tm-antena" aria-hidden="true" style="position:relative;height:clamp(360px,42vw,520px);border:1px solid rgba(255,255,255,.1);background:linear-gradient(180deg,var(--tm-ink) 0%,#101111 100%);overflow:hidden"></div>
+        <div id="tm-antena" aria-hidden="true" style="position:relative;height:clamp(440px,52vw,660px);overflow:hidden"></div>
         <div style="display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:space-between;margin-top:14px;padding-top:13px;border-top:1px solid rgba(255,255,255,.1)">
           <p style="margin:0;font-size:12.5px;line-height:1.5;color:rgba(255,255,255,.62)">Una torre que transmite: la señal sale del domo y se propaga.</p>
           <p style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;color:rgba(255,255,255,.62)">ARRASTRA PARA GIRAR</p>
@@ -155,7 +157,7 @@ article[data-rv]{transition:opacity .35s ease}
 
 <div style="height:1px;background:rgba(255,255,255,.09)"></div>
 
-<section style="padding:clamp(80px,10vw,140px) 0">
+<section style="padding:clamp(56px,7vw,96px) 0">
   <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
     <div class="tm-cat-filter" data-rv role="group" aria-label="Filtrar por categoría"><a href="noticias.html" class="tm-cat-pill is-active" aria-current="true">Todas</a><a href="noticias/categoria-ecommerce.html" class="tm-cat-pill">Ecommerce</a><a href="noticias/categoria-implementaciones.html" class="tm-cat-pill">Implementaciones</a><a href="noticias/categoria-agentes-ia.html" class="tm-cat-pill">Agentes IA</a><a href="noticias/categoria-informativo.html" class="tm-cat-pill">Informativo</a><a href="noticias/categoria-ia.html" class="tm-cat-pill">IA</a><a href="noticias/categoria-casos-de-exito.html" class="tm-cat-pill">Casos de Éxito</a><a href="noticias/categoria-estrategias-de-ventas-ecommerce.html" class="tm-cat-pill">Estrategias de ventas eCommerce</a><a href="noticias/categoria-cro.html" class="tm-cat-pill">CRO</a><a href="noticias/categoria-expertos-ecommerce.html" class="tm-cat-pill">Expertos eCommerce</a><a href="noticias/categoria-plataformas-ecommerce.html" class="tm-cat-pill">Plataformas eCommerce</a></div>
     <div class="tm-news-grid">
@@ -392,10 +394,19 @@ article[data-rv]{transition:opacity .35s ease}
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  componentDidMount(){ this.start(0); this.ftrMesh(); this.antenna(); }
+  componentDidMount(){ this.start(0); this.mesh(); this.ftrMesh(); this.antenna(); }
   componentDidUpdate(){ if(this._stop){ this._stop(); this._stop = null; } this.start(0); }
-  componentWillUnmount(){ this._stop && this._stop(); this._ftrMesh && this._ftrMesh(); this._antenna && this._antenna(); }
+  componentWillUnmount(){ this._stop && this._stop(); this._mesh && this._mesh(); this._ftrMesh && this._ftrMesh(); this._antenna && this._antenna(); }
 
+  mesh(){
+    const token = (this._mToken = (this._mToken || 0) + 1);
+    if(this._mesh){ this._mesh(); this._mesh = null; }
+    import('./js/mount-graphic.js').then(({ mountGraphic })=>{
+      if(token !== this._mToken) return;
+      this._mesh = mountGraphic('#tm-mesh', ()=> import('./js/mesh-gradient.js'), 'initMeshGradient',
+        { tone: 'inicio', motion: this.props.motion });
+    });
+  }
   
   antenna(){
     const token = (this._aToken = (this._aToken || 0) + 1);

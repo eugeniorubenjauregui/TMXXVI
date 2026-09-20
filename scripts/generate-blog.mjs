@@ -344,12 +344,12 @@ function footerHtml(upBase) {
 </a>`;
 }
 
-// Component script compartido por todas las páginas generadas: motion + gráfico de
-// hero + mesh de footer. Nada de fetch/estado — todo el contenido ya es estático.
-// `heroGraphic` decide el hero: 'mesh' (fondo mesh-gradient de siempre en #tm-mesh,
-// usado en posts y en las páginas de paginación/categoría) o 'antenna' (la torre de
-// antena.js en su propia caja #tm-antena, solo en la página raíz del listado — ver
-// "Noticias Hero.dc.html" / antena.js, traídos del proyecto de Claude Design).
+// Component script compartido por todas las páginas generadas: motion + mesh de
+// fondo del hero + mesh de footer. Nada de fetch/estado — todo el contenido ya es
+// estático. `heroGraphic === 'antenna'` (solo la página raíz del listado) además
+// monta la torre de antena.js en su propia caja #tm-antena, encima del mismo
+// #tm-mesh que usa el resto del sitio — ver "Noticias Hero.dc.html" / antena.js,
+// traídos del proyecto de Claude Design.
 function componentScript({ heroMeshTone, heroGraphic = 'mesh' }) {
   const antennaMethod = heroGraphic === 'antenna' ? `
   antenna(){
@@ -361,19 +361,13 @@ function componentScript({ heroMeshTone, heroGraphic = 'mesh' }) {
         { accent: '#80E593', tint: '#8FD9FF', motion: this.props.motion });
     });
   }` : '';
-  // La página con antena no lleva #tm-mesh en el markup (el hero diseñado en
-  // Claude Design es fondo plano + la caja de la torre, sin mesh-gradient) —
-  // así que ahí mesh() ni se llama, en vez de dejar un poll-forever sobre un
-  // selector que nunca va a existir.
   const antennaMount = heroGraphic === 'antenna' ? ' this.antenna();' : '';
   const antennaUnmount = heroGraphic === 'antenna' ? ' this._antenna && this._antenna();' : '';
-  const meshMount = heroGraphic === 'antenna' ? '' : ' this.mesh();';
-  const meshUnmount = heroGraphic === 'antenna' ? '' : ' this._mesh && this._mesh();';
   return `class Component extends DCLogic {
-  componentDidMount(){ this.start(0);${meshMount} this.ftrMesh();${antennaMount} }
+  componentDidMount(){ this.start(0); this.mesh(); this.ftrMesh();${antennaMount} }
   componentDidUpdate(){ if(this._stop){ this._stop(); this._stop = null; } this.start(0); }
-  componentWillUnmount(){ this._stop && this._stop();${meshUnmount} this._ftrMesh && this._ftrMesh();${antennaUnmount} }
-${heroGraphic === 'antenna' ? '' : `
+  componentWillUnmount(){ this._stop && this._stop(); this._mesh && this._mesh(); this._ftrMesh && this._ftrMesh();${antennaUnmount} }
+
   mesh(){
     const token = (this._mToken = (this._mToken || 0) + 1);
     if(this._mesh){ this._mesh(); this._mesh = null; }
@@ -382,7 +376,7 @@ ${heroGraphic === 'antenna' ? '' : `
       this._mesh = mountGraphic('#tm-mesh', ()=> import('./js/mesh-gradient.js'), 'initMeshGradient',
         { tone: '${heroMeshTone}', motion: this.props.motion });
     });
-  }`}
+  }
   ${antennaMethod}
   ftrMesh(){
     const token = (this._fToken = (this._fToken || 0) + 1);
@@ -410,13 +404,14 @@ ${heroGraphic === 'antenna' ? '' : `
 // perceptible. mesh-gradient.js es CSS puro (sin three.js) — no tiene sentido
 // precargar el CDN de three.js ahí.
 function preloadLinks(upBase, heroGraphic) {
+  const base = `<link rel="modulepreload" href="${upBase}js/mount-graphic.js">
+<link rel="modulepreload" href="${upBase}js/mesh-gradient.js">`;
   if (heroGraphic === 'antenna') {
-    return `<link rel="modulepreload" href="${upBase}js/mount-graphic.js">
+    return `${base}
 <link rel="modulepreload" href="https://unpkg.com/three@0.160.0/build/three.module.js" crossorigin>
 <link rel="modulepreload" href="${upBase}js/antena.js">`;
   }
-  return `<link rel="modulepreload" href="${upBase}js/mount-graphic.js">
-<link rel="modulepreload" href="${upBase}js/mesh-gradient.js">`;
+  return base;
 }
 
 function pageShell({ headHtml, bodyHtml, heroMeshTone, heroGraphic = 'mesh' }) {
@@ -598,14 +593,15 @@ ${preloadLinks(upBase, isRoot ? 'antenna' : 'mesh')}
   // sentido repetirla (con su propio contexto three.js + interacción de arrastre)
   // en cada una de las ~38 páginas de paginación/categoría.
   const heroSection = isRoot
-    ? `<section style="background:var(--tm-ink);padding:clamp(70px,8vw,120px) 0 clamp(50px,6vw,80px)">
-  <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
-    <div id="tm-nhero" style="display:grid;grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr);gap:clamp(36px,5vw,68px);align-items:center">
+    ? `<section style="position:relative;isolation:isolate;overflow:hidden;padding:clamp(70px,8vw,120px) 0 clamp(32px,4vw,48px)">
+  <div id="tm-mesh" aria-hidden="true"></div>
+  <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px);position:relative;z-index:1">
+    <div id="tm-nhero" style="display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:clamp(36px,5vw,68px);align-items:center">
       <div style="position:relative;z-index:2">
         ${heroTextBlock}
       </div>
       <div data-rv>
-        <div id="tm-antena" aria-hidden="true" style="position:relative;height:clamp(360px,42vw,520px);border:1px solid rgba(255,255,255,.1);background:linear-gradient(180deg,var(--tm-ink) 0%,#101111 100%);overflow:hidden"></div>
+        <div id="tm-antena" aria-hidden="true" style="position:relative;height:clamp(440px,52vw,660px);overflow:hidden"></div>
         <div style="display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:space-between;margin-top:14px;padding-top:13px;border-top:1px solid rgba(255,255,255,.1)">
           <p style="margin:0;font-size:12.5px;line-height:1.5;color:rgba(255,255,255,.62)">Una torre que transmite: la señal sale del domo y se propaga.</p>
           <p style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;color:rgba(255,255,255,.62)">ARRASTRA PARA GIRAR</p>
@@ -629,7 +625,7 @@ ${heroSection}
 
 <div style="height:1px;background:rgba(255,255,255,.09)"></div>
 
-<section style="padding:clamp(80px,10vw,140px) 0">
+<section style="padding:clamp(56px,7vw,96px) 0">
   <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
     ${categoryFilterHtml({ categories, activeSlug: category?.slug, upBase, siblingPrefix })}
     <div class="tm-news-grid">
