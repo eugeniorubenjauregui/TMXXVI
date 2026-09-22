@@ -1,8 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@200;300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <title>AI &amp; Custom Solutions | Tita Media</title>
 <meta name="description" content="Diseñamos y conectamos agentes de IA con los sistemas y datos de tu empresa para automatizar tareas, analizar información y ejecutar procesos en la operación retail.">
 <link rel="canonical" href="https://titamedia.com/ai-custom-solutions.html">
@@ -43,9 +46,6 @@
 <body>
 <x-dc>
 <helmet data-dc-atomics>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@200;300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <style>
 :root{--tm-accent:#80E593;--tm-accent2:#52C7CF}
@@ -92,6 +92,7 @@ a:hover{color:var(--tm-accent2)}
 <div id="tm-trans" style="position:fixed;inset:0;z-index:250;background:#0B0C0C;opacity:0;pointer-events:none;display:flex;align-items:center;justify-content:center"><span id="tm-transline" style="display:block;height:1px;width:0;background:var(--tm-accent)"></span></div>
 
 <dc-import name="SiteHeader" hint-size="100%,78px"></dc-import>
+<main id="tm-main">
 
 <section style="padding:clamp(70px,9vw,124px) 0 clamp(56px,7vw,92px);position:relative;isolation:isolate;overflow:hidden">
   <div id="tm-mesh" aria-hidden="true"></div>
@@ -230,6 +231,7 @@ a:hover{color:var(--tm-accent2)}
 </section>
 
 <dc-import name="ContactForm" pick="{{ one }}" hint-size="100%,900px"></dc-import>
+</main>
 <dc-import name="SiteFooter" hint-size="100%,520px"></dc-import>
 
 </div>
