@@ -251,7 +251,7 @@ article[data-rv]{transition:opacity .35s ease}
 function headerHtml(upBase) {
   return `<header id="tm-hdr" style="position:sticky;top:0;z-index:100;background:rgba(20,20,20,.74);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.08)">
   <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px);height:78px;display:flex;align-items:center;justify-content:space-between;gap:28px">
-    <a href="${upBase}index.html" style="display:flex;align-items:center;white-space:nowrap"><img src="${upBase}images/logo-tita-media.png" alt="TITA Media" style="height:48px;width:auto;display:block"></a>
+    <a href="${upBase}index.html" style="display:flex;align-items:center;white-space:nowrap"><img width="170" height="48" src="${upBase}images/logo-tita-media.png" alt="TITA Media" style="height:48px;width:auto;display:block"></a>
     <nav id="tm-nav" style="display:flex;align-items:center;gap:28px">
       <a href="${upBase}index.html" style="font-size:14px;font-weight:400;color:rgba(255,255,255,.8)">Inicio</a>
       <div id="tm-dd" style="position:relative">
@@ -269,8 +269,8 @@ function headerHtml(upBase) {
           </div>
         </div>
       </div>
-      <a href="#" style="font-size:14px;font-weight:400;color:rgba(255,255,255,.8)">Soluciones IA</a>
-      <a href="#" style="font-size:14px;font-weight:400;color:rgba(255,255,255,.8)">Nosotros</a>
+      <a href="${upBase}soluciones-ia.html" style="font-size:14px;font-weight:400;color:rgba(255,255,255,.8)">Soluciones IA</a>
+      <a href="${upBase}nosotros.html" style="font-size:14px;font-weight:400;color:rgba(255,255,255,.8)">Nosotros</a>
       <a href="${upBase}noticias.html" style="font-size:14px;font-weight:400;color:rgba(255,255,255,.8)">TITA News</a>
       <a href="#" style="font-size:14px;font-weight:400;color:rgba(255,255,255,.8)">Contacto</a>
       <a id="tm-cta" href="#tm-contacto" style="display:inline-flex;align-items:center;padding:13px 26px;background:var(--tm-accent);color:#141414;font-size:14px;font-weight:500;border:1px solid var(--tm-accent)">Hablemos</a>
@@ -327,7 +327,7 @@ function footerHtml(upBase) {
   <div style="position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
     <div id="tm-ftr-grid" style="display:grid;grid-template-columns:1.7fr 1fr 1.25fr;gap:clamp(32px,4vw,52px);padding-bottom:clamp(44px,5vw,60px)">
       <div>
-        <a href="${upBase}index.html" style="display:block;margin-bottom:20px"><img src="${upBase}images/logo-tita-media.png" alt="TITA Media" style="height:34px;width:auto;display:block"></a>
+        <a href="${upBase}index.html" style="display:block;margin-bottom:20px"><img width="121" height="34" src="${upBase}images/logo-tita-media.png" alt="TITA Media" style="height:34px;width:auto;display:block"></a>
         <p style="font-size:15.5px;line-height:1.65;color:rgba(255,255,255,.66);max-width:38ch;margin:0">Soluciones de tecnología, comercio, datos, growth e inteligencia artificial para retail.</p>
         <div style="display:grid;gap:12px;margin-top:clamp(28px,3.5vw,38px);padding-top:clamp(24px,3vw,30px);border-top:1px solid rgba(255,255,255,.1)">
           <p style="font-size:17px;font-weight:400;letter-spacing:-.01em;color:#fff;margin:0">Tecnología que tiene que mover un resultado.</p>
@@ -442,18 +442,18 @@ function preloadLinks(upBase, heroGraphic) {
 
 function pageShell({ headHtml, bodyHtml, heroMeshTone, heroGraphic = 'mesh' }) {
   return `<!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@200;300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 ${headHtml}
 </head>
 <body>
 <x-dc>
 <helmet data-dc-atomics="">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@200;300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 ${BASE_STYLE}
 </style>
@@ -667,6 +667,7 @@ ${preloadLinks(upBase, isRoot ? 'antenna' : 'mesh')}
 </section>`;
 
   const bodyHtml = `${headerHtml(upBase)}
+<main id="tm-main">
 
 ${heroSection}
 
@@ -683,6 +684,7 @@ ${heroSection}
 </section>
 
 ${contactSectionHtml()}
+</main>
 ${footerHtml(upBase)}`;
 
   return pageShell({ headHtml, bodyHtml, heroMeshTone: 'inicio', heroGraphic: isRoot ? 'antenna' : 'mesh' });
@@ -771,6 +773,7 @@ ${preloadLinks(upBase, 'mesh')}
 <script src="${upBase}support.js"></script>`;
 
   const bodyHtml = `${headerHtml(upBase)}
+<main id="tm-main">
 
 <section style="padding:clamp(70px,9vw,124px) 0 clamp(50px,6vw,80px);position:relative;isolation:isolate;overflow:hidden">
   <div id="tm-mesh" aria-hidden="true"></div>
@@ -796,6 +799,7 @@ ${post.heroImage ? `<div data-rv style="max-width:1100px;margin:0 auto clamp(48p
 
 ${relatedPostsHtml(related)}
 ${contactSectionHtml()}
+</main>
 ${footerHtml(upBase)}`;
 
   return pageShell({ headHtml, bodyHtml, heroMeshTone: 'inicio' });
