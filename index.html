@@ -44,6 +44,8 @@
 <link rel="modulepreload" href="./js/mesh-gradient.js">
 <link rel="modulepreload" href="./js/rhizome.js">
 <link rel="modulepreload" href="./js/solar-system.js">
+<link rel="modulepreload" href="./js/topo-mesh.js">
+<link rel="modulepreload" href="./js/filament-field.js">
 <script src="./support.js"></script>
 </head>
 <body>
@@ -56,10 +58,6 @@ body{margin:0;background:var(--tm-ink);font-family:'Be Vietnam Pro',system-ui,sa
 a{color:var(--tm-accent);text-decoration:none}
 a:hover{color:var(--tm-accent2)}
 ::selection{background:var(--tm-accent);color:#141414}
-[data-faq-item] summary::-webkit-details-marker{display:none}
-[data-faq-item] summary::marker{content:''}
-[data-faq-item][open] [data-faq-v]{opacity:0}
-[data-faq-item][open] [data-faq-q]{color:var(--tm-accent)!important}
 :focus-visible{outline:2px solid var(--tm-accent);outline-offset:3px}
 @keyframes tmdash{to{stroke-dashoffset:-32}}
 @keyframes tmglow{0%{box-shadow:inset 0 0 0 1px var(--tm-accent),0 0 0 0 var(--tm-accent);opacity:1}50%{box-shadow:inset 0 0 8px 1px rgba(128,229,147,.6),0 0 12px 2px rgba(128,229,147,.4);opacity:1}100%{box-shadow:inset 0 0 0 1px var(--tm-accent),0 0 0 0 rgba(128,229,147,0);opacity:1}}
@@ -73,8 +71,25 @@ a:hover{color:var(--tm-accent2)}
 [data-motion] [data-rv][data-in] [data-qbar]{transform:scaleY(1)}
 #tmcur{position:fixed;top:0;left:0;z-index:300;pointer-events:none;display:flex;align-items:center;justify-content:center;width:84px;height:84px;margin:-42px 0 0 -42px;border-radius:50%;background:var(--tm-accent);color:#141414;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.14em;opacity:0;transform:scale(.3);transition:opacity .2s,transform .3s cubic-bezier(.22,.61,.36,1)}
 #tmcur[data-on]{opacity:1;transform:scale(1)}
+[data-tooltip]{position:relative}
+[data-tooltip]::after{content:attr(data-tooltip);position:absolute;bottom:calc(100% + 12px);left:50%;white-space:nowrap;background:var(--tm-ink-deep);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:10.5px;font-weight:400;letter-spacing:.08em;padding:8px 12px;border-radius:5px;box-shadow:0 10px 24px rgba(0,0,0,.22);opacity:0;pointer-events:none;transform:translate(-50%,4px);transition:opacity .25s cubic-bezier(.22,.61,.36,1),transform .25s cubic-bezier(.22,.61,.36,1);z-index:20}
+[data-tooltip]::before{content:'';position:absolute;bottom:calc(100% + 7px);left:50%;width:8px;height:8px;background:var(--tm-ink-deep);opacity:0;pointer-events:none;transform:translate(-50%,4px) rotate(45deg);transition:opacity .25s cubic-bezier(.22,.61,.36,1),transform .25s cubic-bezier(.22,.61,.36,1);z-index:20}
+[data-tooltip]:hover::after,[data-tooltip]:hover::before{opacity:1;transform:translate(-50%,0) rotate(0)}
+[data-tooltip]:hover::before{transform:translate(-50%,0) rotate(45deg)}
 @media(max-width:1080px){#tm-hero-grid{grid-template-columns:minmax(0,1fr)!important}#tm-rhizome{width:112%!important;margin-left:-6%!important}#tm-steps{grid-template-columns:repeat(2,minmax(0,1fr))!important}#tm-stats{grid-template-columns:minmax(0,1fr)!important}#tm-ftr-grid{grid-template-columns:minmax(0,1fr)!important}#tm-form{grid-template-columns:minmax(0,1fr)!important}#tm-herorow{grid-template-columns:minmax(0,1fr)!important}#tm-burger{display:flex!important}#tm-nav{display:none!important;position:fixed;inset:78px 0 auto 0;flex-direction:column;align-items:stretch;gap:0;background:var(--tm-ink-deep);padding:12px clamp(24px,5vw,88px) 32px;border-bottom:1px solid rgba(255,255,255,.1);max-height:calc(100vh - 78px);overflow:auto}#tm-nav[data-open]{display:flex!important}#tm-nav>a,#tm-nav>div>button{padding:16px 0!important;border-bottom:1px solid rgba(255,255,255,.07);width:100%;text-align:left}#tm-bridge{display:none!important}#tm-drop{position:static!important;width:auto!important;border:0!important;padding:4px 0 12px!important;grid-template-columns:minmax(0,1fr)!important}#tm-cta{margin-top:18px;justify-content:center;border-bottom:0!important}}
 @media(max-width:640px){#tm-steps{grid-template-columns:minmax(0,1fr)!important}#tm-solrow-n{display:none!important}}
+.v1s-eyebrow{color:var(--tm-accent);border-bottom-color:var(--tm-accent)}
+.v1s-list{border-top-color:rgba(255,255,255,.12)}
+.v1s-row{border-bottom-color:rgba(255,255,255,.12)}
+.v1s-num{color:rgba(255,255,255,.62)}
+.v1s-title{color:#fff}
+.v1s-sub{color:rgba(255,255,255,.6)}
+.v1s-plus{color:var(--tm-accent);transition:transform .4s cubic-bezier(.22,.61,.36,1);display:inline-block}
+.v1s-btn{padding:clamp(26px,3vw,38px) 0;background:none;border:0;width:100%;text-align:left;font:inherit;cursor:pointer;color:inherit}
+.v2p-grid{gap:56px}
+.v2p-main>*+*{margin-top:22px}
+.v2p-panel{display:grid;gap:1px;background:rgba(20,20,20,.14);border:1px solid rgba(20,20,20,.14);align-self:stretch}
+@media(max-width:1080px){.v2p-grid{grid-template-columns:minmax(0,1fr)!important}}
 </style>
 <script type="application/ld+json">
 {
@@ -124,7 +139,6 @@ a:hover{color:var(--tm-accent2)}
  ]
 }
 </script>
-<script type="module" src="./js/faq-accordion.js"></script>
 </helmet>
 
 <template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect width="400" height="300" fill="#141414"/><g fill="none" stroke="#52C7CF" stroke-width="1.5" opacity=".75"><path d="M200 150 120 96M200 150 286 104M200 150 132 208M200 150 280 206"/></g><g fill="#80E593"><circle cx="200" cy="150" r="10"/><circle cx="120" cy="96" r="5"/><circle cx="286" cy="104" r="5"/><circle cx="132" cy="208" r="5"/><circle cx="280" cy="206" r="5"/></g><text x="200" y="258" fill="#fff" font-family="system-ui,sans-serif" font-size="19" font-weight="300" letter-spacing="7" text-anchor="middle">TITA MEDIA</text></svg></template>
@@ -235,16 +249,16 @@ a:hover{color:var(--tm-accent2)}
 
 <div style="height:1px;background:rgba(255,255,255,.09)"></div>
 
-<section style="padding:clamp(44px,5vw,66px) 0;background:var(--tm-ink-deep)">
+<section style="padding:clamp(44px,5vw,66px) 0;background:#fff">
   <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
-    <p data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:400;letter-spacing:.14em;color:rgba(255,255,255,.58);margin:0 0 clamp(26px,3vw,38px)">MARCAS QUE HAN CONFIADO EN TITA</p>
-    <div data-rv style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08)">
-      <div style="background:var(--tm-ink-deep);min-height:104px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(255,255,255,.5)">LOGO</div>
-      <div style="background:var(--tm-ink-deep);min-height:104px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(255,255,255,.5)">LOGO</div>
-      <div style="background:var(--tm-ink-deep);min-height:104px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(255,255,255,.5)">LOGO</div>
-      <div style="background:var(--tm-ink-deep);min-height:104px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(255,255,255,.5)">LOGO</div>
-      <div style="background:var(--tm-ink-deep);min-height:104px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(255,255,255,.5)">LOGO</div>
-      <div style="background:var(--tm-ink-deep);min-height:104px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(255,255,255,.5)">LOGO</div>
+    <p data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:400;letter-spacing:.14em;color:rgba(20,20,20,.55);margin:0 0 clamp(26px,3vw,38px)">MARCAS QUE HAN CONFIADO EN TITA</p>
+    <div data-rv style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:rgba(20,20,20,.1);border:1px solid rgba(20,20,20,.1)">
+      <div data-tooltip="Nike" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center;color:rgba(20,20,20,.4)"><img src="./images/nike-logo.svg" alt="Nike" width="120" height="43" style="width:120px;height:auto;opacity:.6"></div>
+      <div data-tooltip="Keralty" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/keralty-logo.svg" alt="Keralty" width="120" height="42" style="width:120px;height:auto;filter:grayscale(1)"></div>
+      <div data-tooltip="Mario Hernández" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/mario-hernandez-logo.svg" alt="Mario Hernández" width="150" height="14" style="width:150px;height:auto"></div>
+      <div data-tooltip="Nissan" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/nissan-logo.svg" alt="Nissan" width="92" height="77" style="width:92px;height:auto"></div>
+      <div data-tooltip="Universidad de los Andes" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/universidad-de-los-andes-logo.svg" alt="Universidad de los Andes" width="100" height="30" style="width:100px;height:auto"></div>
+      <div data-tooltip="Nespresso" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/nespresso-logo.svg" alt="Nespresso" width="120" height="28" style="width:120px;height:auto"></div>
     </div>
   </div>
 </section>
@@ -287,85 +301,85 @@ a:hover{color:var(--tm-accent2)}
   </div>
 </section>
 
-<section style="padding:clamp(44px,5vw,66px) 0;background:#101111">
+<section style="padding:clamp(44px,5vw,66px) 0;background:#fff">
   <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
-    <p data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:400;letter-spacing:.14em;color:rgba(255,255,255,.58);margin:0 0 clamp(26px,3vw,38px)">PARTNERS CON LOS QUE TRABAJAMOS</p>
-    <div data-rv style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08)">
-      <div style="background:#101111;min-height:104px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(255,255,255,.5)">LOGO</div>
-      <div style="background:#101111;min-height:104px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(255,255,255,.5)">LOGO</div>
-      <div style="background:#101111;min-height:104px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(255,255,255,.5)">LOGO</div>
-      <div style="background:#101111;min-height:104px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(255,255,255,.5)">LOGO</div>
-      <div style="background:#101111;min-height:104px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(255,255,255,.5)">LOGO</div>
+    <p data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:400;letter-spacing:.14em;color:rgba(20,20,20,.55);margin:0 0 clamp(26px,3vw,38px)">PARTNERS CON LOS QUE TRABAJAMOS</p>
+    <div data-rv style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:rgba(20,20,20,.1);border:1px solid rgba(20,20,20,.1)">
+      <div style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(20,20,20,.4)">LOGO</div>
+      <div style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(20,20,20,.4)">LOGO</div>
+      <div style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(20,20,20,.4)">LOGO</div>
+      <div style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(20,20,20,.4)">LOGO</div>
+      <div style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(20,20,20,.4)">LOGO</div>
     </div>
   </div>
 </section>
 
 <section style="padding:clamp(80px,10vw,140px) 0">
   <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
-    <p data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:var(--tm-accent);border-bottom:1px solid var(--tm-accent);padding-bottom:7px;margin:0 0 clamp(40px,5vw,64px)">SOLUCIONES PARA RETAIL</p>
-    <div style="border-top:1px solid rgba(255,255,255,.12)">
-
-      <div data-rv style="border-bottom:1px solid rgba(255,255,255,.12)">
-        <button data-sol="0" onClick="{{ onSol }}" data-cursor="EXPLORAR" aria-expanded="false" aria-controls="tm-sol-0" style="font:inherit;width:100%;background:none;border:0;padding:clamp(26px,3vw,38px) 0;cursor:pointer;display:grid;grid-template-columns:64px minmax(0,1fr) 34px;gap:clamp(16px,2.5vw,36px);align-items:baseline;text-align:left">
-          <span id="tm-solrow-n" style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:rgba(255,255,255,.62)">01</span>
-          <span style="display:block"><span style="display:block;font-size:clamp(20px,2.3vw,30px);font-weight:300;letter-spacing:-.022em;color:#fff;line-height:1.2">Strategy &amp; Advisory</span><span style="display:block;font-size:15.5px;color:rgba(255,255,255,.6);margin-top:9px">Definimos qué transformar, dónde invertir y qué hacer primero.</span></span>
-          <span data-plus style="justify-self:end;font-size:22px;font-weight:200;color:var(--tm-accent);line-height:1;transition:transform .4s cubic-bezier(.22,.61,.36,1)">+</span>
+    <p class="v1s-eyebrow" style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;border-bottom:1px solid;padding-bottom:7px;margin:0 0 clamp(40px,5vw,64px)">SOLUCIONES PARA RETAIL</p>
+    <div class="v1s-list" style="border-top:1px solid">
+      <div class="v1s-row" style="border-bottom:1px solid">
+        <button type="button" class="v1s-btn" data-sol="0" data-cursor="EXPLORAR" onClick="{{ onSol }}" aria-expanded="false" aria-controls="tm-sol-0" style="display:grid;grid-template-columns:64px minmax(0,1fr) 34px;gap:clamp(16px,2.5vw,36px);align-items:baseline">
+          <span id="tm-solrow-n" class="v1s-num">01</span>
+          <span style="display:block"><span class="v1s-title" style="display:block;font-size:clamp(20px,2.3vw,30px);font-weight:300;letter-spacing:-.022em;line-height:1.2">Strategy &amp; Advisory</span><span class="v1s-sub" style="display:block;font-size:15.5px;margin-top:9px">Definimos qué transformar, dónde invertir y qué hacer primero.</span></span>
+          <span class="v1s-plus" data-plus style="justify-self:end;font-size:22px;font-weight:200;line-height:1">+</span>
         </button>
-        <div id="tm-sol-0" style="position:relative;max-height:0;overflow:hidden;background:linear-gradient(90deg,#141414 0%,#181919 100%);transition:max-height .55s cubic-bezier(.22,.61,.36,1)"><svg aria-hidden="true" viewBox="0 0 420 200" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0 0 0 auto;height:100%;width:min(48%,420px);z-index:0;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 60%);mask-image:linear-gradient(90deg,transparent,#000 60%)"><g fill="none" stroke="rgba(255,255,255,.14)" stroke-width="1.2"><line x1="240" y1="80" x2="340" y2="120"/><line x1="280" y1="40" x2="340" y2="120"/><line x1="320" y1="180" x2="340" y2="120"/></g><g fill="rgba(255,255,255,.3)"><circle cx="240" cy="80" r="3"/><circle cx="280" cy="40" r="3"/><circle cx="320" cy="180" r="3"/><circle cx="360" cy="160" r="3"/></g><circle cx="340" cy="120" r="6" fill="rgba(128,229,147,.7)"/></svg>
+        <div id="tm-sol-0" style="position:relative;max-height:0;overflow:hidden;background:linear-gradient(90deg,#141414 0%,#181919 100%);transition:max-height .55s cubic-bezier(.22,.61,.36,1)">
+          <svg aria-hidden="true" viewBox="0 0 420 200" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0 0 0 auto;height:100%;width:min(48%,420px);z-index:0;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 60%);mask-image:linear-gradient(90deg,transparent,#000 60%)"><g fill="none" stroke="rgba(255,255,255,.14)" stroke-width="1.2"><line x1="240" y1="80" x2="340" y2="120"/><line x1="280" y1="40" x2="340" y2="120"/><line x1="320" y1="180" x2="340" y2="120"/></g><g fill="rgba(255,255,255,.3)"><circle cx="240" cy="80" r="3"/><circle cx="280" cy="40" r="3"/><circle cx="320" cy="180" r="3"/><circle cx="360" cy="160" r="3"/></g><circle cx="340" cy="120" r="6" fill="rgba(128,229,147,.7)"/></svg>
           <div style="position:relative;z-index:1;display:grid;grid-template-columns:64px minmax(0,1fr);gap:clamp(16px,2.5vw,36px);padding:clamp(4px,1vw,10px) 0 clamp(30px,3.5vw,42px)">
             <span></span>
             <div style="max-width:62ch">
-              <p style="font-size:16px;line-height:1.68;color:rgba(255,255,255,.72);margin:0">Analizamos operación, tecnología, datos, experiencia, crecimiento e inteligencia artificial para construir un roadmap priorizado por impacto y viabilidad.</p>
+              <p style="font-size:16px;line-height:1.68;color:rgba(255,255,255,.72);margin:0">Analizamos la operación, los canales digitales, la tecnología, los datos y la experiencia del cliente para identificar dónde está el mayor potencial de crecimiento y priorizar las acciones de mayor impacto.</p>
               <p style="font-family:'IBM Plex Mono',monospace;font-size:12px;line-height:1.7;color:var(--tm-accent2);margin:22px 0 0">Consultoría retail · estrategia tecnológica · estrategia de IA · CRO &amp; Experience</p>
               <a href="strategy-advisory.html" style="display:inline-block;margin-top:26px;font-size:14.5px;font-weight:500;color:var(--tm-accent);border-bottom:1px solid var(--tm-accent);padding-bottom:4px">Conocer Strategy &amp; Advisory</a>
             </div>
           </div>
         </div>
       </div>
-
-      <div data-rv style="border-bottom:1px solid rgba(255,255,255,.12)">
-        <button data-sol="1" onClick="{{ onSol }}" data-cursor="EXPLORAR" aria-expanded="false" aria-controls="tm-sol-1" style="font:inherit;width:100%;background:none;border:0;padding:clamp(26px,3vw,38px) 0;cursor:pointer;display:grid;grid-template-columns:64px minmax(0,1fr) 34px;gap:clamp(16px,2.5vw,36px);align-items:baseline;text-align:left">
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:rgba(255,255,255,.62)">02</span>
-          <span style="display:block"><span style="display:block;font-size:clamp(20px,2.3vw,30px);font-weight:300;letter-spacing:-.022em;color:#fff;line-height:1.2">AI &amp; Custom Solutions</span><span style="display:block;font-size:15.5px;color:rgba(255,255,255,.6);margin-top:9px">Construimos agentes de IA y tecnología para procesos reales del negocio.</span></span>
-          <span data-plus style="justify-self:end;font-size:22px;font-weight:200;color:var(--tm-accent);line-height:1;transition:transform .4s cubic-bezier(.22,.61,.36,1)">+</span>
+      <div class="v1s-row" style="border-bottom:1px solid">
+        <button type="button" class="v1s-btn" data-sol="1" data-cursor="EXPLORAR" onClick="{{ onSol }}" aria-expanded="false" aria-controls="tm-sol-1" style="display:grid;grid-template-columns:64px minmax(0,1fr) 34px;gap:clamp(16px,2.5vw,36px);align-items:baseline">
+          <span class="v1s-num">02</span>
+          <span style="display:block"><span class="v1s-title" style="display:block;font-size:clamp(20px,2.3vw,30px);font-weight:300;letter-spacing:-.022em;line-height:1.2">AI &amp; Custom Solutions</span><span class="v1s-sub" style="display:block;font-size:15.5px;margin-top:9px">Construimos agentes de IA y tecnología para procesos reales del negocio.</span></span>
+          <span class="v1s-plus" data-plus style="justify-self:end;font-size:22px;font-weight:200;line-height:1">+</span>
         </button>
-        <div id="tm-sol-1" style="position:relative;max-height:0;overflow:hidden;background:linear-gradient(90deg,#141414 0%,#181919 100%);transition:max-height .55s cubic-bezier(.22,.61,.36,1)"><svg aria-hidden="true" viewBox="0 0 420 200" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0 0 0 auto;height:100%;width:min(48%,420px);z-index:0;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 60%);mask-image:linear-gradient(90deg,transparent,#000 60%)"><g fill="none" stroke="rgba(255,255,255,.14)" stroke-width="1.2"><path d="M300 100 L240 60 M300 100 L240 140 M300 100 L360 60 M300 100 L360 140 M300 100 L280 180"/></g><g fill="rgba(255,255,255,.26)"><circle cx="240" cy="60" r="3"/><circle cx="240" cy="140" r="3"/><circle cx="360" cy="60" r="3"/><circle cx="360" cy="140" r="3"/><circle cx="280" cy="180" r="3"/></g><circle cx="300" cy="100" r="6.5" fill="rgba(128,229,147,.75)"/></svg>
+        <div id="tm-sol-1" style="position:relative;max-height:0;overflow:hidden;background:linear-gradient(90deg,#141414 0%,#181919 100%);transition:max-height .55s cubic-bezier(.22,.61,.36,1)">
+          <svg aria-hidden="true" viewBox="0 0 420 200" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0 0 0 auto;height:100%;width:min(48%,420px);z-index:0;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 60%);mask-image:linear-gradient(90deg,transparent,#000 60%)"><g fill="none" stroke="rgba(255,255,255,.14)" stroke-width="1.2"><path d="M300 100 L240 60 M300 100 L240 140 M300 100 L360 60 M300 100 L360 140 M300 100 L280 180"/></g><g fill="rgba(255,255,255,.26)"><circle cx="240" cy="60" r="3"/><circle cx="240" cy="140" r="3"/><circle cx="360" cy="60" r="3"/><circle cx="360" cy="140" r="3"/><circle cx="280" cy="180" r="3"/></g><circle cx="300" cy="100" r="6.5" fill="rgba(128,229,147,.75)"/></svg>
           <div style="position:relative;z-index:1;display:grid;grid-template-columns:64px minmax(0,1fr);gap:clamp(16px,2.5vw,36px);padding:clamp(4px,1vw,10px) 0 clamp(30px,3.5vw,42px)">
             <span></span>
             <div style="max-width:62ch">
-              <p style="font-size:16px;line-height:1.68;color:rgba(255,255,255,.72);margin:0">Diseñamos agentes, aplicaciones y productos digitales conectados con los sistemas y datos de la empresa para automatizar procesos, acelerar decisiones y mejorar la operación.</p>
+              <p style="font-size:16px;line-height:1.68;color:rgba(255,255,255,.72);margin:0">Diseñamos y conectamos inteligencia artificial con los sistemas y datos de la empresa para automatizar tareas, analizar información, recomendar decisiones y ejecutar procesos dentro de la operación.</p>
               <p style="font-family:'IBM Plex Mono',monospace;font-size:12px;line-height:1.7;color:var(--tm-accent2);margin:22px 0 0">Agentes de IA · AI Strategy · productos digitales · aplicaciones a medida</p>
               <a href="ai-custom-solutions.html" style="display:inline-block;margin-top:26px;font-size:14.5px;font-weight:500;color:var(--tm-accent);border-bottom:1px solid var(--tm-accent);padding-bottom:4px">Conocer AI &amp; Custom Solutions</a>
             </div>
           </div>
         </div>
       </div>
-
-      <div data-rv style="border-bottom:1px solid rgba(255,255,255,.12)">
-        <button data-sol="2" onClick="{{ onSol }}" data-cursor="EXPLORAR" aria-expanded="false" aria-controls="tm-sol-2" style="font:inherit;width:100%;background:none;border:0;padding:clamp(26px,3vw,38px) 0;cursor:pointer;display:grid;grid-template-columns:64px minmax(0,1fr) 34px;gap:clamp(16px,2.5vw,36px);align-items:baseline;text-align:left">
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:rgba(255,255,255,.62)">03</span>
-          <span style="display:block"><span style="display:block;font-size:clamp(20px,2.3vw,30px);font-weight:300;letter-spacing:-.022em;color:#fff;line-height:1.2">Commerce Solutions</span><span style="display:block;font-size:15.5px;color:rgba(255,255,255,.6);margin-top:9px">Diseñamos y conectamos los canales donde ocurre la venta.</span></span>
-          <span data-plus style="justify-self:end;font-size:22px;font-weight:200;color:var(--tm-accent);line-height:1;transition:transform .4s cubic-bezier(.22,.61,.36,1)">+</span>
+      <div class="v1s-row" style="border-bottom:1px solid">
+        <button type="button" class="v1s-btn" data-sol="2" data-cursor="EXPLORAR" onClick="{{ onSol }}" aria-expanded="false" aria-controls="tm-sol-2" style="display:grid;grid-template-columns:64px minmax(0,1fr) 34px;gap:clamp(16px,2.5vw,36px);align-items:baseline">
+          <span class="v1s-num">03</span>
+          <span style="display:block"><span class="v1s-title" style="display:block;font-size:clamp(20px,2.3vw,30px);font-weight:300;letter-spacing:-.022em;line-height:1.2">Commerce Solutions</span><span class="v1s-sub" style="display:block;font-size:15.5px;margin-top:9px">Diseñamos y conectamos los canales donde ocurre la venta.</span></span>
+          <span class="v1s-plus" data-plus style="justify-self:end;font-size:22px;font-weight:200;line-height:1">+</span>
         </button>
-        <div id="tm-sol-2" style="position:relative;max-height:0;overflow:hidden;background:linear-gradient(90deg,#141414 0%,#181919 100%);transition:max-height .55s cubic-bezier(.22,.61,.36,1)"><div id="tm-commerce-3d" aria-hidden="true" style="position:absolute;inset:0 0 0 auto;height:100%;width:min(48%,420px);z-index:0;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 60%);mask-image:linear-gradient(90deg,transparent,#000 60%)"></div>
+        <div id="tm-sol-2" style="position:relative;max-height:0;overflow:hidden;background:linear-gradient(90deg,#141414 0%,#181919 100%);transition:max-height .55s cubic-bezier(.22,.61,.36,1)">
+          <div id="tm-commerce-3d" aria-hidden="true" style="position:absolute;inset:0 0 0 auto;height:100%;width:min(48%,420px);z-index:0;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 60%);mask-image:linear-gradient(90deg,transparent,#000 60%)"></div>
           <div style="position:relative;z-index:1;display:grid;grid-template-columns:64px minmax(0,1fr);gap:clamp(16px,2.5vw,36px);padding:clamp(4px,1vw,10px) 0 clamp(30px,3.5vw,42px)">
             <span></span>
             <div style="max-width:62ch">
-              <p style="font-size:16px;line-height:1.68;color:rgba(255,255,255,.72);margin:0">Implementamos y evolucionamos ecommerce B2C y B2B, marketplaces y experiencias omnicanal conectadas con inventario, ERP, POS, pagos y logística.</p>
+              <p style="font-size:16px;line-height:1.68;color:rgba(255,255,255,.72);margin:0">Diseñamos, integramos y evolucionamos plataformas de comercio B2C y B2B, marketplaces y modelos omnicanal conectados con inventario, precios, pedidos, pagos, logística y sistemas empresariales.</p>
               <p style="font-family:'IBM Plex Mono',monospace;font-size:12px;line-height:1.7;color:var(--tm-accent2);margin:22px 0 0">VTEX · Shopify · commercetools · integraciones · migraciones · marketplaces · omnicanalidad</p>
               <a href="commerce-solutions.html" style="display:inline-block;margin-top:26px;font-size:14.5px;font-weight:500;color:var(--tm-accent);border-bottom:1px solid var(--tm-accent);padding-bottom:4px">Conocer Commerce Solutions</a>
             </div>
           </div>
         </div>
       </div>
-
-      <div data-rv style="border-bottom:1px solid rgba(255,255,255,.12)">
-        <button data-sol="3" onClick="{{ onSol }}" data-cursor="EXPLORAR" aria-expanded="false" aria-controls="tm-sol-3" style="font:inherit;width:100%;background:none;border:0;padding:clamp(26px,3vw,38px) 0;cursor:pointer;display:grid;grid-template-columns:64px minmax(0,1fr) 34px;gap:clamp(16px,2.5vw,36px);align-items:baseline;text-align:left">
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:rgba(255,255,255,.62)">04</span>
-          <span style="display:block"><span style="display:block;font-size:clamp(20px,2.3vw,30px);font-weight:300;letter-spacing:-.022em;color:#fff;line-height:1.2">Retail Growth</span><span style="display:block;font-size:15.5px;color:rgba(255,255,255,.6);margin-top:9px">Trabajamos las variables que hacen crecer el negocio digital.</span></span>
-          <span data-plus style="justify-self:end;font-size:22px;font-weight:200;color:var(--tm-accent);line-height:1;transition:transform .4s cubic-bezier(.22,.61,.36,1)">+</span>
+      <div class="v1s-row" style="border-bottom:1px solid">
+        <button type="button" class="v1s-btn" data-sol="3" data-cursor="EXPLORAR" onClick="{{ onSol }}" aria-expanded="false" aria-controls="tm-sol-3" style="display:grid;grid-template-columns:64px minmax(0,1fr) 34px;gap:clamp(16px,2.5vw,36px);align-items:baseline">
+          <span class="v1s-num">04</span>
+          <span style="display:block"><span class="v1s-title" style="display:block;font-size:clamp(20px,2.3vw,30px);font-weight:300;letter-spacing:-.022em;line-height:1.2">Retail Growth</span><span class="v1s-sub" style="display:block;font-size:15.5px;margin-top:9px">Trabajamos las variables que hacen crecer el negocio digital.</span></span>
+          <span class="v1s-plus" data-plus style="justify-self:end;font-size:22px;font-weight:200;line-height:1">+</span>
         </button>
-        <div id="tm-sol-3" style="position:relative;max-height:0;overflow:hidden;background:linear-gradient(90deg,#141414 0%,#181919 100%);transition:max-height .55s cubic-bezier(.22,.61,.36,1)"><div id="tm-retail-3d" aria-hidden="true" style="position:absolute;inset:0 0 0 auto;height:100%;width:min(48%,420px);z-index:0;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 60%);mask-image:linear-gradient(90deg,transparent,#000 60%)"></div>
+        <div id="tm-sol-3" style="position:relative;max-height:0;overflow:hidden;background:linear-gradient(90deg,#141414 0%,#181919 100%);transition:max-height .55s cubic-bezier(.22,.61,.36,1)">
+          <div id="tm-retail-3d" aria-hidden="true" style="position:absolute;inset:0 0 0 auto;height:100%;width:min(48%,420px);z-index:0;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 60%);mask-image:linear-gradient(90deg,transparent,#000 60%)"></div>
           <div style="position:relative;z-index:1;display:grid;grid-template-columns:64px minmax(0,1fr);gap:clamp(16px,2.5vw,36px);padding:clamp(4px,1vw,10px) 0 clamp(30px,3.5vw,42px)">
             <span></span>
             <div style="max-width:62ch">
@@ -376,14 +390,14 @@ a:hover{color:var(--tm-accent2)}
           </div>
         </div>
       </div>
-
-      <div data-rv style="border-bottom:1px solid rgba(255,255,255,.12)">
-        <button data-sol="4" onClick="{{ onSol }}" data-cursor="EXPLORAR" aria-expanded="false" aria-controls="tm-sol-4" style="font:inherit;width:100%;background:none;border:0;padding:clamp(26px,3vw,38px) 0;cursor:pointer;display:grid;grid-template-columns:64px minmax(0,1fr) 34px;gap:clamp(16px,2.5vw,36px);align-items:baseline;text-align:left">
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:rgba(255,255,255,.62)">05</span>
-          <span style="display:block"><span style="display:block;font-size:clamp(20px,2.3vw,30px);font-weight:300;letter-spacing:-.022em;color:#fff;line-height:1.2">Cloud &amp; Data</span><span style="display:block;font-size:15.5px;color:rgba(255,255,255,.6);margin-top:9px">Construimos la infraestructura y los datos que sostienen la operación.</span></span>
-          <span data-plus style="justify-self:end;font-size:22px;font-weight:200;color:var(--tm-accent);line-height:1;transition:transform .4s cubic-bezier(.22,.61,.36,1)">+</span>
+      <div class="v1s-row" style="border-bottom:1px solid">
+        <button type="button" class="v1s-btn" data-sol="4" data-cursor="EXPLORAR" onClick="{{ onSol }}" aria-expanded="false" aria-controls="tm-sol-4" style="display:grid;grid-template-columns:64px minmax(0,1fr) 34px;gap:clamp(16px,2.5vw,36px);align-items:baseline">
+          <span class="v1s-num">05</span>
+          <span style="display:block"><span class="v1s-title" style="display:block;font-size:clamp(20px,2.3vw,30px);font-weight:300;letter-spacing:-.022em;line-height:1.2">Cloud &amp; Data</span><span class="v1s-sub" style="display:block;font-size:15.5px;margin-top:9px">Construimos la infraestructura y los datos que sostienen la operación.</span></span>
+          <span class="v1s-plus" data-plus style="justify-self:end;font-size:22px;font-weight:200;line-height:1">+</span>
         </button>
-        <div id="tm-sol-4" style="position:relative;max-height:0;overflow:hidden;background:linear-gradient(90deg,#141414 0%,#181919 100%);transition:max-height .55s cubic-bezier(.22,.61,.36,1)"><div id="tm-cloud-3d" aria-hidden="true" style="position:absolute;inset:0 0 0 auto;height:100%;width:min(48%,420px);z-index:0;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 60%);mask-image:linear-gradient(90deg,transparent,#000 60%)"></div>
+        <div id="tm-sol-4" style="position:relative;max-height:0;overflow:hidden;background:linear-gradient(90deg,#141414 0%,#181919 100%);transition:max-height .55s cubic-bezier(.22,.61,.36,1)">
+          <div id="tm-cloud-3d" aria-hidden="true" style="position:absolute;inset:0 0 0 auto;height:100%;width:min(48%,420px);z-index:0;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 60%);mask-image:linear-gradient(90deg,transparent,#000 60%)"></div>
           <div style="position:relative;z-index:1;display:grid;grid-template-columns:64px minmax(0,1fr);gap:clamp(16px,2.5vw,36px);padding:clamp(4px,1vw,10px) 0 clamp(30px,3.5vw,42px)">
             <span></span>
             <div style="max-width:62ch">
@@ -394,41 +408,42 @@ a:hover{color:var(--tm-accent2)}
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </section>
 
-<section id="tm-pause" style="position:relative;overflow:hidden;background:#F2F4F3;color:#141414;padding:clamp(90px,12vw,168px) 0">
-  <svg id="tm-neural" aria-hidden="true" viewBox="0 0 900 520" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;width:100%;height:100%;display:none;z-index:0;pointer-events:none;-webkit-mask-image:linear-gradient(100deg,transparent 18%,rgba(0,0,0,.45) 52%,#000 88%);mask-image:linear-gradient(100deg,transparent 18%,rgba(0,0,0,.45) 52%,#000 88%)"></svg>
+<section id="tm-pause" style="position:relative;overflow:hidden;background:#52C7CF;color:#141414;padding:clamp(90px,12vw,168px) 0">
   <div id="tm-pausefield" aria-hidden="true" style="position:absolute;inset:0;z-index:0;pointer-events:none;-webkit-mask-image:linear-gradient(100deg,transparent 14%,rgba(0,0,0,.5) 50%,#000 86%);mask-image:linear-gradient(100deg,transparent 14%,rgba(0,0,0,.5) 50%,#000 86%)"></div>
   <div style="position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
-    <div style="max-width:900px">
-      <h2 data-split style="font-size:clamp(28px,3.6vw,46px);font-weight:300;line-height:1.13;letter-spacing:-.028em;color:#141414;margin:0;max-width:20ch;text-wrap:pretty">La IA llegó después de entender cómo funciona el retail.</h2>
-      <div data-rv style="margin-top:clamp(28px,3.5vw,40px);max-width:62ch">
-        <p style="font-size:clamp(16px,1.3vw,19px);line-height:1.68;color:#4A524E;margin:0">Durante más de 10 años hemos trabajado con catálogos, inventarios, pedidos, integraciones, plataformas, adquisición, conversión e infraestructura.</p>
-        <p style="font-size:clamp(16px,1.3vw,19px);line-height:1.68;color:#4A524E;margin:18px 0 0">Ese conocimiento cambia la forma en que usamos inteligencia artificial.</p>
-      </div>
-      <div data-rv style="margin:clamp(44px,5vw,64px) 0 clamp(36px,4vw,48px);display:grid;gap:clamp(26px,3vw,36px)">
-        <div data-rv style="position:relative;padding-left:clamp(20px,2.5vw,32px)">
-          <span data-qbar style="position:absolute;left:0;top:0;bottom:0;width:2px;background:#17747C"></span>
-          <span style="display:block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.12em;color:#6A716D;margin-bottom:14px">NO EMPEZAMOS PREGUNTANDO:</span>
-          <span style="display:block;font-size:clamp(20px,2.4vw,32px);font-weight:300;line-height:1.28;letter-spacing:-.022em;color:#141414">“¿Dónde podemos poner IA?”</span>
+    <div class="v2p-grid" style="display:grid;grid-template-columns:.9fr 1.1fr;align-items:start">
+      <div class="v2p-panel">
+        <div data-rv data-glow data-glow-base="linear-gradient(160deg,rgba(255,255,255,.5) 0%,rgba(255,255,255,.2) 55%,rgba(255,255,255,.32) 100%)" style="position:relative;background:linear-gradient(160deg,rgba(255,255,255,.5) 0%,rgba(255,255,255,.2) 55%,rgba(255,255,255,.32) 100%);backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);padding:clamp(26px,3vw,32px) clamp(24px,2.6vw,32px) clamp(26px,3vw,32px) clamp(18px,2.2vw,26px)">
+          <span data-qbar style="position:absolute;left:0;top:0;bottom:0;width:2px;background:rgba(20,20,20,.18)"></span>
+          <span style="display:block;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;color:rgba(20,20,20,.5);margin-bottom:12px">NO EMPEZAMOS PREGUNTANDO:</span>
+          <span style="display:block;font-size:clamp(18px,2vw,26px);font-weight:300;line-height:1.28;letter-spacing:-.02em;color:rgba(20,20,20,.5)">“¿Dónde podemos poner IA?”</span>
         </div>
-        <div data-rv style="position:relative;padding-left:clamp(20px,2.5vw,32px)">
-          <span data-qbar style="position:absolute;left:0;top:0;bottom:0;width:2px;background:#17747C"></span>
-          <span style="display:block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.12em;color:#6A716D;margin-bottom:14px">EMPEZAMOS PREGUNTANDO:</span>
-          <span style="display:block;font-size:clamp(20px,2.4vw,32px);font-weight:300;line-height:1.28;letter-spacing:-.022em;color:#141414">“¿Qué parte del negocio debería funcionar mejor?”</span>
+        <div data-rv data-glow data-glow-base="linear-gradient(160deg,rgba(255,255,255,.5) 0%,rgba(255,255,255,.2) 55%,rgba(255,255,255,.32) 100%)" style="position:relative;background:linear-gradient(160deg,rgba(255,255,255,.5) 0%,rgba(255,255,255,.2) 55%,rgba(255,255,255,.32) 100%);backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);padding:clamp(26px,3vw,32px) clamp(24px,2.6vw,32px) clamp(26px,3vw,32px) clamp(18px,2.2vw,26px)">
+          <span data-qbar style="position:absolute;left:0;top:0;bottom:0;width:2px;background:#141414"></span>
+          <span style="display:block;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;color:#141414;margin-bottom:12px">EMPEZAMOS PREGUNTANDO:</span>
+          <span style="display:block;font-size:clamp(18px,2vw,26px);font-weight:300;line-height:1.28;letter-spacing:-.02em;color:#141414">“¿Qué parte del negocio debería funcionar mejor?”</span>
         </div>
       </div>
-      <p data-rv style="font-size:clamp(16px,1.3vw,19px);line-height:1.68;color:#4A524E;margin:0 0 clamp(36px,4vw,48px);max-width:62ch">A partir de ahí definimos si la respuesta necesita automatización, predicción, recomendación, ejecución autónoma o simplemente una mejor solución tecnológica.</p>
-      <a data-rv data-mag href="soluciones-ia.html" data-cursor="CONECTAR" style="display:inline-flex;align-items:center;gap:12px;padding:16px 30px;background:transparent;color:#141414;font-size:15px;font-weight:500;border:1px solid #141414">Conocer soluciones de IA</a>
+      <div class="v2p-main">
+        <h2 data-split style="font-size:clamp(28px,3.6vw,46px);font-weight:300;line-height:1.13;letter-spacing:-.028em;color:#141414;margin:0;max-width:20ch;text-wrap:pretty">La IA llegó después de entender cómo funciona el retail.</h2>
+        <div data-rv style="max-width:48ch">
+          <p style="font-size:clamp(15px,1.1vw,17px);line-height:1.66;color:rgba(20,20,20,.72);margin:0">Durante más de 10 años hemos trabajado con catálogos, inventarios, pedidos, integraciones, plataformas, adquisición, conversión e infraestructura.</p>
+          <p style="font-size:clamp(15px,1.1vw,17px);line-height:1.66;color:rgba(20,20,20,.72);margin:12px 0 0">Ese conocimiento cambia la forma en que usamos inteligencia artificial.</p>
+        </div>
+        <p data-rv style="font-size:clamp(15px,1.1vw,17px);line-height:1.66;color:rgba(20,20,20,.72);max-width:48ch">A partir de ahí definimos si la respuesta necesita automatización, predicción, recomendación, ejecución autónoma o simplemente una mejor solución tecnológica.</p>
+        <a data-rv data-mag href="soluciones-ia.html" data-cursor="CONECTAR" style="display:inline-flex;align-items:center;gap:12px;padding:16px 30px;background:transparent;color:#141414;font-size:15px;font-weight:500;border:1px solid #141414">Conocer soluciones de IA</a>
+      </div>
     </div>
   </div>
 </section>
 
-<section style="background:var(--tm-ink-deep);padding:clamp(84px,10vw,148px) 0">
-  <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
+<section style="position:relative;overflow:hidden;background:var(--tm-ink-deep);padding:clamp(84px,10vw,148px) 0">
+  <div id="tm-topo" aria-hidden="true" style="position:absolute;inset:0;pointer-events:none"></div>
+  <div style="position:relative;max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
     <p data-rv style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.2em;color:var(--tm-accent);margin:0 0 30px">CASO DE ÉXITO · MARIO HERNÁNDEZ</p>
     <h2 data-split style="font-size:clamp(26px,3.4vw,44px);font-weight:300;line-height:1.14;letter-spacing:-.028em;color:#fff;margin:0;max-width:20ch;text-wrap:pretty">5 países. 7 marketplaces. 100% de las tiendas conectadas.</h2>
     <p data-rv style="font-size:clamp(16px,1.3vw,19px);line-height:1.68;color:rgba(255,255,255,.72);margin:28px 0 0;max-width:58ch">Desde 2015 construimos y operamos junto a Mario Hernández una operación de comercio que conecta ecommerce, marketplaces y tiendas físicas.</p>
@@ -438,119 +453,54 @@ a:hover{color:var(--tm-accent2)}
     </div>
 
     <div id="tm-stats" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:rgba(255,255,255,.1);border-top:1px solid rgba(255,255,255,.1);border-bottom:1px solid rgba(255,255,255,.1);margin:clamp(44px,5vw,68px) 0">
-      <div data-rv style="background:var(--tm-ink-deep);padding:clamp(30px,4vw,48px) clamp(22px,2.5vw,32px)">
+      <div data-rv data-glow data-glow-base="linear-gradient(160deg,rgba(255,255,255,.12) 0%,rgba(255,255,255,.03) 55%,rgba(255,255,255,.08) 100%)" style="background:linear-gradient(160deg,rgba(255,255,255,.12) 0%,rgba(255,255,255,.03) 55%,rgba(255,255,255,.08) 100%);backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);padding:clamp(30px,4vw,48px) clamp(22px,2.5vw,32px)">
         <b data-count="5" data-pad="2" style="display:block;font-size:clamp(34px,4.4vw,58px);font-weight:200;letter-spacing:-.03em;color:var(--tm-accent);margin-bottom:12px;line-height:1">05</b>
         <span style="font-size:15px;color:rgba(255,255,255,.66)">ecommerce</span>
       </div>
-      <div data-rv style="background:var(--tm-ink-deep);padding:clamp(30px,4vw,48px) clamp(22px,2.5vw,32px)">
+      <div data-rv data-glow data-glow-base="linear-gradient(160deg,rgba(255,255,255,.12) 0%,rgba(255,255,255,.03) 55%,rgba(255,255,255,.08) 100%)" style="background:linear-gradient(160deg,rgba(255,255,255,.12) 0%,rgba(255,255,255,.03) 55%,rgba(255,255,255,.08) 100%);backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);padding:clamp(30px,4vw,48px) clamp(22px,2.5vw,32px)">
         <b data-count="7" data-pad="2" style="display:block;font-size:clamp(34px,4.4vw,58px);font-weight:200;letter-spacing:-.03em;color:var(--tm-accent);margin-bottom:12px;line-height:1">07</b>
         <span style="font-size:15px;color:rgba(255,255,255,.66)">marketplaces</span>
       </div>
-      <div data-rv style="background:var(--tm-ink-deep);padding:clamp(30px,4vw,48px) clamp(22px,2.5vw,32px)">
+      <div data-rv data-glow data-glow-base="linear-gradient(160deg,rgba(255,255,255,.12) 0%,rgba(255,255,255,.03) 55%,rgba(255,255,255,.08) 100%)" style="background:linear-gradient(160deg,rgba(255,255,255,.12) 0%,rgba(255,255,255,.03) 55%,rgba(255,255,255,.08) 100%);backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);padding:clamp(30px,4vw,48px) clamp(22px,2.5vw,32px)">
         <b data-count="80" data-suffix="%" style="display:block;font-size:clamp(34px,4.4vw,58px);font-weight:200;letter-spacing:-.03em;color:var(--tm-accent);margin-bottom:12px;line-height:1">80%</b>
         <span style="font-size:15px;color:rgba(255,255,255,.66)">de los envíos salen desde tienda</span>
       </div>
     </div>
 
-    <a data-rv data-mag href="#" data-cursor="VER CASO" style="display:inline-flex;align-items:center;gap:12px;padding:16px 30px;background:var(--tm-accent);color:#141414;font-size:15px;font-weight:500;border:1px solid var(--tm-accent)">Ver el caso →</a>
+    <a data-rv data-mag href="caso-mario-hernandez.html" data-cursor="VER CASO" style="display:inline-flex;align-items:center;gap:12px;padding:16px 30px;background:var(--tm-accent);color:#141414;font-size:15px;font-weight:500;border:1px solid var(--tm-accent)">Ver el caso →</a>
   </div>
 </section>
 
-<section data-faq style="border-top:1px solid rgba(255,255,255,.09);padding:clamp(80px,10vw,140px) 0">
-  <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
-    <h2 data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:400;letter-spacing:.14em;color:var(--tm-accent);border-bottom:1px solid var(--tm-accent);padding-bottom:7px;margin:0 0 clamp(40px,5vw,64px)">PREGUNTAS FRECUENTES</h2>
-    <div style="max-width:980px;border-top:1px solid rgba(255,255,255,.11)">
-      <details data-faq-item data-rv style="border-bottom:1px solid rgba(255,255,255,.11)">
-        <summary style="display:flex;align-items:flex-start;justify-content:space-between;gap:clamp(20px,3vw,48px);padding:clamp(22px,2.4vw,30px) 0;list-style:none;cursor:pointer;transition:opacity .3s" style-hover="opacity:.76">
-          <h3 data-faq-q style="font-size:clamp(16.5px,1.4vw,19px);font-weight:400;line-height:1.46;letter-spacing:-.01em;color:#fff;margin:0;max-width:46ch;text-wrap:pretty;transition:color .3s">¿Qué hace TITA Media?</h3>
-          <span aria-hidden="true" style="position:relative;flex:none;display:block;width:13px;height:13px;margin-top:6px">
-            <i style="position:absolute;top:6px;left:0;width:13px;height:1px;background:var(--tm-accent)"></i>
-            <i data-faq-v style="position:absolute;top:0;left:6px;width:1px;height:13px;background:var(--tm-accent);transition:opacity .3s"></i>
-          </span>
-        </summary>
-        <div data-faq-panel style="overflow:hidden">
-          <p style="font-size:15.5px;line-height:1.7;color:rgba(255,255,255,.72);margin:0 0 clamp(24px,2.6vw,32px);max-width:62ch;text-wrap:pretty">TITA Media es una compañía de consultoría y tecnología para operaciones de comercio y retail. Trabajamos cinco frentes conectados: estrategia y advisory, agentes de IA y tecnología a medida, plataformas de comercio, crecimiento en retail, y arquitectura de cloud y datos. Operamos desde Colombia con proyectos en distintos países de Latinoamérica.</p>
-        </div>
-      </details>
-      <details data-faq-item data-rv style="border-bottom:1px solid rgba(255,255,255,.11)">
-        <summary style="display:flex;align-items:flex-start;justify-content:space-between;gap:clamp(20px,3vw,48px);padding:clamp(22px,2.4vw,30px) 0;list-style:none;cursor:pointer;transition:opacity .3s" style-hover="opacity:.76">
-          <h3 data-faq-q style="font-size:clamp(16.5px,1.4vw,19px);font-weight:400;line-height:1.46;letter-spacing:-.01em;color:#fff;margin:0;max-width:46ch;text-wrap:pretty;transition:color .3s">¿En qué se diferencia TITA de una agencia digital o de un integrador?</h3>
-          <span aria-hidden="true" style="position:relative;flex:none;display:block;width:13px;height:13px;margin-top:6px">
-            <i style="position:absolute;top:6px;left:0;width:13px;height:1px;background:var(--tm-accent)"></i>
-            <i data-faq-v style="position:absolute;top:0;left:6px;width:1px;height:13px;background:var(--tm-accent);transition:opacity .3s"></i>
-          </span>
-        </summary>
-        <div data-faq-panel style="overflow:hidden">
-          <p style="font-size:15.5px;line-height:1.7;color:rgba(255,255,255,.72);margin:0 0 clamp(24px,2.6vw,32px);max-width:62ch;text-wrap:pretty">Una agencia ejecuta campañas y contenido; un integrador implementa una plataforma y entrega. Nosotros cubrimos las tres capas: definimos la estrategia, implementamos la tecnología y acompañamos la operación una vez que está en marcha, con el mismo equipo.</p>
-        </div>
-      </details>
-      <details data-faq-item data-rv style="border-bottom:1px solid rgba(255,255,255,.11)">
-        <summary style="display:flex;align-items:flex-start;justify-content:space-between;gap:clamp(20px,3vw,48px);padding:clamp(22px,2.4vw,30px) 0;list-style:none;cursor:pointer;transition:opacity .3s" style-hover="opacity:.76">
-          <h3 data-faq-q style="font-size:clamp(16.5px,1.4vw,19px);font-weight:400;line-height:1.46;letter-spacing:-.01em;color:#fff;margin:0;max-width:46ch;text-wrap:pretty;transition:color .3s">¿Cómo empieza un proyecto con TITA?</h3>
-          <span aria-hidden="true" style="position:relative;flex:none;display:block;width:13px;height:13px;margin-top:6px">
-            <i style="position:absolute;top:6px;left:0;width:13px;height:1px;background:var(--tm-accent)"></i>
-            <i data-faq-v style="position:absolute;top:0;left:6px;width:1px;height:13px;background:var(--tm-accent);transition:opacity .3s"></i>
-          </span>
-        </summary>
-        <div data-faq-panel style="overflow:hidden">
-          <p style="font-size:15.5px;line-height:1.7;color:rgba(255,255,255,.72);margin:0 0 clamp(24px,2.6vw,32px);max-width:62ch;text-wrap:pretty">Empieza con un diagnóstico de la operación actual: sistemas, datos, canales y procesos. De ahí sale un alcance por fases, donde la primera fase tiene entregables acotados y medibles antes de comprometer el resto.</p>
-        </div>
-      </details>
-      <details data-faq-item data-rv style="border-bottom:1px solid rgba(255,255,255,.11)">
-        <summary style="display:flex;align-items:flex-start;justify-content:space-between;gap:clamp(20px,3vw,48px);padding:clamp(22px,2.4vw,30px) 0;list-style:none;cursor:pointer;transition:opacity .3s" style-hover="opacity:.76">
-          <h3 data-faq-q style="font-size:clamp(16.5px,1.4vw,19px);font-weight:400;line-height:1.46;letter-spacing:-.01em;color:#fff;margin:0;max-width:46ch;text-wrap:pretty;transition:color .3s">¿Cómo se estructura la inversión?</h3>
-          <span aria-hidden="true" style="position:relative;flex:none;display:block;width:13px;height:13px;margin-top:6px">
-            <i style="position:absolute;top:6px;left:0;width:13px;height:1px;background:var(--tm-accent)"></i>
-            <i data-faq-v style="position:absolute;top:0;left:6px;width:1px;height:13px;background:var(--tm-accent);transition:opacity .3s"></i>
-          </span>
-        </summary>
-        <div data-faq-panel style="overflow:hidden">
-          <p style="font-size:15.5px;line-height:1.7;color:rgba(255,255,255,.72);margin:0 0 clamp(24px,2.6vw,32px);max-width:62ch;text-wrap:pretty">Depende del tipo de trabajo. Los proyectos de implementación se cotizan por alcance cerrado y fases; el acompañamiento, la operación y el crecimiento se trabajan con un fee recurrente. Las licencias de plataforma y el consumo de nube los factura directamente cada proveedor y no van dentro de nuestro fee.</p>
-        </div>
-      </details>
-      <details data-faq-item data-rv style="border-bottom:1px solid rgba(255,255,255,.11)">
-        <summary style="display:flex;align-items:flex-start;justify-content:space-between;gap:clamp(20px,3vw,48px);padding:clamp(22px,2.4vw,30px) 0;list-style:none;cursor:pointer;transition:opacity .3s" style-hover="opacity:.76">
-          <h3 data-faq-q style="font-size:clamp(16.5px,1.4vw,19px);font-weight:400;line-height:1.46;letter-spacing:-.01em;color:#fff;margin:0;max-width:46ch;text-wrap:pretty;transition:color .3s">¿Trabajan con empresas fuera de Colombia?</h3>
-          <span aria-hidden="true" style="position:relative;flex:none;display:block;width:13px;height:13px;margin-top:6px">
-            <i style="position:absolute;top:6px;left:0;width:13px;height:1px;background:var(--tm-accent)"></i>
-            <i data-faq-v style="position:absolute;top:0;left:6px;width:1px;height:13px;background:var(--tm-accent);transition:opacity .3s"></i>
-          </span>
-        </summary>
-        <div data-faq-panel style="overflow:hidden">
-          <p style="font-size:15.5px;line-height:1.7;color:rgba(255,255,255,.72);margin:0 0 clamp(24px,2.6vw,32px);max-width:62ch;text-wrap:pretty">Sí. Acompañamos operaciones regionales en Latinoamérica. Con Mario Hernández, por ejemplo, operamos desde 2015 una operación de comercio que conecta cinco países y siete marketplaces.</p>
-        </div>
-      </details>
-    </div>
-  </div>
-</section>
-
-<section id="tm-contacto" style="background:var(--tm-panel);padding:clamp(84px,10vw,148px) 0">
+<section id="tm-contacto" style="background:#fff;padding:clamp(84px,10vw,148px) 0">
   <div style="max-width:900px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
-    <h2 data-split style="font-size:clamp(28px,3.6vw,46px);font-weight:300;line-height:1.13;letter-spacing:-.028em;color:#fff;margin:0;max-width:14ch">Hablemos de tu negocio.</h2>
+    <h2 data-split style="font-size:clamp(28px,3.6vw,46px);font-weight:300;line-height:1.13;letter-spacing:-.028em;color:#141414;margin:0;max-width:14ch">Hablemos de tu negocio.</h2>
     <div data-rv style="margin:26px 0 clamp(44px,5vw,60px);max-width:60ch">
-      <p style="font-size:clamp(16px,1.3vw,18px);line-height:1.68;color:rgba(255,255,255,.72);margin:0">Cuéntanos qué quieres resolver, mejorar o construir.</p>
-      <p style="font-size:clamp(16px,1.3vw,18px);line-height:1.68;color:rgba(255,255,255,.72);margin:16px 0 0">Nuestro equipo revisará tu caso para entender el contexto y definir si podemos ayudarte y por dónde tiene sentido empezar.</p>
+      <p style="font-size:clamp(16px,1.3vw,18px);line-height:1.68;color:rgba(20,20,20,.68);margin:0">Cuéntanos qué quieres resolver, mejorar o construir.</p>
+      <p style="font-size:clamp(16px,1.3vw,18px);line-height:1.68;color:rgba(20,20,20,.68);margin:16px 0 0">Nuestro equipo revisará tu caso para entender el contexto y definir si podemos ayudarte y por dónde tiene sentido empezar.</p>
     </div>
 
-    <p data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:var(--tm-accent);border-bottom:1px solid var(--tm-accent);padding-bottom:7px;margin:0 0 clamp(26px,3vw,34px)">¿EN QUÉ PODEMOS AYUDARTE?</p>
-    <div data-rv role="group" aria-label="¿En qué podemos ayudarte?" style="display:grid;gap:1px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.1);margin-bottom:clamp(44px,5vw,60px)">
-      <label style="background:var(--tm-panel);padding:17px clamp(18px,2.2vw,26px);display:flex;align-items:center;gap:16px;cursor:pointer;font-size:15.5px;color:rgba(255,255,255,.85)"><input type="checkbox" name="need" style="accent-color:#80E593;width:17px;height:17px;flex:none;margin:0"><span>Strategy &amp; Advisory · Consultoría y estrategia</span></label>
-      <label style="background:var(--tm-panel);padding:17px clamp(18px,2.2vw,26px);display:flex;align-items:center;gap:16px;cursor:pointer;font-size:15.5px;color:rgba(255,255,255,.85)"><input type="checkbox" name="need" style="accent-color:#80E593;width:17px;height:17px;flex:none;margin:0"><span>AI &amp; Custom Solutions · Agentes de IA y tecnología a medida</span></label>
-      <label style="background:var(--tm-panel);padding:17px clamp(18px,2.2vw,26px);display:flex;align-items:center;gap:16px;cursor:pointer;font-size:15.5px;color:rgba(255,255,255,.85)"><input type="checkbox" name="need" style="accent-color:#80E593;width:17px;height:17px;flex:none;margin:0"><span>Commerce Solutions · Commerce, integraciones y omnicanalidad</span></label>
-      <label style="background:var(--tm-panel);padding:17px clamp(18px,2.2vw,26px);display:flex;align-items:center;gap:16px;cursor:pointer;font-size:15.5px;color:rgba(255,255,255,.85)"><input type="checkbox" name="need" style="accent-color:#80E593;width:17px;height:17px;flex:none;margin:0"><span>Retail Growth · SEO, GEO, AEO, CRO y Paid Media</span></label>
-      <label style="background:var(--tm-panel);padding:17px clamp(18px,2.2vw,26px);display:flex;align-items:center;gap:16px;cursor:pointer;font-size:15.5px;color:rgba(255,255,255,.85)"><input type="checkbox" name="need" style="accent-color:#80E593;width:17px;height:17px;flex:none;margin:0"><span>Cloud &amp; Data · Infraestructura cloud y datos</span></label>
-      <label style="background:var(--tm-panel);padding:17px clamp(18px,2.2vw,26px);display:flex;align-items:center;gap:16px;cursor:pointer;font-size:15.5px;color:rgba(255,255,255,.85)"><input type="checkbox" name="need" style="accent-color:#80E593;width:17px;height:17px;flex:none;margin:0"><span>Aún no lo tengo claro</span></label>
+    <p data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:#2E8C52;border-bottom:1px solid #2E8C52;padding-bottom:7px;margin:0 0 clamp(26px,3vw,34px)">¿EN QUÉ PODEMOS AYUDARTE?</p>
+    <div style="position:relative;margin-bottom:clamp(44px,5vw,60px)">
+    <div id="tm-glow" aria-hidden="true"></div>
+    <div data-rv role="group" aria-label="¿En qué podemos ayudarte?" style="position:relative;z-index:1;display:grid;gap:1px;background:rgba(20,20,20,.1);border:1px solid rgba(20,20,20,.12)">
+      <label style="background:#fff;padding:17px clamp(18px,2.2vw,26px);display:flex;align-items:center;gap:16px;cursor:pointer;font-size:15.5px;color:rgba(20,20,20,.85)"><input type="checkbox" name="need" style="accent-color:#2E8C52;width:17px;height:17px;flex:none;margin:0"><span>Strategy &amp; Advisory · Consultoría y estrategia</span></label>
+      <label style="background:#fff;padding:17px clamp(18px,2.2vw,26px);display:flex;align-items:center;gap:16px;cursor:pointer;font-size:15.5px;color:rgba(20,20,20,.85)"><input type="checkbox" name="need" style="accent-color:#2E8C52;width:17px;height:17px;flex:none;margin:0"><span>AI &amp; Custom Solutions · Agentes de IA y tecnología a medida</span></label>
+      <label style="background:#fff;padding:17px clamp(18px,2.2vw,26px);display:flex;align-items:center;gap:16px;cursor:pointer;font-size:15.5px;color:rgba(20,20,20,.85)"><input type="checkbox" name="need" style="accent-color:#2E8C52;width:17px;height:17px;flex:none;margin:0"><span>Commerce Solutions · Commerce, integraciones y omnicanalidad</span></label>
+      <label style="background:#fff;padding:17px clamp(18px,2.2vw,26px);display:flex;align-items:center;gap:16px;cursor:pointer;font-size:15.5px;color:rgba(20,20,20,.85)"><input type="checkbox" name="need" style="accent-color:#2E8C52;width:17px;height:17px;flex:none;margin:0"><span>Retail Growth · SEO, GEO, AEO, CRO y Paid Media</span></label>
+      <label style="background:#fff;padding:17px clamp(18px,2.2vw,26px);display:flex;align-items:center;gap:16px;cursor:pointer;font-size:15.5px;color:rgba(20,20,20,.85)"><input type="checkbox" name="need" style="accent-color:#2E8C52;width:17px;height:17px;flex:none;margin:0"><span>Cloud &amp; Data · Infraestructura cloud y datos</span></label>
+      <label style="background:#fff;padding:17px clamp(18px,2.2vw,26px);display:flex;align-items:center;gap:16px;cursor:pointer;font-size:15.5px;color:rgba(20,20,20,.85)"><input type="checkbox" name="need" style="accent-color:#2E8C52;width:17px;height:17px;flex:none;margin:0"><span>Aún no lo tengo claro</span></label>
+    </div>
     </div>
 
-    <p data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:var(--tm-accent);border-bottom:1px solid var(--tm-accent);padding-bottom:7px;margin:0 0 clamp(26px,3vw,34px)">CUÉNTANOS SOBRE TI</p>
+    <p data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:#2E8C52;border-bottom:1px solid #2E8C52;padding-bottom:7px;margin:0 0 clamp(26px,3vw,34px)">CUÉNTANOS SOBRE TI</p>
     <div id="tm-form" data-rv style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px">
-      <div style="display:flex;flex-direction:column;gap:9px"><label for="q1" style="font-size:13.5px;font-weight:500;color:rgba(255,255,255,.8)">Nombre y apellido</label><input id="q1" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:var(--tm-ink);border:1px solid rgba(255,255,255,.14);color:#fff"></div>
-      <div style="display:flex;flex-direction:column;gap:9px"><label for="q2" style="font-size:13.5px;font-weight:500;color:rgba(255,255,255,.8)">Empresa</label><input id="q2" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:var(--tm-ink);border:1px solid rgba(255,255,255,.14);color:#fff"></div>
-      <div style="display:flex;flex-direction:column;gap:9px"><label for="q3" style="font-size:13.5px;font-weight:500;color:rgba(255,255,255,.8)">Cargo</label><input id="q3" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:var(--tm-ink);border:1px solid rgba(255,255,255,.14);color:#fff"></div>
-      <div style="display:flex;flex-direction:column;gap:9px"><label for="q4" style="font-size:13.5px;font-weight:500;color:rgba(255,255,255,.8)">Correo corporativo</label><input id="q4" type="email" style="font:inherit;font-size:15px;padding:14px 15px;background:var(--tm-ink);border:1px solid rgba(255,255,255,.14);color:#fff"></div>
-      <div style="display:flex;flex-direction:column;gap:9px"><label for="q5" style="font-size:13.5px;font-weight:500;color:rgba(255,255,255,.8)">País</label><input id="q5" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:var(--tm-ink);border:1px solid rgba(255,255,255,.14);color:#fff"></div>
-      <div style="display:flex;flex-direction:column;gap:9px"><label for="q6" style="font-size:13.5px;font-weight:500;color:rgba(255,255,255,.8)">¿Cómo nos conociste?</label>
-        <select id="q6" style="font:inherit;font-size:15px;padding:14px 15px;background:var(--tm-ink);border:1px solid rgba(255,255,255,.14);color:#fff">
+      <div style="display:flex;flex-direction:column;gap:9px"><label for="q1" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Nombre y apellido</label><input id="q1" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
+      <div style="display:flex;flex-direction:column;gap:9px"><label for="q2" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Empresa</label><input id="q2" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
+      <div style="display:flex;flex-direction:column;gap:9px"><label for="q3" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Cargo</label><input id="q3" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
+      <div style="display:flex;flex-direction:column;gap:9px"><label for="q4" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Correo corporativo</label><input id="q4" type="email" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
+      <div style="display:flex;flex-direction:column;gap:9px"><label for="q5" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">País</label><input id="q5" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
+      <div style="display:flex;flex-direction:column;gap:9px"><label for="q6" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">¿Cómo nos conociste?</label>
+        <select id="q6" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414">
           <option value=""></option>
           <option>Redes sociales</option>
           <optgroup label="Motores de IA"><option>ChatGPT</option><option>Claude</option></optgroup>
@@ -559,7 +509,7 @@ a:hover{color:var(--tm-accent2)}
           <option>Otro</option>
         </select>
       </div>
-      <div style="display:flex;flex-direction:column;gap:9px;grid-column:1/-1;margin-top:8px"><label for="q7" style="font-size:13.5px;font-weight:500;color:rgba(255,255,255,.8)">Cuéntanos brevemente qué necesitas resolver</label><textarea id="q7" style="font:inherit;font-size:15px;padding:14px 15px;background:var(--tm-ink);border:1px solid rgba(255,255,255,.14);color:#fff;resize:vertical;min-height:150px"></textarea></div>
+      <div style="display:flex;flex-direction:column;gap:9px;grid-column:1/-1;margin-top:8px"><label for="q7" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Cuéntanos brevemente qué necesitas resolver</label><textarea id="q7" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414;resize:vertical;min-height:150px"></textarea></div>
       <div style="grid-column:1/-1"><button type="button" style="font:inherit;display:inline-flex;align-items:center;padding:16px 30px;background:var(--tm-accent);color:#141414;font-size:15px;font-weight:500;border:1px solid var(--tm-accent);cursor:pointer;transition:box-shadow .3s ease" style-hover="animation:tmglow 1.6s ease-in-out infinite">Enviar solicitud</button></div>
     </div>
   </div>
@@ -615,9 +565,38 @@ a:hover{color:var(--tm-accent2)}
 
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;motion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;heroLayout&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;rhizome&quot;,&quot;solar&quot;,&quot;network&quot;,&quot;quiet&quot;],&quot;default&quot;:&quot;rhizome&quot;,&quot;tsType&quot;:&quot;'rhizome' | 'solar' | 'network' | 'quiet'&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;pauseGraphic&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;contour&quot;,&quot;neural&quot;],&quot;default&quot;:&quot;contour&quot;,&quot;tsType&quot;:&quot;'contour' | 'neural'&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;contextualCursor&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;options&quot;:[&quot;#80E593&quot;,&quot;#52C7CF&quot;],&quot;default&quot;:&quot;#80E593&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Color&quot;},&quot;accent2&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;options&quot;:[&quot;#52C7CF&quot;,&quot;#80E593&quot;],&quot;default&quot;:&quot;#52C7CF&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Color&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;motion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;heroLayout&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;rhizome&quot;,&quot;solar&quot;,&quot;network&quot;,&quot;quiet&quot;],&quot;default&quot;:&quot;rhizome&quot;,&quot;tsType&quot;:&quot;'rhizome' | 'solar' | 'network' | 'quiet'&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;contextualCursor&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;options&quot;:[&quot;#80E593&quot;,&quot;#52C7CF&quot;],&quot;default&quot;:&quot;#80E593&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Color&quot;},&quot;accent2&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;options&quot;:[&quot;#52C7CF&quot;,&quot;#80E593&quot;],&quot;default&quot;:&quot;#52C7CF&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Color&quot;}}">
 class Component extends DCLogic {
-  componentDidMount(){ this._t = []; this.boot(); this.neural(); this.solar(); this.mesh(); this.ftrMesh(); }
+  componentDidMount(){ this._t = []; this.boot(); this.neural(); this.solar(); this.mesh(); this.ftrMesh(); this.glow(); this.topo(); }
+
+  neural(){
+    const token = (this._nToken = (this._nToken || 0) + 1);
+    if(this._neural){ this._neural(); this._neural = null; }
+    import('./js/mount-graphic.js').then(({ mountGraphic })=>{
+      if(token !== this._nToken) return;
+      this._neural = mountGraphic('#tm-pausefield', ()=> import('./js/filament-field.js'), 'initFilamentField',
+        { accent: '#141414', accent2: '#141414', blend: 'normal', motion: this.props.motion });
+    });
+  }
+
+  topo(){
+    if(this._topo){ this._topo(); this._topo = null; }
+    import('./js/mount-graphic.js').then(({ mountGraphic })=>{
+      const host = document.querySelector('#tm-topo');
+      this._topo = mountGraphic('#tm-topo', ()=> import('./js/topo-mesh.js'), 'initTopoMesh',
+        { accent2: this.props.accent2 || '#52C7CF', motion: this.props.motion, pointerTarget: host && host.parentElement });
+    });
+  }
+
+  glow(){
+    const token = (this._gToken = (this._gToken || 0) + 1);
+    if(this._glow){ this._glow(); this._glow = null; }
+    import('./js/mount-graphic.js').then(({ mountGraphic })=>{
+      if(token !== this._gToken) return;
+      this._glow = mountGraphic('#tm-glow', ()=> import('./js/mesh-gradient.js'), 'initEdgeGlow',
+        { tone: 'inicio', opacity: 0.14 });
+    });
+  }
 
   mesh(){
     const token = (this._mToken = (this._mToken || 0) + 1);
@@ -658,30 +637,8 @@ class Component extends DCLogic {
     });
   }
 
-  neural(){
-    const kind = this.props.pauseGraphic || 'contour';
-    const contour = kind === 'contour';
-    const prepare = ()=>{
-      const svg = this.q('#tm-neural'), div = this.q('#tm-pausefield');
-      if(svg) svg.style.display = contour ? 'none' : 'block';
-      if(div) div.style.display = contour ? 'block' : 'none';
-    };
-    const token = (this._nToken = (this._nToken || 0) + 1);
-    if(this._neural){ this._neural(); this._neural = null; }
-    import('./js/mount-graphic.js').then(({ mountGraphic })=>{
-      if(token !== this._nToken) return;
-      this._neural = mountGraphic(
-        contour ? '#tm-pausefield' : '#tm-neural',
-        ()=> import(contour ? './js/pause-field.js' : './js/neural-field.js'),
-        contour ? 'initPauseField' : 'initNeuralField',
-        { accent2: this.props.accent2 || '#52C7CF', motion: this.props.motion },
-        prepare
-      );
-    });
-  }
-
-  componentDidUpdate(){ this.applyTheme(); this.solar(); this.neural(); }
-  componentWillUnmount(){ (this._t||[]).forEach(clearTimeout); (this._off||[]).forEach(f=>f()); this._neural && this._neural(); this._solar && this._solar(); this._mesh && this._mesh(); this._ftrMesh && this._ftrMesh(); }
+  componentDidUpdate(){ this.applyTheme(); this.solar(); }
+  componentWillUnmount(){ (this._t||[]).forEach(clearTimeout); (this._off||[]).forEach(f=>f()); this._neural && this._neural(); this._solar && this._solar(); this._mesh && this._mesh(); this._ftrMesh && this._ftrMesh(); this._glow && this._glow(); this._topo && this._topo(); }
 
   q(s){ return document.querySelector(s); }
   qa(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); }
@@ -770,6 +727,7 @@ class Component extends DCLogic {
     this.elastic(motion);
     this.steps(motion);
     this.magnetic(motion);
+    this.cardGlow();
     this.pageTransition(motion);
     if(motion) this.motionFailsafe();
   }
@@ -960,6 +918,37 @@ class Component extends DCLogic {
         if(!raf) raf = requestAnimationFrame(tick);
       },{passive:true});
       (this._off=this._off||[]).push(()=>{ if(raf) cancelAnimationFrame(raf); });
+    });
+  }
+
+  /* ---------- Brillo de vidrio: sigue el cursor sobre los bloques glossy ---------- */
+  cardGlow(){
+    const st = this.qa('[data-glow]').map(el=>({ el, x:50, y:50, k:0, tk:0, base: el.getAttribute('data-glow-base') || '' }));
+    if(!st.length) return;
+    let raf = null;
+    const paint = s => {
+      s.el.style.backgroundImage =
+        'radial-gradient(380px circle at '+s.x.toFixed(1)+'% '+s.y.toFixed(1)+'%,rgba(255,255,255,'+(0.2*s.k).toFixed(3)+') 0%,rgba(255,255,255,'+(0.07*s.k).toFixed(3)+') 40%,transparent 75%),'+s.base;
+    };
+    const loop = () => {
+      let live = false;
+      st.forEach(s=>{
+        const d = s.tk - s.k;
+        if(Math.abs(d) > .002){ s.k += d*.07; live = true; } else s.k = s.tk;
+        paint(s);
+      });
+      raf = live ? requestAnimationFrame(loop) : null;
+    };
+    st.forEach(s=>{
+      this.on(s.el,'pointermove',e=>{
+        const r = s.el.getBoundingClientRect();
+        s.x = ((e.clientX-r.left)/r.width)*100;
+        s.y = ((e.clientY-r.top)/r.height)*100;
+        if(!raf) raf = requestAnimationFrame(loop);
+      },{passive:true});
+      this.on(s.el,'pointerenter',()=>{ s.tk = 1; if(!raf) raf = requestAnimationFrame(loop); });
+      this.on(s.el,'pointerleave',()=>{ s.tk = 0; if(!raf) raf = requestAnimationFrame(loop); });
+      paint(s);
     });
   }
 
