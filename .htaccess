@@ -1,0 +1,22 @@
+# Sitio estático sin build step ni cache-busting por hash de archivo (ver CLAUDE.md).
+# El HTML se revalida rápido (10 min) pero los módulos JS no tenían filename
+# versionado, así que un deploy podía romper a visitantes con el JS viejo
+# cacheado hasta por 30 días (ver commit que agrega este archivo). Los .js
+# se revalidan siempre; los assets binarios sí pueden cachear un poco más.
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html "access plus 10 minutes"
+  ExpiresByType application/javascript "access plus 0 seconds"
+  ExpiresByType text/javascript "access plus 0 seconds"
+  ExpiresByType image/svg+xml "access plus 1 day"
+  ExpiresByType image/png "access plus 1 day"
+  ExpiresByType image/webp "access plus 1 day"
+  ExpiresByType image/jpeg "access plus 1 day"
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.js$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>
