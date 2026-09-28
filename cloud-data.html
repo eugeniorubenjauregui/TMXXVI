@@ -49,10 +49,6 @@ body{margin:0;background:#141414;font-family:'Be Vietnam Pro',system-ui,sans-ser
 a{color:var(--tm-accent);text-decoration:none}
 a:hover{color:var(--tm-accent2)}
 ::selection{background:var(--tm-accent);color:#141414}
-[data-faq-item] summary::-webkit-details-marker{display:none}
-[data-faq-item] summary::marker{content:''}
-[data-faq-item][open] [data-faq-v]{opacity:0}
-[data-faq-item][open] [data-faq-q]{color:var(--tm-accent)!important}
 :focus-visible{outline:2px solid var(--tm-accent);outline-offset:3px}
 [data-motion] [data-rv]{opacity:0;transform:translateY(20px);transition:opacity .8s cubic-bezier(.22,.61,.36,1),transform .8s cubic-bezier(.22,.61,.36,1)}
 [data-motion] [data-rv][data-in]{opacity:1;transform:none}
@@ -76,7 +72,6 @@ a:hover{color:var(--tm-accent2)}
  ]
 }
 </script>
-<script type="module" src="./js/faq-accordion.js"></script>
 </helmet>
 
 <template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect width="400" height="300" fill="#141414"/><path d="M60 200 L110 196 L150 188 L180 120 L215 108 L260 104 L340 100" fill="none" stroke="#80E593" stroke-width="3" stroke-linejoin="round"/><g fill="rgba(128,229,147,.3)"><rect x="60" y="222" width="18" height="30"/><rect x="86" y="222" width="18" height="30"/><rect x="112" y="222" width="18" height="30"/><rect x="138" y="222" width="18" height="30"/><rect x="164" y="222" width="18" height="30"/></g><text x="340" y="252" fill="#fff" font-family="system-ui,sans-serif" font-size="20" font-weight="300" letter-spacing="6" text-anchor="end">TITA</text></svg></template>
@@ -138,74 +133,6 @@ a:hover{color:var(--tm-accent2)}
       <a href="commerce-solutions.html" data-cursor="EXPLORAR" style="font-size:15px;font-weight:500;color:#141414;border-bottom:1px solid #17747C;padding-bottom:4px">Commerce Solutions</a>
       <a href="ai-custom-solutions.html" data-cursor="EXPLORAR" style="font-size:15px;font-weight:500;color:#141414;border-bottom:1px solid #17747C;padding-bottom:4px">AI &amp; Custom Solutions</a>
       <a href="strategy-advisory.html" data-cursor="EXPLORAR" style="font-size:15px;font-weight:500;color:#141414;border-bottom:1px solid #17747C;padding-bottom:4px">Strategy &amp; Advisory</a>
-    </div>
-  </div>
-</section>
-
-<section data-faq style="border-top:1px solid rgba(255,255,255,.09);padding:clamp(80px,10vw,140px) 0">
-  <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
-    <h2 data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:400;letter-spacing:.14em;color:var(--tm-accent);border-bottom:1px solid var(--tm-accent);padding-bottom:7px;margin:0 0 clamp(40px,5vw,64px)">PREGUNTAS FRECUENTES</h2>
-    <div style="max-width:980px;border-top:1px solid rgba(255,255,255,.11)">
-      <details data-faq-item data-rv style="border-bottom:1px solid rgba(255,255,255,.11)">
-        <summary style="display:flex;align-items:flex-start;justify-content:space-between;gap:clamp(20px,3vw,48px);padding:clamp(22px,2.4vw,30px) 0;list-style:none;cursor:pointer;transition:opacity .3s" style-hover="opacity:.76">
-          <h3 data-faq-q style="font-size:clamp(16.5px,1.4vw,19px);font-weight:400;line-height:1.46;letter-spacing:-.01em;color:#fff;margin:0;max-width:46ch;text-wrap:pretty;transition:color .3s">¿Con qué proveedores de nube trabajan?</h3>
-          <span aria-hidden="true" style="position:relative;flex:none;display:block;width:13px;height:13px;margin-top:6px">
-            <i style="position:absolute;top:6px;left:0;width:13px;height:1px;background:var(--tm-accent)"></i>
-            <i data-faq-v style="position:absolute;top:0;left:6px;width:1px;height:13px;background:var(--tm-accent);transition:opacity .3s"></i>
-          </span>
-        </summary>
-        <div data-faq-panel style="overflow:hidden">
-          <p style="font-size:15.5px;line-height:1.7;color:rgba(255,255,255,.72);margin:0 0 clamp(24px,2.6vw,32px);max-width:62ch;text-wrap:pretty">AWS, Azure y Google Cloud. La elección depende de lo que ya esté en operación, de las integraciones existentes y del perfil de costo de la carga de trabajo, no de una preferencia nuestra.</p>
-        </div>
-      </details>
-      <details data-faq-item data-rv style="border-bottom:1px solid rgba(255,255,255,.11)">
-        <summary style="display:flex;align-items:flex-start;justify-content:space-between;gap:clamp(20px,3vw,48px);padding:clamp(22px,2.4vw,30px) 0;list-style:none;cursor:pointer;transition:opacity .3s" style-hover="opacity:.76">
-          <h3 data-faq-q style="font-size:clamp(16.5px,1.4vw,19px);font-weight:400;line-height:1.46;letter-spacing:-.01em;color:#fff;margin:0;max-width:46ch;text-wrap:pretty;transition:color .3s">¿Cómo se estructura la inversión?</h3>
-          <span aria-hidden="true" style="position:relative;flex:none;display:block;width:13px;height:13px;margin-top:6px">
-            <i style="position:absolute;top:6px;left:0;width:13px;height:1px;background:var(--tm-accent)"></i>
-            <i data-faq-v style="position:absolute;top:0;left:6px;width:1px;height:13px;background:var(--tm-accent);transition:opacity .3s"></i>
-          </span>
-        </summary>
-        <div data-faq-panel style="overflow:hidden">
-          <p style="font-size:15.5px;line-height:1.7;color:rgba(255,255,255,.72);margin:0 0 clamp(24px,2.6vw,32px);max-width:62ch;text-wrap:pretty">La arquitectura y la implementación se cotizan por alcance y fases. El consumo de la nube lo factura directamente el proveedor a nombre de la empresa, que mantiene la propiedad de las cuentas y de los datos.</p>
-        </div>
-      </details>
-      <details data-faq-item data-rv style="border-bottom:1px solid rgba(255,255,255,.11)">
-        <summary style="display:flex;align-items:flex-start;justify-content:space-between;gap:clamp(20px,3vw,48px);padding:clamp(22px,2.4vw,30px) 0;list-style:none;cursor:pointer;transition:opacity .3s" style-hover="opacity:.76">
-          <h3 data-faq-q style="font-size:clamp(16.5px,1.4vw,19px);font-weight:400;line-height:1.46;letter-spacing:-.01em;color:#fff;margin:0;max-width:46ch;text-wrap:pretty;transition:color .3s">¿Por qué TITA y no el partner del proveedor de nube?</h3>
-          <span aria-hidden="true" style="position:relative;flex:none;display:block;width:13px;height:13px;margin-top:6px">
-            <i style="position:absolute;top:6px;left:0;width:13px;height:1px;background:var(--tm-accent)"></i>
-            <i data-faq-v style="position:absolute;top:0;left:6px;width:1px;height:13px;background:var(--tm-accent);transition:opacity .3s"></i>
-          </span>
-        </summary>
-        <div data-faq-panel style="overflow:hidden">
-          <p style="font-size:15.5px;line-height:1.7;color:rgba(255,255,255,.72);margin:0 0 clamp(24px,2.6vw,32px);max-width:62ch;text-wrap:pretty">Un partner de infraestructura resuelve la nube. Nosotros diseñamos la arquitectura sabiendo qué va a correr encima: comercio, integraciones, analítica y agentes de IA. Eso cambia decisiones de datos, costos y seguridad desde el principio.</p>
-        </div>
-      </details>
-      <details data-faq-item data-rv style="border-bottom:1px solid rgba(255,255,255,.11)">
-        <summary style="display:flex;align-items:flex-start;justify-content:space-between;gap:clamp(20px,3vw,48px);padding:clamp(22px,2.4vw,30px) 0;list-style:none;cursor:pointer;transition:opacity .3s" style-hover="opacity:.76">
-          <h3 data-faq-q style="font-size:clamp(16.5px,1.4vw,19px);font-weight:400;line-height:1.46;letter-spacing:-.01em;color:#fff;margin:0;max-width:46ch;text-wrap:pretty;transition:color .3s">¿Migran operaciones que ya están en producción?</h3>
-          <span aria-hidden="true" style="position:relative;flex:none;display:block;width:13px;height:13px;margin-top:6px">
-            <i style="position:absolute;top:6px;left:0;width:13px;height:1px;background:var(--tm-accent)"></i>
-            <i data-faq-v style="position:absolute;top:0;left:6px;width:1px;height:13px;background:var(--tm-accent);transition:opacity .3s"></i>
-          </span>
-        </summary>
-        <div data-faq-panel style="overflow:hidden">
-          <p style="font-size:15.5px;line-height:1.7;color:rgba(255,255,255,.72);margin:0 0 clamp(24px,2.6vw,32px);max-width:62ch;text-wrap:pretty">Sí. Las migraciones se hacen por fases, manteniendo la operación en marcha: primero se levanta la arquitectura destino con sus integraciones, y el corte se hace por servicio, no de una sola vez.</p>
-        </div>
-      </details>
-      <details data-faq-item data-rv style="border-bottom:1px solid rgba(255,255,255,.11)">
-        <summary style="display:flex;align-items:flex-start;justify-content:space-between;gap:clamp(20px,3vw,48px);padding:clamp(22px,2.4vw,30px) 0;list-style:none;cursor:pointer;transition:opacity .3s" style-hover="opacity:.76">
-          <h3 data-faq-q style="font-size:clamp(16.5px,1.4vw,19px);font-weight:400;line-height:1.46;letter-spacing:-.01em;color:#fff;margin:0;max-width:46ch;text-wrap:pretty;transition:color .3s">¿Quién queda a cargo de la infraestructura?</h3>
-          <span aria-hidden="true" style="position:relative;flex:none;display:block;width:13px;height:13px;margin-top:6px">
-            <i style="position:absolute;top:6px;left:0;width:13px;height:1px;background:var(--tm-accent)"></i>
-            <i data-faq-v style="position:absolute;top:0;left:6px;width:1px;height:13px;background:var(--tm-accent);transition:opacity .3s"></i>
-          </span>
-        </summary>
-        <div data-faq-panel style="overflow:hidden">
-          <p style="font-size:15.5px;line-height:1.7;color:rgba(255,255,255,.72);margin:0 0 clamp(24px,2.6vw,32px);max-width:62ch;text-wrap:pretty">Se define al contratar. Podemos dejar la operación en manos del equipo interno con documentación y transferencia, o asumir la gestión, el monitoreo y la optimización de costos con un fee recurrente.</p>
-        </div>
-      </details>
     </div>
   </div>
 </section>

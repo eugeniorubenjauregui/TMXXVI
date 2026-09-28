@@ -49,10 +49,6 @@ body{margin:0;background:#141414;font-family:'Be Vietnam Pro',system-ui,sans-ser
 a{color:var(--tm-accent);text-decoration:none}
 a:hover{color:var(--tm-accent2)}
 ::selection{background:var(--tm-accent);color:#141414}
-[data-faq-item] summary::-webkit-details-marker{display:none}
-[data-faq-item] summary::marker{content:''}
-[data-faq-item][open] [data-faq-v]{opacity:0}
-[data-faq-item][open] [data-faq-q]{color:var(--tm-accent)!important}
 #tm-vtex-logo img{transition:filter .5s ease}
 #tm-vtex-logo:hover img{filter:none}
 #tm-shopify-logo:hover{filter:none!important}
@@ -117,7 +113,6 @@ a:hover{color:var(--tm-accent2)}
  ]
 }
 </script>
-<script type="module" src="./js/faq-accordion.js"></script>
 </helmet>
 
 <div id="tm-root" style="background:#141414;overflow-x:clip">
@@ -237,74 +232,6 @@ a:hover{color:var(--tm-accent2)}
       <a href="cloud-data.html" data-cursor="EXPLORAR" style="font-size:15px;font-weight:500;color:#141414;border-bottom:1px solid #17747C;padding-bottom:4px">Cloud &amp; Data</a>
       <a href="retail-growth.html" data-cursor="EXPLORAR" style="font-size:15px;font-weight:500;color:#141414;border-bottom:1px solid #17747C;padding-bottom:4px">Retail Growth</a>
       <a href="strategy-advisory.html" data-cursor="EXPLORAR" style="font-size:15px;font-weight:500;color:#141414;border-bottom:1px solid #17747C;padding-bottom:4px">Strategy &amp; Advisory</a>
-    </div>
-  </div>
-</section>
-
-<section data-faq="" style="border-top:1px solid rgba(255,255,255,.09);padding:clamp(80px,10vw,140px) 0">
-  <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
-    <h2 data-rv="" style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:400;letter-spacing:.14em;color:var(--tm-accent);border-bottom:1px solid var(--tm-accent);padding-bottom:7px;margin:0 0 clamp(40px,5vw,64px)">PREGUNTAS FRECUENTES</h2>
-    <div style="border-top: 1px solid rgba(255,255,255,.11); width: 1100px; height: 545px">
-      <details data-faq-item="" data-rv="" style="border-bottom:1px solid rgba(255,255,255,.11)">
-        <summary style="display: flex; align-items: flex-start; justify-content: space-between; gap: clamp(20px,3vw,48px); padding: clamp(22px,2.4vw,30px) 0; list-style: none; cursor: pointer; transition: opacity .3s; max-width: 100%; min-height: 100%" style-hover="opacity:.76">
-          <h3 data-faq-q="" style="font-size:clamp(16.5px,1.4vw,19px);font-weight:400;line-height:1.46;letter-spacing:-.01em;color:#fff;margin:0;max-width:46ch;text-wrap:pretty;transition:color .3s">¿Qué plataformas de comercio implementan?</h3>
-          <span aria-hidden="true" style="position:relative;flex:none;display:block;width:13px;height:13px;margin-top:6px">
-            <i style="position:absolute;top:6px;left:0;width:13px;height:1px;background:var(--tm-accent)"></i>
-            <i data-faq-v="" style="position:absolute;top:0;left:6px;width:1px;height:13px;background:var(--tm-accent);transition:opacity .3s"></i>
-          </span>
-        </summary>
-        <div data-faq-panel="" style="overflow:hidden">
-          <p style="font-size:15.5px;line-height:1.7;color:rgba(255,255,255,.72);margin:0 0 clamp(24px,2.6vw,32px);max-width:62ch;text-wrap:pretty">VTEX, Shopify y commercetools. La plataforma se selecciona según el modelo de negocio, el volumen, las integraciones necesarias, los mercados y la complejidad operativa: no partimos de una recomendación fija.</p>
-        </div>
-      </details>
-      <details data-faq-item="" data-rv="" style="border-bottom:1px solid rgba(255,255,255,.11)">
-        <summary style="display:flex;align-items:flex-start;justify-content:space-between;gap:clamp(20px,3vw,48px);padding:clamp(22px,2.4vw,30px) 0;list-style:none;cursor:pointer;transition:opacity .3s" style-hover="opacity:.76">
-          <h3 data-faq-q="" style="font-size:clamp(16.5px,1.4vw,19px);font-weight:400;line-height:1.46;letter-spacing:-.01em;color:#fff;margin:0;max-width:46ch;text-wrap:pretty;transition:color .3s">¿Cómo se estructura la inversión en un proyecto de comercio?</h3>
-          <span aria-hidden="true" style="position:relative;flex:none;display:block;width:13px;height:13px;margin-top:6px">
-            <i style="position:absolute;top:6px;left:0;width:13px;height:1px;background:var(--tm-accent)"></i>
-            <i data-faq-v="" style="position:absolute;top:0;left:6px;width:1px;height:13px;background:var(--tm-accent);transition:opacity .3s"></i>
-          </span>
-        </summary>
-        <div data-faq-panel="" style="overflow:hidden">
-          <p style="font-size:15.5px;line-height:1.7;color:rgba(255,255,255,.72);margin:0 0 clamp(24px,2.6vw,32px);max-width:62ch;text-wrap:pretty">En tres componentes: la implementación, que se cotiza por alcance y fases; la licencia de la plataforma, que factura directamente el fabricante; y la evolución posterior, que se trabaja con un fee recurrente según el ritmo de cambios de la operación.</p>
-        </div>
-      </details>
-      <details data-faq-item="" data-rv="" style="border-bottom:1px solid rgba(255,255,255,.11)">
-        <summary style="display:flex;align-items:flex-start;justify-content:space-between;gap:clamp(20px,3vw,48px);padding:clamp(22px,2.4vw,30px) 0;list-style:none;cursor:pointer;transition:opacity .3s" style-hover="opacity:.76">
-          <h3 data-faq-q="" style="font-size:clamp(16.5px,1.4vw,19px);font-weight:400;line-height:1.46;letter-spacing:-.01em;color:#fff;margin:0;max-width:46ch;text-wrap:pretty;transition:color .3s">¿Por qué TITA y no una agencia de ecommerce?</h3>
-          <span aria-hidden="true" style="position:relative;flex:none;display:block;width:13px;height:13px;margin-top:6px">
-            <i style="position:absolute;top:6px;left:0;width:13px;height:1px;background:var(--tm-accent)"></i>
-            <i data-faq-v="" style="position:absolute;top:0;left:6px;width:1px;height:13px;background:var(--tm-accent);transition:opacity .3s"></i>
-          </span>
-        </summary>
-        <div data-faq-panel="" style="overflow:hidden">
-          <p style="font-size:15.5px;line-height:1.7;color:rgba(255,255,255,.72);margin:0 0 clamp(24px,2.6vw,32px);max-width:62ch;text-wrap:pretty">Porque la mayor parte del trabajo no está en la vitrina. Está en conectar la plataforma con ERP, CRM, POS, inventarios, pagos y logística para que el stock, los precios y los pedidos sean los mismos en todos los canales.</p>
-        </div>
-      </details>
-      <details data-faq-item="" data-rv="" style="border-bottom:1px solid rgba(255,255,255,.11)">
-        <summary style="display:flex;align-items:flex-start;justify-content:space-between;gap:clamp(20px,3vw,48px);padding:clamp(22px,2.4vw,30px) 0;list-style:none;cursor:pointer;transition:opacity .3s" style-hover="opacity:.76">
-          <h3 data-faq-q="" style="font-size:clamp(16.5px,1.4vw,19px);font-weight:400;line-height:1.46;letter-spacing:-.01em;color:#fff;margin:0;max-width:46ch;text-wrap:pretty;transition:color .3s">¿Se integra con nuestro ERP?</h3>
-          <span aria-hidden="true" style="position:relative;flex:none;display:block;width:13px;height:13px;margin-top:6px">
-            <i style="position:absolute;top:6px;left:0;width:13px;height:1px;background:var(--tm-accent)"></i>
-            <i data-faq-v="" style="position:absolute;top:0;left:6px;width:1px;height:13px;background:var(--tm-accent);transition:opacity .3s"></i>
-          </span>
-        </summary>
-        <div data-faq-panel="" style="overflow:hidden">
-          <p style="font-size:15.5px;line-height:1.7;color:rgba(255,255,255,.72);margin:0 0 clamp(24px,2.6vw,32px);max-width:62ch;text-wrap:pretty">Sí. Las integraciones son parte del alcance, no un añadido: conectamos la plataforma de comercio con el ERP, el CRM, el POS, los inventarios, los pagos y la logística que ya estén en operación.</p>
-        </div>
-      </details>
-      <details data-faq-item="" data-rv="" style="border-bottom:1px solid rgba(255,255,255,.11)">
-        <summary style="display: flex; align-items: flex-start; justify-content: space-between; gap: clamp(20px,3vw,48px); padding: clamp(22px,2.4vw,30px) 0; list-style: none; cursor: pointer; transition: opacity .3s; height: 89px" style-hover="opacity:.76">
-          <h3 data-faq-q="" style="font-size:clamp(16.5px,1.4vw,19px);font-weight:400;line-height:1.46;letter-spacing:-.01em;color:#fff;margin:0;max-width:46ch;text-wrap:pretty;transition:color .3s">¿Tienen experiencia en operaciones multipaís y multicanal?</h3>
-          <span aria-hidden="true" style="position:relative;flex:none;display:block;width:13px;height:13px;margin-top:6px">
-            <i style="position:absolute;top:6px;left:0;width:13px;height:1px;background:var(--tm-accent)"></i>
-            <i data-faq-v="" style="position:absolute;top:0;left:6px;width:1px;height:13px;background:var(--tm-accent);transition:opacity .3s"></i>
-          </span>
-        </summary>
-        <div data-faq-panel="" style="overflow:hidden">
-          <p style="font-size:15.5px;line-height:1.7;color:rgba(255,255,255,.72);margin:0 0 clamp(24px,2.6vw,32px);max-width:62ch;text-wrap:pretty">Sí. Con Mario Hernández construimos y operamos desde 2015 una operación que conecta ecommerce, marketplaces y tiendas físicas: cinco países, siete marketplaces y el 100% de las tiendas conectadas.</p>
-        </div>
-      </details>
     </div>
   </div>
 </section>
