@@ -26,15 +26,58 @@
   "@graph": [
     {
       "@type": "Organization",
+      "@id": "https://titamedia.com/#organization",
       "name": "Tita Media",
       "url": "https://titamedia.com/",
-      "logo": "https://titamedia.com/images/logo-tita-media.png",
-      "description": "Consultoría y tecnología para operaciones de comercio y retail: estrategia, agentes de IA y tecnología a medida, plataformas de comercio, crecimiento digital y arquitectura cloud y de datos."
+      "logo": {
+        "@type": "ImageObject",
+        "@id": "https://titamedia.com/#logo",
+        "url": "https://titamedia.com/images/logo-tita-media.png",
+        "width": 600,
+        "height": 169
+      },
+      "description": "Consultoría y tecnología para operaciones de comercio y retail: estrategia, agentes de IA y tecnología a medida, plataformas de comercio, crecimiento digital y arquitectura cloud y de datos.",
+      "sameAs": [
+        "https://www.linkedin.com/company/tita-media/",
+        "https://www.instagram.com/titamedia/",
+        "https://www.facebook.com/titamedia/",
+        "https://www.youtube.com/channel/UCahCtdiony6T4qrEzG7fDag",
+        "https://www.tiktok.com/@titamedia"
+      ],
+      "address": [
+        {
+          "@type": "PostalAddress",
+          "streetAddress": "Carrera 16 #93A - 16",
+          "addressLocality": "Bogotá",
+          "addressCountry": "CO"
+        },
+        {
+          "@type": "PostalAddress",
+          "streetAddress": "Av. Paseo de la Reforma 26, col. Juárez",
+          "addressLocality": "Ciudad de México",
+          "addressCountry": "MX"
+        }
+      ],
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "contactType": "sales",
+          "email": "cuentanos@titamedia.com",
+          "availableLanguage": [
+            "es"
+          ]
+        }
+      ]
     },
     {
       "@type": "WebSite",
+      "@id": "https://titamedia.com/#website",
       "name": "Tita Media",
-      "url": "https://titamedia.com/"
+      "url": "https://titamedia.com/",
+      "inLanguage": "es-CO",
+      "publisher": {
+        "@id": "https://titamedia.com/#organization"
+      }
     }
   ]
 }
@@ -91,54 +134,6 @@ a:hover{color:var(--tm-accent2)}
 .v2p-panel{display:grid;gap:1px;background:rgba(20,20,20,.14);border:1px solid rgba(20,20,20,.14);align-self:stretch}
 @media(max-width:1080px){.v2p-grid{grid-template-columns:minmax(0,1fr)!important}}
 </style>
-<script type="application/ld+json">
-{
- "@context": "https://schema.org",
- "@type": "FAQPage",
- "mainEntity": [
-  {
-   "@type": "Question",
-   "name": "¿Qué hace TITA Media?",
-   "acceptedAnswer": {
-    "@type": "Answer",
-    "text": "TITA Media es una compañía de consultoría y tecnología para operaciones de comercio y retail. Trabajamos cinco frentes conectados: estrategia y advisory, agentes de IA y tecnología a medida, plataformas de comercio, crecimiento en retail, y arquitectura de cloud y datos. Operamos desde Colombia con proyectos en distintos países de Latinoamérica."
-   }
-  },
-  {
-   "@type": "Question",
-   "name": "¿En qué se diferencia TITA de una agencia digital o de un integrador?",
-   "acceptedAnswer": {
-    "@type": "Answer",
-    "text": "Una agencia ejecuta campañas y contenido; un integrador implementa una plataforma y entrega. Nosotros cubrimos las tres capas: definimos la estrategia, implementamos la tecnología y acompañamos la operación una vez que está en marcha, con el mismo equipo."
-   }
-  },
-  {
-   "@type": "Question",
-   "name": "¿Cómo empieza un proyecto con TITA?",
-   "acceptedAnswer": {
-    "@type": "Answer",
-    "text": "Empieza con un diagnóstico de la operación actual: sistemas, datos, canales y procesos. De ahí sale un alcance por fases, donde la primera fase tiene entregables acotados y medibles antes de comprometer el resto."
-   }
-  },
-  {
-   "@type": "Question",
-   "name": "¿Cómo se estructura la inversión?",
-   "acceptedAnswer": {
-    "@type": "Answer",
-    "text": "Depende del tipo de trabajo. Los proyectos de implementación se cotizan por alcance cerrado y fases; el acompañamiento, la operación y el crecimiento se trabajan con un fee recurrente. Las licencias de plataforma y el consumo de nube los factura directamente cada proveedor y no van dentro de nuestro fee."
-   }
-  },
-  {
-   "@type": "Question",
-   "name": "¿Trabajan con empresas fuera de Colombia?",
-   "acceptedAnswer": {
-    "@type": "Answer",
-    "text": "Sí. Acompañamos operaciones regionales en Latinoamérica. Con Mario Hernández, por ejemplo, operamos desde 2015 una operación de comercio que conecta cinco países y siete marketplaces."
-   }
-  }
- ]
-}
-</script>
 </helmet>
 
 <template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect width="400" height="300" fill="#141414"/><g fill="none" stroke="#52C7CF" stroke-width="1.5" opacity=".75"><path d="M200 150 120 96M200 150 286 104M200 150 132 208M200 150 280 206"/></g><g fill="#80E593"><circle cx="200" cy="150" r="10"/><circle cx="120" cy="96" r="5"/><circle cx="286" cy="104" r="5"/><circle cx="132" cy="208" r="5"/><circle cx="280" cy="206" r="5"/></g><text x="200" y="258" fill="#fff" font-family="system-ui,sans-serif" font-size="19" font-weight="300" letter-spacing="7" text-anchor="middle">TITA MEDIA</text></svg></template>
@@ -1155,6 +1150,11 @@ class Component extends DCLogic {
       fy = ((e.clientY-(r.top+r.height/2))/r.height)*14;
       if(!raf) tick();
     },{passive:true});
+    this.on(window,'scroll',()=>{ sy = Math.max(-40, -window.scrollY*0.055); if(!raf) tick(); },{passive:true});
+    (this._off=this._off||[]).push(()=>{ if(raf) cancelAnimationFrame(raf); });
+  }
+
+  /* ---------- Expand: soluciones ---------- */
   contactForm(){
     import('./js/contact-form.js').then(({ initContactForm })=>{
       if(this._cfDead) return;
@@ -1163,11 +1163,6 @@ class Component extends DCLogic {
     });
   }
 
-    this.on(window,'scroll',()=>{ sy = Math.max(-40, -window.scrollY*0.055); if(!raf) tick(); },{passive:true});
-    (this._off=this._off||[]).push(()=>{ if(raf) cancelAnimationFrame(raf); });
-  }
-
-  /* ---------- Expand: soluciones ---------- */
   renderVals(){
     return {
       onSol: (e)=>{

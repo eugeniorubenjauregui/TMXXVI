@@ -30,6 +30,34 @@
   ]
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "@id": "https://titamedia.com/ai-custom-solutions.html#service",
+  "name": "AI & Custom Solutions",
+  "serviceType": "Agentes de IA y tecnología a medida",
+  "description": "Diseñamos y conectamos agentes de IA con los sistemas y datos de tu empresa para automatizar tareas, analizar información y ejecutar procesos en la operación retail.",
+  "url": "https://titamedia.com/ai-custom-solutions.html",
+  "provider": {
+    "@type": "Organization",
+    "@id": "https://titamedia.com/#organization",
+    "name": "Tita Media",
+    "url": "https://titamedia.com/"
+  },
+  "areaServed": [
+    {
+      "@type": "Country",
+      "name": "Colombia"
+    },
+    {
+      "@type": "Country",
+      "name": "México"
+    },
+    "Latinoamérica"
+  ]
+}
+</script>
 <link rel="modulepreload" href="https://unpkg.com/three@0.160.0/build/three.module.js" crossorigin>
 <link rel="modulepreload" href="./js/mount-graphic.js">
 <link rel="modulepreload" href="./js/mesh-gradient.js">
@@ -64,19 +92,6 @@ a:hover{color:var(--tm-accent2)}
 #tmcur[data-on]{opacity:1;transform:scale(1)}
 @media(max-width:1080px){#tm-burger{display:block!important}#tm-nav{display:none!important;position:fixed;inset:78px 0 auto 0;flex-direction:column;align-items:stretch;gap:0;background:#0B0C0C;padding:12px clamp(24px,5vw,88px) 32px;border-bottom:1px solid rgba(255,255,255,.1);max-height:calc(100vh - 78px);overflow:auto}#tm-nav[data-open]{display:flex!important}#tm-nav>a,#tm-nav>div>button{padding:16px 0!important;border-bottom:1px solid rgba(255,255,255,.07);width:100%;text-align:left}#tm-bridge{display:none!important}#tm-drop{position:static!important;width:auto!important;border:0!important;padding:4px 0 12px!important;grid-template-columns:minmax(0,1fr)!important}#tm-cta{margin-top:18px;justify-content:center;border-bottom:0!important}#tm-cells{grid-template-columns:minmax(0,1fr)!important}#tm-ftr-grid{grid-template-columns:minmax(0,1fr)!important}#tm-form{grid-template-columns:minmax(0,1fr)!important}#tm-herorow{grid-template-columns:minmax(0,1fr)!important}#tm-ai-grid{grid-template-columns:minmax(0,1fr)!important}#tm-sphere{width:112%!important;margin-left:-6%!important}}
 </style>
-<script type="application/ld+json">
-{
- "@context": "https://schema.org",
- "@type": "FAQPage",
- "mainEntity": [
-  {"@type":"Question","name":"¿Cuánto cuesta implementar agentes de IA?","acceptedAnswer":{"@type":"Answer","text":"La inversión se define por caso de uso, no por licencia por usuario. Un primer agente sobre un proceso acotado —inventario, catálogo, servicio— tiene un alcance cerrado y medible; a partir de ahí cada nuevo agente se cotiza sobre la base ya construida, que es más económica que la primera."}},
-  {"@type":"Question","name":"¿Por qué TITA y no un producto de IA genérico?","acceptedAnswer":{"@type":"Answer","text":"Un producto genérico responde con información pública o con lo que se le entrega en el prompt. Nuestros agentes se conectan a los sistemas donde vive la operación —ERP, CRM, POS, inventarios, plataformas de comercio— y actúan sobre datos propios, con el nivel de autonomía que defina la empresa."}},
-  {"@type":"Question","name":"¿Con qué sistemas se integran los agentes?","acceptedAnswer":{"@type":"Answer","text":"Con los que ya usa la operación: ERP, CRM, POS, inventarios, pagos, logística y plataformas de comercio como VTEX, Shopify o commercetools. Cuando no hay API disponible, construimos la capa de integración dentro de la arquitectura de cloud y datos."}},
-  {"@type":"Question","name":"¿Se puede empezar con un piloto?","acceptedAnswer":{"@type":"Answer","text":"Sí, y es lo que recomendamos. Para empresas que quieren ir más allá del primer caso existe el programa de incubadora: identificar oportunidades, priorizar agentes, implementar quick wins y escalar capacidades progresivamente."}},
-  {"@type":"Question","name":"¿Quién opera los agentes después de implementarlos?","acceptedAnswer":{"@type":"Answer","text":"Se define al contratar. Podemos entregar la operación al equipo interno con documentación y capacitación, o quedarnos a cargo del monitoreo, los ajustes y la evolución de los agentes con un fee recurrente."}}
- ]
-}
-</script>
 </helmet>
 
 <template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect width="400" height="300" fill="#141414"/><g fill="none" stroke="#80E593" stroke-width="2"><circle cx="200" cy="150" r="9" fill="#80E593"/><circle cx="130" cy="105" r="5"/><circle cx="272" cy="112" r="5"/><circle cx="138" cy="196" r="5"/><circle cx="266" cy="192" r="5"/><path d="M200 150 130 105M200 150 272 112M200 150 138 196M200 150 266 192" stroke="#52C7CF" stroke-width="1.5" opacity=".7"/></g><text x="200" y="255" fill="#fff" font-family="system-ui,sans-serif" font-size="20" font-weight="300" letter-spacing="6" text-anchor="middle">TITA</text></svg></template>
