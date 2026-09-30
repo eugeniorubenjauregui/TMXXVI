@@ -494,13 +494,13 @@ a:hover{color:var(--tm-accent2)}
 
     <p data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:#2E8C52;border-bottom:1px solid #2E8C52;padding-bottom:7px;margin:0 0 clamp(26px,3vw,34px)">CUÉNTANOS SOBRE TI</p>
     <div id="tm-form" data-rv style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px">
-      <div style="display:flex;flex-direction:column;gap:9px"><label for="q1" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Nombre y apellido</label><input id="q1" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
-      <div style="display:flex;flex-direction:column;gap:9px"><label for="q2" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Empresa</label><input id="q2" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
-      <div style="display:flex;flex-direction:column;gap:9px"><label for="q3" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Cargo</label><input id="q3" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
-      <div style="display:flex;flex-direction:column;gap:9px"><label for="q4" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Correo corporativo</label><input id="q4" type="email" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
-      <div style="display:flex;flex-direction:column;gap:9px"><label for="q5" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">País</label><input id="q5" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
+      <div style="display:flex;flex-direction:column;gap:9px"><label for="q1" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Nombre y apellido</label><input id="q1" name="name" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
+      <div style="display:flex;flex-direction:column;gap:9px"><label for="q2" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Empresa</label><input id="q2" name="company" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
+      <div style="display:flex;flex-direction:column;gap:9px"><label for="q3" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Cargo</label><input id="q3" name="role" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
+      <div style="display:flex;flex-direction:column;gap:9px"><label for="q4" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Correo corporativo</label><input id="q4" name="email" type="email" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
+      <div style="display:flex;flex-direction:column;gap:9px"><label for="q5" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">País</label><input id="q5" name="country" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
       <div style="display:flex;flex-direction:column;gap:9px"><label for="q6" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">¿Cómo nos conociste?</label>
-        <select id="q6" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414">
+        <select id="q6" name="source" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414">
           <option value=""></option>
           <option>Redes sociales</option>
           <optgroup label="Motores de IA"><option>ChatGPT</option><option>Claude</option></optgroup>
@@ -509,8 +509,11 @@ a:hover{color:var(--tm-accent2)}
           <option>Otro</option>
         </select>
       </div>
-      <div style="display:flex;flex-direction:column;gap:9px;grid-column:1/-1;margin-top:8px"><label for="q7" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Cuéntanos brevemente qué necesitas resolver</label><textarea id="q7" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414;resize:vertical;min-height:150px"></textarea></div>
-      <div style="grid-column:1/-1"><button type="button" style="font:inherit;display:inline-flex;align-items:center;padding:16px 30px;background:var(--tm-accent);color:#141414;font-size:15px;font-weight:500;border:1px solid var(--tm-accent);cursor:pointer;transition:box-shadow .3s ease" style-hover="animation:tmglow 1.6s ease-in-out infinite">Enviar solicitud</button></div>
+      <div style="display:flex;flex-direction:column;gap:9px;grid-column:1/-1;margin-top:8px"><label for="q7" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Cuéntanos brevemente qué necesitas resolver</label><textarea id="q7" name="message" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414;resize:vertical;min-height:150px"></textarea></div>
+      <div style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden" aria-hidden="true"><label for="tm-cf-website">No completar este campo</label><input id="tm-cf-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+      <label style="grid-column:1/-1;display:flex;align-items:flex-start;gap:12px;cursor:pointer;font-size:13.5px;line-height:1.55;color:rgba(20,20,20,.72)"><input id="tm-cf-consent" type="checkbox" name="consent" style="accent-color:#2E8C52;width:17px;height:17px;flex:none;margin:2px 0 0"><span>Autorizo el tratamiento de mis datos personales para que Tita Media me contacte sobre esta solicitud.</span></label>
+      <p id="tm-cf-status" role="status" aria-live="polite" style="grid-column:1/-1;margin:0;min-height:1.4em;font-size:14.5px;line-height:1.5"></p>
+      <div style="grid-column:1/-1"><button id="tm-cf-submit" type="button" style="font:inherit;display:inline-flex;align-items:center;padding:16px 30px;background:var(--tm-accent);color:#141414;font-size:15px;font-weight:500;border:1px solid var(--tm-accent);cursor:pointer;transition:box-shadow .3s ease" style-hover="animation:tmglow 1.6s ease-in-out infinite">Enviar solicitud</button></div>
     </div>
   </div>
 </section>
@@ -567,7 +570,7 @@ a:hover{color:var(--tm-accent2)}
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;motion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;heroLayout&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;rhizome&quot;,&quot;solar&quot;,&quot;network&quot;,&quot;quiet&quot;],&quot;default&quot;:&quot;rhizome&quot;,&quot;tsType&quot;:&quot;'rhizome' | 'solar' | 'network' | 'quiet'&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;contextualCursor&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;options&quot;:[&quot;#80E593&quot;,&quot;#52C7CF&quot;],&quot;default&quot;:&quot;#80E593&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Color&quot;},&quot;accent2&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;options&quot;:[&quot;#52C7CF&quot;,&quot;#80E593&quot;],&quot;default&quot;:&quot;#52C7CF&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Color&quot;}}">
 class Component extends DCLogic {
-  componentDidMount(){ this._t = []; this.boot(); this.neural(); this.solar(); this.mesh(); this.ftrMesh(); this.glow(); this.topo(); }
+  componentDidMount(){ this._t = []; this.boot(); this.neural(); this.solar(); this.mesh(); this.ftrMesh(); this.glow(); this.topo(); this.contactForm(); }
 
   neural(){
     const token = (this._nToken = (this._nToken || 0) + 1);
@@ -638,7 +641,7 @@ class Component extends DCLogic {
   }
 
   componentDidUpdate(){ this.applyTheme(); this.solar(); }
-  componentWillUnmount(){ (this._t||[]).forEach(clearTimeout); (this._off||[]).forEach(f=>f()); this._neural && this._neural(); this._solar && this._solar(); this._mesh && this._mesh(); this._ftrMesh && this._ftrMesh(); this._glow && this._glow(); this._topo && this._topo(); }
+  componentWillUnmount(){ this._cfDead = true; this._cf && this._cf(); (this._t||[]).forEach(clearTimeout); (this._off||[]).forEach(f=>f()); this._neural && this._neural(); this._solar && this._solar(); this._mesh && this._mesh(); this._ftrMesh && this._ftrMesh(); this._glow && this._glow(); this._topo && this._topo(); }
 
   q(s){ return document.querySelector(s); }
   qa(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); }
@@ -1152,6 +1155,14 @@ class Component extends DCLogic {
       fy = ((e.clientY-(r.top+r.height/2))/r.height)*14;
       if(!raf) tick();
     },{passive:true});
+  contactForm(){
+    import('./js/contact-form.js').then(({ initContactForm })=>{
+      if(this._cfDead) return;
+      this._cf && this._cf();
+      this._cf = initContactForm(document);
+    });
+  }
+
     this.on(window,'scroll',()=>{ sy = Math.max(-40, -window.scrollY*0.055); if(!raf) tick(); },{passive:true});
     (this._off=this._off||[]).push(()=>{ if(raf) cancelAnimationFrame(raf); });
   }
