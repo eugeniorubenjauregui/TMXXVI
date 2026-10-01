@@ -838,6 +838,9 @@ function sitemapXml({ posts, totalPages, categories, categoryPageCount }) {
     { loc: `${SITE}/commerce-solutions.html`, lastmod: today, changefreq: 'monthly', priority: '0.8' },
     { loc: `${SITE}/retail-growth.html`, lastmod: today, changefreq: 'monthly', priority: '0.8' },
     { loc: `${SITE}/cloud-data.html`, lastmod: today, changefreq: 'monthly', priority: '0.8' },
+    { loc: `${SITE}/soluciones-ia.html`, lastmod: today, changefreq: 'monthly', priority: '0.8' },
+    { loc: `${SITE}/nosotros.html`, lastmod: today, changefreq: 'monthly', priority: '0.8' },
+    { loc: `${SITE}/caso-mario-hernandez.html`, lastmod: today, changefreq: 'monthly', priority: '0.7' },
     { loc: `${SITE}/noticias.html`, lastmod: today, changefreq: 'weekly', priority: '0.8' }
   ];
   for (let n = 2; n <= totalPages; n++) {
