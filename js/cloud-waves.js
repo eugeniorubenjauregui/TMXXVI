@@ -239,6 +239,11 @@ export function initCloudWaves(host, opts = {}) {
     renderer.setClearAlpha(0);
     const canvas = renderer.domElement;
     canvas.style.cssText = 'width:100%;height:100%;display:block';
+    // las fibras que llegan al borde del lienzo se disuelven en lugar de cortarse en seco
+    const edgeMask = 'linear-gradient(to right,transparent 0,#000 24%,#000 76%,transparent 100%),' +
+      'linear-gradient(to bottom,transparent 0,#000 22%,#000 78%,transparent 100%)';
+    canvas.style.webkitMaskImage = edgeMask; canvas.style.maskImage = edgeMask;
+    canvas.style.webkitMaskComposite = 'source-in'; canvas.style.maskComposite = 'intersect';
     host.insertBefore(canvas, layer);
 
     const scene = new THREE.Scene();
@@ -310,6 +315,10 @@ export function initCloudWaves(host, opts = {}) {
     const hitV = new THREE.Vector3();
     const onMove = e => {
       const r = host.getBoundingClientRect();
+      if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) {
+        if (overHost) onLeave();
+        return;
+      }
       ndc.set(((e.clientX - r.left) / Math.max(1, r.width)) * 2 - 1, -((e.clientY - r.top) / Math.max(1, r.height)) * 2 + 1);
       ray.setFromCamera(ndc, camera);
       if (ray.ray.intersectPlane(plane, hitV)) mouseW.set(hitV.x, hitV.z);
@@ -420,15 +429,14 @@ export function initCloudWaves(host, opts = {}) {
     } else {
       raf = requestAnimationFrame(loop);
       if (!simple) {
-        host.addEventListener('mousemove', onMove, { passive: true });
-        host.addEventListener('mouseleave', onLeave);
+        // a nivel documento: la máscara del canvas puede impedir que el host reciba el evento
+        document.addEventListener('mousemove', onMove, { passive: true });
       }
     }
 
     disposer = () => {
       if (raf) cancelAnimationFrame(raf);
-      host.removeEventListener('mousemove', onMove);
-      host.removeEventListener('mouseleave', onLeave);
+      document.removeEventListener('mousemove', onMove);
       window.removeEventListener('resize', resize);
       geo.dispose(); mat.dispose(); renderer.dispose();
       if (canvas.parentNode) canvas.parentNode.removeChild(canvas);

@@ -117,7 +117,7 @@ export function initMotion(opts = {}) {
     const h = document.documentElement.scrollHeight - window.innerHeight;
     if (bar) bar.style.width = (h > 0 ? (y / h) * 100 : 0) + '%';
     if (hdr) {
-      hdr.style.background = y > 40 ? 'rgba(11,12,12,.92)' : 'rgba(20,20,20,.74)';
+      hdr.style.background = y > 40 ? 'rgba(255,255,255,.94)' : 'rgba(255,255,255,1)';
       const nav = q('#tm-nav');
       hdr.style.transform = (y > 220 && y > last && !(nav && nav.hasAttribute('data-open'))) ? 'translateY(-100%)' : 'none';
     }
