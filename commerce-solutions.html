@@ -91,7 +91,7 @@ a:hover{color:var(--tm-accent2)}
 [data-motion] [data-ln][data-in]>span{transform:none}
 #tmcur{position:fixed;top:0;left:0;z-index:300;pointer-events:none;display:flex;align-items:center;justify-content:center;width:84px;height:84px;margin:-42px 0 0 -42px;border-radius:50%;background:var(--tm-accent);color:#141414;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.14em;opacity:0;transform:scale(.3);transition:opacity .2s,transform .3s cubic-bezier(.22,.61,.36,1)}
 #tmcur[data-on]{opacity:1;transform:scale(1)}
-@media(max-width:1080px){#tm-burger{display:block!important}#tm-nav{display:none!important;position:fixed;inset:78px 0 auto 0;flex-direction:column;align-items:stretch;gap:0;background:#0B0C0C;padding:12px clamp(24px,5vw,88px) 32px;border-bottom:1px solid rgba(255,255,255,.1);max-height:calc(100vh - 78px);overflow:auto}#tm-nav[data-open]{display:flex!important}#tm-nav>a,#tm-nav>div>button{padding:16px 0!important;border-bottom:1px solid rgba(255,255,255,.07);width:100%;text-align:left}#tm-bridge{display:none!important}#tm-drop{position:static!important;width:auto!important;border:0!important;padding:4px 0 12px!important;grid-template-columns:minmax(0,1fr)!important}#tm-cta{margin-top:18px;justify-content:center;border-bottom:0!important}#tm-cells{grid-template-columns:minmax(0,1fr)!important}#tm-ftr-grid{grid-template-columns:minmax(0,1fr)!important}#tm-form{grid-template-columns:minmax(0,1fr)!important}#tm-herorow{grid-template-columns:minmax(0,1fr)!important}#tm-ai-grid{grid-template-columns:minmax(0,1fr)!important}}
+@media(max-width:1080px){#tm-burger{display:block!important}#tm-nav{display:none!important;position:fixed;inset:78px 0 auto 0;flex-direction:column;align-items:stretch;gap:0;background:#fff;padding:12px clamp(24px,5vw,88px) 32px;border-bottom:1px solid rgba(20,20,20,.12);max-height:calc(100vh - 78px);overflow:auto}#tm-nav[data-open]{display:flex!important}#tm-nav>a,#tm-nav>div>button{padding:16px 0!important;border-bottom:1px solid rgba(20,20,20,.08);width:100%;text-align:left}#tm-bridge{display:none!important}#tm-drop{position:static!important;width:auto!important;border:0!important;padding:4px 0 12px!important;grid-template-columns:minmax(0,1fr)!important}#tm-cta{margin-top:18px;justify-content:center;border-bottom:0!important}#tm-cells{grid-template-columns:minmax(0,1fr)!important}#tm-ftr-grid{grid-template-columns:minmax(0,1fr)!important}#tm-form{grid-template-columns:minmax(0,1fr)!important}#tm-herorow{grid-template-columns:minmax(0,1fr)!important}#tm-ai-grid{grid-template-columns:minmax(0,1fr)!important}}
 </style>
 </helmet>
 
@@ -146,47 +146,47 @@ a:hover{color:var(--tm-accent2)}
 
 <div style="height:1px;background:rgba(255,255,255,.09)"></div>
 
-<section style="padding: clamp(80px,10vw,140px) 0">
+<section style="background:#F2F4F3;padding: clamp(80px,10vw,140px) 0">
   <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
-    <p data-rv="" style="display: inline-block; font-family: 'IBM Plex Mono',monospace; font-size: 11.5px; letter-spacing: .14em; color: var(--tm-accent); border-bottom: 1px solid var(--tm-accent); padding-bottom: 7px; margin: 0 0 clamp(40px,5vw,64px); position: relative">QUÉ HACEMOS</p>
-    <div id="tm-cells" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.11)">
-      <div data-rv="" data-beam="" style="position:relative;overflow:hidden;background:#141414;padding:clamp(28px,3.4vw,46px);transition:background .3s,box-shadow .3s" style-hover="background:#191A1A;box-shadow:inset 2px 0 0 var(--tm-accent)">
-        <p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:var(--tm-accent);margin:0 0 18px">01</p>
-        <h3 style="font-size:clamp(19px,1.7vw,23px);font-weight:500;letter-spacing:-.012em;color:#fff;margin:0 0 16px">Implementación de Commerce</h3>
-        <p style="font-size:15.5px;line-height:1.66;color:rgba(255,255,255,.68);margin:0">Diseñamos e implementamos plataformas de comercio digital desde el discovery hasta la salida a producción.</p>
-        <p style="font-size:15.5px;line-height:1.66;color:rgba(255,255,255,.68);margin:14px 0 0">Definimos arquitectura, catálogo, experiencia, checkout, integraciones y modelo operativo según la forma real de vender del negocio.</p>
+    <p data-rv="" style="display: inline-block; font-family: 'IBM Plex Mono',monospace; font-size: 11.5px; letter-spacing: .14em; color:#2E8C52;border-bottom:1px solid #2E8C52; padding-bottom: 7px; margin: 0 0 clamp(40px,5vw,64px); position: relative">QUÉ HACEMOS</p>
+    <div id="tm-cells" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:rgba(20,20,20,.14);border:1px solid rgba(20,20,20,.14)">
+      <div data-rv="" data-beam="" style="position:relative;overflow:hidden;background:#fff;padding:clamp(28px,3.4vw,46px);transition:background .3s,box-shadow .3s" style-hover="background:#F4F8F6;box-shadow:inset 2px 0 0 #2E8C52">
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:#2E8C52;margin:0 0 18px">01</p>
+        <h3 style="font-size:clamp(19px,1.7vw,23px);font-weight:500;letter-spacing:-.012em;color:#141414;margin:0 0 16px">Implementación de Commerce</h3>
+        <p style="font-size:15.5px;line-height:1.66;color:rgba(20,20,20,.78);margin:0">Diseñamos e implementamos plataformas de comercio digital desde el discovery hasta la salida a producción.</p>
+        <p style="font-size:15.5px;line-height:1.66;color:rgba(20,20,20,.78);margin:14px 0 0">Definimos arquitectura, catálogo, experiencia, checkout, integraciones y modelo operativo según la forma real de vender del negocio.</p>
       </div>
-      <div data-rv="" data-beam="" style="position:relative;overflow:hidden;background:#141414;padding:clamp(28px,3.4vw,46px);transition:background .3s,box-shadow .3s" style-hover="background:#191A1A;box-shadow:inset 2px 0 0 var(--tm-accent)">
-        <p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:var(--tm-accent);margin:0 0 18px">02</p>
-        <h3 style="font-size:clamp(19px,1.7vw,23px);font-weight:500;letter-spacing:-.012em;color:#fff;margin:0 0 16px">Integraciones</h3>
-        <p style="font-size:15.5px;line-height:1.66;color:rgba(255,255,255,.68);margin:0">Conectamos las plataformas de comercio con ERP, CRM, POS, inventarios, pagos, logística y otros sistemas que sostienen la operación.</p>
+      <div data-rv="" data-beam="" style="position:relative;overflow:hidden;background:#fff;padding:clamp(28px,3.4vw,46px);transition:background .3s,box-shadow .3s" style-hover="background:#F4F8F6;box-shadow:inset 2px 0 0 #2E8C52">
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:#2E8C52;margin:0 0 18px">02</p>
+        <h3 style="font-size:clamp(19px,1.7vw,23px);font-weight:500;letter-spacing:-.012em;color:#141414;margin:0 0 16px">Integraciones</h3>
+        <p style="font-size:15.5px;line-height:1.66;color:rgba(20,20,20,.78);margin:0">Conectamos las plataformas de comercio con ERP, CRM, POS, inventarios, pagos, logística y otros sistemas que sostienen la operación.</p>
       </div>
-      <div data-rv="" data-beam="" style="position:relative;overflow:hidden;background:#141414;padding:clamp(28px,3.4vw,46px);transition:background .3s,box-shadow .3s" style-hover="background:#191A1A;box-shadow:inset 2px 0 0 var(--tm-accent)">
-        <p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:var(--tm-accent);margin:0 0 18px">03</p>
-        <h3 style="font-size:clamp(19px,1.7vw,23px);font-weight:500;letter-spacing:-.012em;color:#fff;margin:0 0 16px">B2C, B2B y otros modelos de venta</h3>
-        <p style="font-size:15.5px;line-height:1.66;color:rgba(255,255,255,.68);margin:0">Construimos experiencias según el modelo comercial.</p>
-        <p style="font-size:15.5px;line-height:1.66;color:rgba(255,255,255,.68);margin:14px 0 0">Desde ecommerce para consumidor final hasta operaciones B2B con listas de precio por cliente, crédito, aprobaciones, unidades de venta y reglas comerciales específicas.</p>
+      <div data-rv="" data-beam="" style="position:relative;overflow:hidden;background:#fff;padding:clamp(28px,3.4vw,46px);transition:background .3s,box-shadow .3s" style-hover="background:#F4F8F6;box-shadow:inset 2px 0 0 #2E8C52">
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:#2E8C52;margin:0 0 18px">03</p>
+        <h3 style="font-size:clamp(19px,1.7vw,23px);font-weight:500;letter-spacing:-.012em;color:#141414;margin:0 0 16px">B2C, B2B y otros modelos de venta</h3>
+        <p style="font-size:15.5px;line-height:1.66;color:rgba(20,20,20,.78);margin:0">Construimos experiencias según el modelo comercial.</p>
+        <p style="font-size:15.5px;line-height:1.66;color:rgba(20,20,20,.78);margin:14px 0 0">Desde ecommerce para consumidor final hasta operaciones B2B con listas de precio por cliente, crédito, aprobaciones, unidades de venta y reglas comerciales específicas.</p>
       </div>
-      <div data-rv="" data-beam="" style="position:relative;overflow:hidden;background:#141414;padding:clamp(28px,3.4vw,46px);transition:background .3s,box-shadow .3s" style-hover="background:#191A1A;box-shadow:inset 2px 0 0 var(--tm-accent)">
-        <p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:var(--tm-accent);margin:0 0 18px">04</p>
-        <h3 style="font-size:clamp(19px,1.7vw,23px);font-weight:500;letter-spacing:-.012em;color:#fff;margin:0 0 16px">Migraciones y Replatforming</h3>
-        <p style="font-size:15.5px;line-height:1.66;color:rgba(255,255,255,.68);margin:0">Migramos operaciones entre plataformas protegiendo datos, tráfico orgánico, continuidad operativa y ventas.</p>
+      <div data-rv="" data-beam="" style="position:relative;overflow:hidden;background:#fff;padding:clamp(28px,3.4vw,46px);transition:background .3s,box-shadow .3s" style-hover="background:#F4F8F6;box-shadow:inset 2px 0 0 #2E8C52">
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:#2E8C52;margin:0 0 18px">04</p>
+        <h3 style="font-size:clamp(19px,1.7vw,23px);font-weight:500;letter-spacing:-.012em;color:#141414;margin:0 0 16px">Migraciones y Replatforming</h3>
+        <p style="font-size:15.5px;line-height:1.66;color:rgba(20,20,20,.78);margin:0">Migramos operaciones entre plataformas protegiendo datos, tráfico orgánico, continuidad operativa y ventas.</p>
       </div>
-      <div data-rv="" data-beam="" style="position:relative;overflow:hidden;background:#141414;padding:clamp(28px,3.4vw,46px);transition:background .3s,box-shadow .3s" style-hover="background:#191A1A;box-shadow:inset 2px 0 0 var(--tm-accent)">
-        <p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:var(--tm-accent);margin:0 0 18px">05</p>
-        <h3 style="font-size:clamp(19px,1.7vw,23px);font-weight:500;letter-spacing:-.012em;color:#fff;margin:0 0 16px">Marketplaces</h3>
-        <p style="font-size:15.5px;line-height:1.66;color:rgba(255,255,255,.68);margin:0">Diseñamos e integramos marketplaces propios y de terceros con catálogo, inventario, pedidos y operación comercial.</p>
+      <div data-rv="" data-beam="" style="position:relative;overflow:hidden;background:#fff;padding:clamp(28px,3.4vw,46px);transition:background .3s,box-shadow .3s" style-hover="background:#F4F8F6;box-shadow:inset 2px 0 0 #2E8C52">
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:#2E8C52;margin:0 0 18px">05</p>
+        <h3 style="font-size:clamp(19px,1.7vw,23px);font-weight:500;letter-spacing:-.012em;color:#141414;margin:0 0 16px">Marketplaces</h3>
+        <p style="font-size:15.5px;line-height:1.66;color:rgba(20,20,20,.78);margin:0">Diseñamos e integramos marketplaces propios y de terceros con catálogo, inventario, pedidos y operación comercial.</p>
       </div>
-      <div data-rv="" data-beam="" style="position:relative;overflow:hidden;background:#141414;padding:clamp(28px,3.4vw,46px);transition:background .3s,box-shadow .3s" style-hover="background:#191A1A;box-shadow:inset 2px 0 0 var(--tm-accent)">
-        <p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:var(--tm-accent);margin:0 0 18px">06</p>
-        <h3 style="font-size:clamp(19px,1.7vw,23px);font-weight:500;letter-spacing:-.012em;color:#fff;margin:0 0 16px">Omnicanalidad</h3>
-        <p style="font-size:15.5px;line-height:1.66;color:rgba(255,255,255,.68);margin:0">Diseñamos e implementamos modelos omnicanal que conectan procesos, tecnología y operación.</p>
-        <p style="font-size:15.5px;line-height:1.66;color:rgba(255,255,255,.68);margin:14px 0 0">Integramos inventario, pedidos, logística, fulfillment, tiendas y canales digitales para que cada canal funcione como parte de una misma operación.</p>
+      <div data-rv="" data-beam="" style="position:relative;overflow:hidden;background:#fff;padding:clamp(28px,3.4vw,46px);transition:background .3s,box-shadow .3s" style-hover="background:#F4F8F6;box-shadow:inset 2px 0 0 #2E8C52">
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:#2E8C52;margin:0 0 18px">06</p>
+        <h3 style="font-size:clamp(19px,1.7vw,23px);font-weight:500;letter-spacing:-.012em;color:#141414;margin:0 0 16px">Omnicanalidad</h3>
+        <p style="font-size:15.5px;line-height:1.66;color:rgba(20,20,20,.78);margin:0">Diseñamos e implementamos modelos omnicanal que conectan procesos, tecnología y operación.</p>
+        <p style="font-size:15.5px;line-height:1.66;color:rgba(20,20,20,.78);margin:14px 0 0">Integramos inventario, pedidos, logística, fulfillment, tiendas y canales digitales para que cada canal funcione como parte de una misma operación.</p>
       </div>
-      <div data-rv="" data-beam="" style="grid-column:1/-1;position:relative;overflow:hidden;background:#191A1A;padding:clamp(28px,3.4vw,46px);box-shadow:inset 2px 0 0 var(--tm-accent2)">
-        <p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:var(--tm-accent2);margin:0 0 18px">07</p>
-        <h3 style="font-size:clamp(19px,1.7vw,23px);font-weight:500;letter-spacing:-.012em;color:#fff;margin:0 0 16px">Operación y evolución</h3>
-        <p style="font-size:15.5px;line-height:1.66;color:rgba(255,255,255,.68);margin:0;max-width:70ch">Acompañamos la plataforma después del lanzamiento para mantenerla estable, resolver necesidades operativas y evolucionarla a medida que crece el negocio.</p>
+      <div data-rv="" data-beam="" style="grid-column:1/-1;position:relative;overflow:hidden;background:#fff;padding:clamp(28px,3.4vw,46px);box-shadow:inset 2px 0 0 var(--tm-accent2)">
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:#17747C;margin:0 0 18px">07</p>
+        <h3 style="font-size:clamp(19px,1.7vw,23px);font-weight:500;letter-spacing:-.012em;color:#141414;margin:0 0 16px">Operación y evolución</h3>
+        <p style="font-size:15.5px;line-height:1.66;color:rgba(20,20,20,.78);margin:0;max-width:70ch">Acompañamos la plataforma después del lanzamiento para mantenerla estable, resolver necesidades operativas y evolucionarla a medida que crece el negocio.</p>
       </div>
     </div>
   </div>
@@ -195,7 +195,7 @@ a:hover{color:var(--tm-accent2)}
 <section style="background:#0B0C0C;padding:clamp(80px,10vw,140px) 0">
   <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
     <p data-rv="" style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:var(--tm-accent);border-bottom:1px solid var(--tm-accent);padding-bottom:7px;margin:0 0 clamp(36px,4vw,52px)">PLATAFORMAS</p>
-    <p data-rv="" style="display:flex;flex-wrap:wrap;align-items:center;gap:14px 24px;font-size:clamp(17px,2vw,26px);font-weight:300;letter-spacing:-.02em;color:#fff;margin:0 0 clamp(40px,5vw,58px)"><span id="tm-vtex-logo" style="display:inline-flex;align-items:center;color:#fff;transition:color .45s ease;cursor:default"><img src="./images/vtex-logo.svg" alt="VTEX" style="height:0.62em;width:auto;display:block;filter:brightness(0) invert(1)"></span><i style="font-style:normal;color:var(--tm-accent)">·</i><span id="tm-shopify-logo" style="display:inline-flex;align-items:center;transition:filter .5s ease;filter:brightness(0) invert(1);cursor:default"><img src="./images/shopify-logo.webp" alt="Shopify" style="height:0.72em;width:auto;display:block"></span><i style="font-style:normal;color:var(--tm-accent)">·</i><span id="tm-ct-logo" style="display:inline-flex;align-items:center;transition:filter .5s ease;filter:brightness(0) invert(1);cursor:default"><img src="./images/commercetools-logo.svg" alt="commercetools" style="height:0.55em;width:auto;display:block"></span><i style="font-style:normal;color:var(--tm-accent)">·</i><span id="tm-sf-logo" style="display:inline-flex;align-items:center;transition:filter .5s ease;filter:brightness(0) invert(1);cursor:default"><img src="./images/salesforce-logo.svg" alt="Salesforce" style="height:0.68em;width:auto;display:block"></span><i style="font-style:normal;color:var(--tm-accent)">·</i><span id="tm-wc-logo" style="display:inline-flex;align-items:center;transition:filter .5s ease;filter:brightness(0) invert(1);cursor:default"><img src="./images/woocommerce-logo.svg" alt="WooCommerce" style="height:0.5em;width:auto;display:block"></span></p>
+    <p data-rv="" style="display:flex;flex-wrap:wrap;align-items:center;gap:14px 24px;font-size:clamp(28px,4vw,52px);font-weight:300;letter-spacing:-.02em;color:#fff;margin:0 0 clamp(40px,5vw,58px)"><span id="tm-vtex-logo" style="display:inline-flex;align-items:center;color:#fff;transition:color .45s ease;cursor:default"><img src="./images/vtex-logo.svg?v=3" alt="VTEX" style="height:0.85em;width:auto;display:block;filter:brightness(0) invert(1)"></span><i style="font-style:normal;color:var(--tm-accent)">·</i><span id="tm-shopify-logo" style="display:inline-flex;align-items:center;transition:filter .5s ease;filter:brightness(0) invert(1);cursor:default"><img src="./images/shopify-logo.webp?v=2" alt="Shopify" style="height:1.05em;width:auto;display:block"></span><i style="font-style:normal;color:var(--tm-accent)">·</i><span id="tm-ct-logo" style="display:inline-flex;align-items:center;transition:filter .5s ease;filter:brightness(0) invert(1);cursor:default"><img src="./images/commercetools-logo.svg?v=2" alt="commercetools" style="height:0.95em;width:auto;display:block"></span><i style="font-style:normal;color:var(--tm-accent)">·</i><span id="tm-sf-logo" style="display:inline-flex;align-items:center;transition:filter .5s ease;filter:brightness(0) invert(1);cursor:default"><img src="./images/salesforce-logo.svg" alt="Salesforce" style="height:1.1em;width:auto;display:block"></span><i style="font-style:normal;color:var(--tm-accent)">·</i><span id="tm-wc-logo" style="display:inline-flex;align-items:center;transition:filter .5s ease;filter:brightness(0) invert(1);cursor:default"><img src="./images/woocommerce-logo.svg?v=2" alt="WooCommerce" style="height:0.6em;width:auto;display:block"></span></p>
     <div data-rv="" style="max-width:62ch">
       <p style="font-size:clamp(16px,1.3vw,19px);line-height:1.68;color:rgba(255,255,255,.72);margin:0">La plataforma se selecciona según el modelo de negocio, volumen, integraciones, mercados y complejidad operativa.</p>
       <p style="font-size:clamp(16px,1.3vw,19px);line-height:1.68;color:rgba(255,255,255,.72);margin:18px 0 0">No adaptamos el negocio a la plataforma.</p>
@@ -204,14 +204,14 @@ a:hover{color:var(--tm-accent2)}
   </div>
 </section>
 
-<section style="background:#F2F4F3;padding:clamp(80px,10vw,140px) 0">
+<section style="background:var(--tm-ink);border-top:1px solid rgba(255,255,255,.09);padding:clamp(80px,10vw,140px) 0">
   <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
-    <p data-split="" style="font-size:clamp(24px,3.1vw,40px);font-weight:300;line-height:1.2;letter-spacing:-.026em;color:#141414;margin:0;max-width:24ch;text-wrap:pretty">Una operación de comercio conectada, estable y preparada para crecer sin que la tecnología se convierta en una limitación.</p>
-    <div data-rv="" style="display:flex;flex-wrap:wrap;gap:18px 40px;margin-top:clamp(44px,5vw,64px);padding-top:clamp(28px,3vw,36px);border-top:1px solid rgba(20,20,20,.16)">
-      <a href="#" data-cursor="VER CASO" style="font-size:15px;font-weight:500;color:#141414;border-bottom:1px solid #17747C;padding-bottom:4px">Caso Mario Hernández</a>
-      <a href="cloud-data.html" data-cursor="EXPLORAR" style="font-size:15px;font-weight:500;color:#141414;border-bottom:1px solid #17747C;padding-bottom:4px">Cloud &amp; Data</a>
-      <a href="retail-growth.html" data-cursor="EXPLORAR" style="font-size:15px;font-weight:500;color:#141414;border-bottom:1px solid #17747C;padding-bottom:4px">Retail Growth</a>
-      <a href="strategy-advisory.html" data-cursor="EXPLORAR" style="font-size:15px;font-weight:500;color:#141414;border-bottom:1px solid #17747C;padding-bottom:4px">Strategy &amp; Advisory</a>
+    <p data-split="" style="font-size:clamp(24px,3.1vw,40px);font-weight:300;line-height:1.2;letter-spacing:-.026em;color:var(--tm-accent2);margin:0;max-width:24ch;text-wrap:pretty">Una operación de comercio conectada, estable y preparada para crecer sin que la tecnología se convierta en una limitación.</p>
+    <div data-rv="" style="display:flex;flex-wrap:wrap;gap:18px 40px;margin-top:clamp(44px,5vw,64px);padding-top:clamp(28px,3vw,36px);border-top:1px solid rgba(255,255,255,.16)">
+      <a href="caso-mario-hernandez.html" data-cursor="VER CASO" style="font-size:15px;font-weight:500;color:#fff;border-bottom:1px solid var(--tm-accent2);padding-bottom:4px">Caso Mario Hernández</a>
+      <a href="cloud-data.html" data-cursor="EXPLORAR" style="font-size:15px;font-weight:500;color:#fff;border-bottom:1px solid var(--tm-accent2);padding-bottom:4px">Cloud &amp; Data</a>
+      <a href="retail-growth.html" data-cursor="EXPLORAR" style="font-size:15px;font-weight:500;color:#fff;border-bottom:1px solid var(--tm-accent2);padding-bottom:4px">Retail Growth</a>
+      <a href="strategy-advisory.html" data-cursor="EXPLORAR" style="font-size:15px;font-weight:500;color:#fff;border-bottom:1px solid var(--tm-accent2);padding-bottom:4px">Strategy &amp; Advisory</a>
     </div>
   </div>
 </section>
@@ -273,6 +273,7 @@ class Component extends DCLogic {
         .then(()=>{ if(this._beam){ this._beam(); this._beam = null; } })
         .then(()=> import('./js/card-beam.js'))
         .then(b=>{ this._beam = b.initCardBeam('[data-beam]', {
+          codeColor: 'rgba(20,20,20,.09)', beamCore: '#2E8C52',
           accent: this.props.accent || '#80E593',
           motion: this.props.motion
         }); });

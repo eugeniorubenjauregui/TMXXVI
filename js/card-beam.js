@@ -42,6 +42,8 @@ export function initCardBeam(selector, opts = {}) {
   const still = opts.motion === false || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const accent = opts.accent || '#80E593';
   const accent2 = accent.toLowerCase() === '#52c7cf' ? '#80E593' : '#52C7CF';
+  const codeColor = opts.codeColor || 'rgba(255,255,255,.13)';   // texto ASCII (en tarjetas claras: oscuro)
+  const beamCore = opts.beamCore || '#fff';                      // núcleo del haz
   const cleanup = [];
 
   cards.forEach(card => {
@@ -65,7 +67,7 @@ export function initCardBeam(selector, opts = {}) {
     ascii.style.cssText =
       'position:absolute;inset:0;margin:0;padding:0;z-index:0;pointer-events:none;' +
       "font-family:'IBM Plex Mono',monospace;font-size:11px;line-height:13px;letter-spacing:0;" +
-      'color:rgba(255,255,255,.13);white-space:pre;overflow:hidden;opacity:0;' +
+      'color:' + codeColor + ';white-space:pre;overflow:hidden;opacity:0;' +
       'clip-path:inset(0 100% 0 0);' +
       '-webkit-mask-image:linear-gradient(to right,rgba(0,0,0,.25) 0%,rgba(0,0,0,.7) 55%,rgba(0,0,0,1) 100%);' +
       'mask-image:linear-gradient(to right,rgba(0,0,0,.25) 0%,rgba(0,0,0,.7) 55%,rgba(0,0,0,1) 100%);';
@@ -75,7 +77,7 @@ export function initCardBeam(selector, opts = {}) {
     beam.setAttribute('aria-hidden', 'true');
     beam.style.cssText =
       'position:absolute;top:0;bottom:0;left:0;width:2px;z-index:2;pointer-events:none;opacity:0;' +
-      'background:linear-gradient(to bottom,transparent,#fff 12%,#fff 88%,transparent);' +
+      'background:linear-gradient(to bottom,transparent,' + beamCore + ' 12%,' + beamCore + ' 88%,transparent);' +
       'box-shadow:0 0 6px 1px ' + accent + ',0 0 18px 3px ' + accent2 + '66,0 0 40px 8px ' + accent + '26;';
     card.appendChild(beam);
 

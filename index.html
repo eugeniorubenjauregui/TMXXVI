@@ -95,7 +95,7 @@
 <x-dc>
 <helmet data-dc-atomics>
 <style>
-:root{--tm-accent:#80E593;--tm-accent2:#52C7CF;--tm-ink:#141414;--tm-ink-deep:#0B0C0C;--tm-panel:#1A1A1A}
+:root{--tm-accent:#80E593;--tm-accent2:#52C7CF;--tm-ink:#141414;--tm-ink-deep:#0B0C0C;--tm-panel:#1A1A1A;--tm-surface:#fff;--tm-surface-quiet:#F2F4F3;--tm-accent-ink:#2E8C52;--tm-teal-ink:#17747C;--tm-text-2:#4A524E;--tm-text-3:#5F6662;--tm-line:rgba(20,20,20,.14)}
 *{box-sizing:border-box}
 body{margin:0;background:var(--tm-ink);font-family:'Be Vietnam Pro',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
 a{color:var(--tm-accent);text-decoration:none}
@@ -119,12 +119,12 @@ a:hover{color:var(--tm-accent2)}
 [data-tooltip]::before{content:'';position:absolute;bottom:calc(100% + 7px);left:50%;width:8px;height:8px;background:var(--tm-ink-deep);opacity:0;pointer-events:none;transform:translate(-50%,4px) rotate(45deg);transition:opacity .25s cubic-bezier(.22,.61,.36,1),transform .25s cubic-bezier(.22,.61,.36,1);z-index:20}
 [data-tooltip]:hover::after,[data-tooltip]:hover::before{opacity:1;transform:translate(-50%,0) rotate(0)}
 [data-tooltip]:hover::before{transform:translate(-50%,0) rotate(45deg)}
-@media(max-width:1080px){#tm-hero-grid{grid-template-columns:minmax(0,1fr)!important}#tm-rhizome{width:112%!important;margin-left:-6%!important}#tm-steps{grid-template-columns:repeat(2,minmax(0,1fr))!important}#tm-stats{grid-template-columns:minmax(0,1fr)!important}#tm-ftr-grid{grid-template-columns:minmax(0,1fr)!important}#tm-form{grid-template-columns:minmax(0,1fr)!important}#tm-herorow{grid-template-columns:minmax(0,1fr)!important}#tm-burger{display:flex!important}#tm-nav{display:none!important;position:fixed;inset:78px 0 auto 0;flex-direction:column;align-items:stretch;gap:0;background:var(--tm-ink-deep);padding:12px clamp(24px,5vw,88px) 32px;border-bottom:1px solid rgba(255,255,255,.1);max-height:calc(100vh - 78px);overflow:auto}#tm-nav[data-open]{display:flex!important}#tm-nav>a,#tm-nav>div>button{padding:16px 0!important;border-bottom:1px solid rgba(255,255,255,.07);width:100%;text-align:left}#tm-bridge{display:none!important}#tm-drop{position:static!important;width:auto!important;border:0!important;padding:4px 0 12px!important;grid-template-columns:minmax(0,1fr)!important}#tm-cta{margin-top:18px;justify-content:center;border-bottom:0!important}}
+@media(max-width:1080px){#tm-hero-grid{grid-template-columns:minmax(0,1fr)!important}#tm-rhizome{width:112%!important;margin-left:-6%!important}#tm-steps{grid-template-columns:repeat(2,minmax(0,1fr))!important}#tm-stats{grid-template-columns:minmax(0,1fr)!important}#tm-ftr-grid{grid-template-columns:minmax(0,1fr)!important}#tm-form{grid-template-columns:minmax(0,1fr)!important}#tm-herorow{grid-template-columns:minmax(0,1fr)!important}#tm-burger{display:flex!important}#tm-nav{display:none!important;position:fixed;inset:78px 0 auto 0;flex-direction:column;align-items:stretch;gap:0;background:#fff;padding:12px clamp(24px,5vw,88px) 32px;border-bottom:1px solid rgba(20,20,20,.12);max-height:calc(100vh - 78px);overflow:auto}#tm-nav[data-open]{display:flex!important}#tm-nav>a,#tm-nav>div>button{padding:16px 0!important;border-bottom:1px solid rgba(20,20,20,.08);width:100%;text-align:left}#tm-bridge{display:none!important}#tm-drop{position:static!important;width:auto!important;border:0!important;padding:4px 0 12px!important;grid-template-columns:minmax(0,1fr)!important}#tm-cta{margin-top:18px;justify-content:center;border-bottom:0!important}}
 @media(max-width:640px){#tm-steps{grid-template-columns:minmax(0,1fr)!important}#tm-solrow-n{display:none!important}}
 .v1s-eyebrow{color:var(--tm-accent);border-bottom-color:var(--tm-accent)}
 .v1s-list{border-top-color:rgba(255,255,255,.12)}
 .v1s-row{border-bottom-color:rgba(255,255,255,.12)}
-.v1s-num{color:rgba(255,255,255,.62)}
+.v1s-num{color:var(--tm-accent2)}
 .v1s-title{color:#fff}
 .v1s-sub{color:rgba(255,255,255,.6)}
 .v1s-plus{color:var(--tm-accent);transition:transform .4s cubic-bezier(.22,.61,.36,1);display:inline-block}
@@ -143,33 +143,33 @@ a:hover{color:var(--tm-accent2)}
 <div id="tmcur"><span id="tmcur-l"></span></div>
 <div id="tm-trans" style="position:fixed;inset:0;z-index:250;background:var(--tm-ink-deep);opacity:0;pointer-events:none;display:flex;align-items:center;justify-content:center"><span id="tm-transline" style="display:block;height:1px;width:0;background:var(--tm-accent)"></span></div>
 
-<header id="tm-hdr" style="position:sticky;top:0;z-index:100;background:rgba(20,20,20,.74);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.08)">
+<header id="tm-hdr" style="position:sticky;top:0;z-index:100;background:#fff;backdrop-filter:blur(18px);border-bottom:1px solid rgba(20,20,20,.1)">
   <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px);height:78px;display:flex;align-items:center;justify-content:space-between;gap:28px">
-    <a href="index.html" style="display:flex;align-items:center;white-space:nowrap"><img width="170" height="48" src="./images/logo-tita-media.png" alt="TITA Media" style="height:48px;width:auto;display:block"></a>
+    <a href="index.html" style="display:flex;align-items:center;white-space:nowrap"><img width="170" height="48" src="./images/logo-tita-media.png" alt="TITA Media" style="height:48px;width:auto;display:block;filter:brightness(0)"></a>
     <nav id="tm-nav" style="display:flex;align-items:center;gap:28px">
-      <a href="#" style="font-size:14px;font-weight:500;color:#fff">Inicio</a>
+      <a href="#" style="font-size:14px;font-weight:500;color:#141414">Inicio</a>
       <div id="tm-dd" style="position:relative">
-        <button id="tm-ddbtn" aria-expanded="false" aria-controls="tm-drop" style="font:inherit;font-size:14px;font-weight:400;color:rgba(255,255,255,.8);background:none;border:0;padding:14px 0;min-height:44px;cursor:pointer;display:flex;align-items:center;gap:7px">Soluciones <span style="font-size:9px;opacity:.7">▼</span></button>
+        <button id="tm-ddbtn" aria-expanded="false" aria-controls="tm-drop" style="font:inherit;font-size:14px;font-weight:400;color:rgba(20,20,20,.78);background:none;border:0;padding:14px 0;min-height:44px;cursor:pointer;display:flex;align-items:center;gap:7px">Soluciones <span style="font-size:9px;opacity:.7">▼</span></button>
         <span id="tm-bridge" aria-hidden="true" style="position:absolute;top:100%;left:-22px;width:min(660px,86vw);height:20px"></span>
-        <div id="tm-drop" style="position:absolute;top:calc(100% + 18px);left:-22px;width:min(660px,86vw);background:var(--tm-ink-deep);border:1px solid rgba(255,255,255,.1);padding:14px;display:none;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px">
-          <a href="strategy-advisory.html" style="padding:15px 16px;color:#fff" data-cursor="EXPLORAR"><strong style="display:block;font-size:14.5px;font-weight:500;margin-bottom:4px;color:#fff">Strategy &amp; Advisory</strong><span style="display:block;font-size:13px;line-height:1.45;color:rgba(255,255,255,.55)">Consultoría y estrategia para retail.</span></a>
-          <a href="ai-custom-solutions.html" style="padding:15px 16px;color:#fff" data-cursor="EXPLORAR"><strong style="display:block;font-size:14.5px;font-weight:500;margin-bottom:4px;color:#fff">AI &amp; Custom Solutions</strong><span style="display:block;font-size:13px;line-height:1.45;color:rgba(255,255,255,.55)">Agentes de IA y tecnología a medida.</span></a>
-          <a href="commerce-solutions.html" style="padding:15px 16px;color:#fff" data-cursor="EXPLORAR"><strong style="display:block;font-size:14.5px;font-weight:500;margin-bottom:4px;color:#fff">Commerce Solutions</strong><span style="display:block;font-size:13px;line-height:1.45;color:rgba(255,255,255,.55)">Ecommerce, B2B, integraciones y omnicanalidad.</span></a>
-          <a href="retail-growth.html" style="padding:15px 16px;color:#fff" data-cursor="EXPLORAR"><strong style="display:block;font-size:14.5px;font-weight:500;margin-bottom:4px;color:#fff">Retail Growth</strong><span style="display:block;font-size:13px;line-height:1.45;color:rgba(255,255,255,.55)">SEO, GEO, AEO, CRO y Paid Media.</span></a>
-          <a href="cloud-data.html" style="padding:15px 16px;color:#fff" data-cursor="EXPLORAR"><strong style="display:block;font-size:14.5px;font-weight:500;margin-bottom:4px;color:#fff">Cloud &amp; Data</strong><span style="display:block;font-size:13px;line-height:1.45;color:rgba(255,255,255,.55)">Infraestructura cloud y plataformas de datos.</span></a>
-          <div style="grid-column:1/-1;margin-top:10px;padding:16px 16px 4px;border-top:1px solid rgba(255,255,255,.1);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px">
-            <span style="font-size:13px;color:rgba(255,255,255,.55)">¿No sabes por dónde empezar? Cuéntanos qué necesitas resolver.</span>
-            <a href="#tm-contacto" style="font-size:13.5px;font-weight:500;color:var(--tm-accent);border-bottom:1px solid var(--tm-accent);padding-bottom:3px">Hablemos</a>
+        <div id="tm-drop" style="position:absolute;top:calc(100% + 18px);left:-22px;width:min(660px,86vw);background:#fff;border:1px solid rgba(20,20,20,.12);box-shadow:0 18px 40px rgba(20,20,20,.12);padding:14px;display:none;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px">
+          <a href="strategy-advisory.html" style="padding:15px 16px;color:#141414" data-cursor="EXPLORAR"><strong style="display:block;font-size:14.5px;font-weight:500;margin-bottom:4px;color:#141414">Strategy &amp; Advisory</strong><span style="display:block;font-size:13px;line-height:1.45;color:rgba(20,20,20,.62)">Consultoría y estrategia para retail.</span></a>
+          <a href="ai-custom-solutions.html" style="padding:15px 16px;color:#141414" data-cursor="EXPLORAR"><strong style="display:block;font-size:14.5px;font-weight:500;margin-bottom:4px;color:#141414">AI &amp; Custom Solutions</strong><span style="display:block;font-size:13px;line-height:1.45;color:rgba(20,20,20,.62)">Agentes de IA y tecnología a medida.</span></a>
+          <a href="commerce-solutions.html" style="padding:15px 16px;color:#141414" data-cursor="EXPLORAR"><strong style="display:block;font-size:14.5px;font-weight:500;margin-bottom:4px;color:#141414">Commerce Solutions</strong><span style="display:block;font-size:13px;line-height:1.45;color:rgba(20,20,20,.62)">Ecommerce, B2B, integraciones y omnicanalidad.</span></a>
+          <a href="retail-growth.html" style="padding:15px 16px;color:#141414" data-cursor="EXPLORAR"><strong style="display:block;font-size:14.5px;font-weight:500;margin-bottom:4px;color:#141414">Retail Growth</strong><span style="display:block;font-size:13px;line-height:1.45;color:rgba(20,20,20,.62)">SEO, GEO, AEO, CRO y Paid Media.</span></a>
+          <a href="cloud-data.html" style="padding:15px 16px;color:#141414" data-cursor="EXPLORAR"><strong style="display:block;font-size:14.5px;font-weight:500;margin-bottom:4px;color:#141414">Cloud &amp; Data</strong><span style="display:block;font-size:13px;line-height:1.45;color:rgba(20,20,20,.62)">Infraestructura cloud y plataformas de datos.</span></a>
+          <div style="grid-column:1/-1;margin-top:10px;padding:16px 16px 4px;border-top:1px solid rgba(20,20,20,.12);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px">
+            <span style="font-size:13px;color:rgba(20,20,20,.62)">¿No sabes por dónde empezar? Cuéntanos qué necesitas resolver.</span>
+            <a href="#tm-contacto" style="font-size:13.5px;font-weight:500;color:#2E8C52;border-bottom:1px solid #2E8C52;padding-bottom:3px">Hablemos</a>
           </div>
         </div>
       </div>
-      <a href="soluciones-ia.html" style="font-size:14px;font-weight:400;color:rgba(255,255,255,.8)">Soluciones IA</a>
-      <a href="nosotros.html" style="font-size:14px;font-weight:400;color:rgba(255,255,255,.8)">Nosotros</a>
-      <a href="noticias.html" style="font-size:14px;font-weight:400;color:rgba(255,255,255,.8)">TITA News</a>
-      <a href="#" style="font-size:14px;font-weight:400;color:rgba(255,255,255,.8)">Contacto</a>
+      <a href="soluciones-ia.html" style="font-size:14px;font-weight:400;color:rgba(20,20,20,.78)">Soluciones IA</a>
+      <a href="nosotros.html" style="font-size:14px;font-weight:400;color:rgba(20,20,20,.78)">Nosotros</a>
+      <a href="noticias.html" style="font-size:14px;font-weight:400;color:rgba(20,20,20,.78)">TITA News</a>
+      <a href="#" style="font-size:14px;font-weight:400;color:rgba(20,20,20,.78)">Contacto</a>
       <a id="tm-cta" href="#tm-contacto" style="display:inline-flex;align-items:center;padding:13px 26px;background:var(--tm-accent);color:#141414;font-size:14px;font-weight:500;border:1px solid var(--tm-accent);transition:box-shadow .3s ease" style-hover="animation:tmglow 1.6s ease-in-out infinite">Hablemos</a>
     </nav>
-    <button id="tm-burger" aria-label="Menú" aria-expanded="false" aria-controls="tm-nav" style="display:none;width:44px;height:44px;align-items:center;justify-content:center;font:inherit;font-size:20px;line-height:1;color:#fff;background:none;border:0;cursor:pointer">☰</button>
+    <button id="tm-burger" aria-label="Menú" aria-expanded="false" aria-controls="tm-nav" style="display:none;width:44px;height:44px;align-items:center;justify-content:center;font:inherit;font-size:20px;line-height:1;color:#141414;background:none;border:0;cursor:pointer">☰</button>
   </div>
 </header>
 <main id="tm-main">
@@ -187,7 +187,7 @@ a:hover{color:var(--tm-accent2)}
         </div>
       </div>
       <div id="tm-rhizowrap" style="position:relative;z-index:0;min-height:540px">
-        <div id="tm-rhizome" role="group" aria-label="Rizoma de soluciones conectadas a la operación" style="width:196%;margin-left:-58%;aspect-ratio:1/.78;min-height:540px"></div>
+        <div id="tm-rhizome" role="group" aria-label="Rizoma de soluciones conectadas a la operación" style="width:196%;margin-left:-58%;aspect-ratio:1/.78;min-height:540px;transform:translateY(-48px)"></div>
         <div style="display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:space-between;margin-top:14px;padding-top:13px;border-top:1px solid rgba(255,255,255,.1)">
           <p style="margin:0;font-size:12.5px;line-height:1.5;color:rgba(255,255,255,.62)">Una sola red: cinco soluciones enredadas entre sí y con tu operación.</p>
           <p data-rhizome-hint style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;color:rgba(255,255,255,.62)">ARRASTRA LOS NÚCLEOS</p>
@@ -258,38 +258,38 @@ a:hover{color:var(--tm-accent2)}
   </div>
 </section>
 
-<section id="tm-proc" style="padding:clamp(80px,10vw,140px) 0">
+<section id="tm-proc" style="padding:clamp(80px,10vw,140px) 0;background:var(--tm-surface-quiet)">
   <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
-    <h2 data-split style="font-size:clamp(26px,3.2vw,44px);font-weight:300;line-height:1.14;letter-spacing:-.028em;color:#fff;margin:0 0 clamp(46px,6vw,76px);max-width:22ch;text-wrap:pretty">Entendemos el problema antes de operar la solución</h2>
+    <h2 data-split style="font-size:clamp(26px,3.2vw,44px);font-weight:300;line-height:1.14;letter-spacing:-.028em;color:var(--tm-ink);margin:0 0 clamp(46px,6vw,76px);max-width:22ch;text-wrap:pretty">Entendemos el problema antes de operar la solución</h2>
     <div>
       <div id="tm-steps" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(24px,3vw,44px)">
         <div data-rv data-step="0" style="position:relative">
-          <svg data-elastic style="position:absolute;top:-15px;left:0;width:100%;height:40px;overflow:visible;pointer-events:none" aria-hidden="true"><path data-track d="M0 20 L100 20" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="1"></path><path data-fill d="M0 20 L100 20" fill="none" stroke="var(--tm-accent)" stroke-width="1" stroke-linecap="round"></path></svg>
-          <div data-dot style="position:relative;width:11px;height:11px;border-radius:50%;background:var(--tm-ink);border:1px solid rgba(255,255,255,.3);transition:background .4s,border-color .4s"></div>
-          <p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:var(--tm-accent);margin:26px 0 12px">01</p>
-          <h3 style="font-size:19px;font-weight:500;letter-spacing:-.01em;color:#fff;margin:0 0 12px">Diagnosticar</h3>
-          <p style="font-size:15px;line-height:1.62;color:rgba(255,255,255,.66);margin:0">Entendemos la operación, identificamos oportunidades y priorizamos dónde actuar.</p>
+          <svg data-elastic style="position:absolute;top:-15px;left:0;width:100%;height:40px;overflow:visible;pointer-events:none" aria-hidden="true"><path data-track d="M0 20 L100 20" fill="none" stroke="rgba(20,20,20,.14)" stroke-width="1"></path><path data-fill d="M0 20 L100 20" fill="none" stroke="var(--tm-accent)" stroke-width="1" stroke-linecap="round"></path></svg>
+          <div data-dot style="position:relative;width:11px;height:11px;border-radius:50%;background:var(--tm-surface-quiet);border:1px solid rgba(20,20,20,.3);transition:background .4s,border-color .4s"></div>
+          <p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:var(--tm-accent-ink);margin:26px 0 12px">01</p>
+          <h3 style="font-size:19px;font-weight:500;letter-spacing:-.01em;color:var(--tm-ink);margin:0 0 12px">Diagnosticar</h3>
+          <p style="font-size:15px;line-height:1.62;color:var(--tm-text-2);margin:0">Entendemos la operación, identificamos oportunidades y priorizamos dónde actuar.</p>
         </div>
         <div data-rv data-step="1" style="position:relative">
-          <svg data-elastic style="position:absolute;top:-15px;left:0;width:100%;height:40px;overflow:visible;pointer-events:none" aria-hidden="true"><path data-track d="M0 20 L100 20" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="1"></path><path data-fill d="M0 20 L100 20" fill="none" stroke="var(--tm-accent)" stroke-width="1" stroke-linecap="round"></path></svg>
-          <div data-dot style="position:relative;width:11px;height:11px;border-radius:50%;background:var(--tm-ink);border:1px solid rgba(255,255,255,.3);transition:background .4s,border-color .4s"></div>
-          <p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:var(--tm-accent);margin:26px 0 12px">02</p>
-          <h3 style="font-size:19px;font-weight:500;letter-spacing:-.01em;color:#fff;margin:0 0 12px">Diseñar</h3>
-          <p style="font-size:15px;line-height:1.62;color:rgba(255,255,255,.66);margin:0">Definimos la solución, la tecnología y el impacto esperado.</p>
+          <svg data-elastic style="position:absolute;top:-15px;left:0;width:100%;height:40px;overflow:visible;pointer-events:none" aria-hidden="true"><path data-track d="M0 20 L100 20" fill="none" stroke="rgba(20,20,20,.14)" stroke-width="1"></path><path data-fill d="M0 20 L100 20" fill="none" stroke="var(--tm-accent)" stroke-width="1" stroke-linecap="round"></path></svg>
+          <div data-dot style="position:relative;width:11px;height:11px;border-radius:50%;background:var(--tm-surface-quiet);border:1px solid rgba(20,20,20,.3);transition:background .4s,border-color .4s"></div>
+          <p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:var(--tm-accent-ink);margin:26px 0 12px">02</p>
+          <h3 style="font-size:19px;font-weight:500;letter-spacing:-.01em;color:var(--tm-ink);margin:0 0 12px">Diseñar</h3>
+          <p style="font-size:15px;line-height:1.62;color:var(--tm-text-2);margin:0">Definimos la solución, la tecnología y el impacto esperado.</p>
         </div>
         <div data-rv data-step="2" style="position:relative">
-          <svg data-elastic style="position:absolute;top:-15px;left:0;width:100%;height:40px;overflow:visible;pointer-events:none" aria-hidden="true"><path data-track d="M0 20 L100 20" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="1"></path><path data-fill d="M0 20 L100 20" fill="none" stroke="var(--tm-accent)" stroke-width="1" stroke-linecap="round"></path></svg>
-          <div data-dot style="position:relative;width:11px;height:11px;border-radius:50%;background:var(--tm-ink);border:1px solid rgba(255,255,255,.3);transition:background .4s,border-color .4s"></div>
-          <p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:var(--tm-accent);margin:26px 0 12px">03</p>
-          <h3 style="font-size:19px;font-weight:500;letter-spacing:-.01em;color:#fff;margin:0 0 12px">Implementar</h3>
-          <p style="font-size:15px;line-height:1.62;color:rgba(255,255,255,.66);margin:0">Construimos, integramos y ponemos la solución en operación.</p>
+          <svg data-elastic style="position:absolute;top:-15px;left:0;width:100%;height:40px;overflow:visible;pointer-events:none" aria-hidden="true"><path data-track d="M0 20 L100 20" fill="none" stroke="rgba(20,20,20,.14)" stroke-width="1"></path><path data-fill d="M0 20 L100 20" fill="none" stroke="var(--tm-accent)" stroke-width="1" stroke-linecap="round"></path></svg>
+          <div data-dot style="position:relative;width:11px;height:11px;border-radius:50%;background:var(--tm-surface-quiet);border:1px solid rgba(20,20,20,.3);transition:background .4s,border-color .4s"></div>
+          <p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:var(--tm-accent-ink);margin:26px 0 12px">03</p>
+          <h3 style="font-size:19px;font-weight:500;letter-spacing:-.01em;color:var(--tm-ink);margin:0 0 12px">Implementar</h3>
+          <p style="font-size:15px;line-height:1.62;color:var(--tm-text-2);margin:0">Construimos, integramos y ponemos la solución en operación.</p>
         </div>
         <div data-rv data-step="3" style="position:relative">
-          <svg data-elastic style="position:absolute;top:-15px;left:0;width:100%;height:40px;overflow:visible;pointer-events:none" aria-hidden="true"><path data-track d="M0 20 L100 20" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="1"></path><path data-fill d="M0 20 L100 20" fill="none" stroke="var(--tm-accent)" stroke-width="1" stroke-linecap="round"></path></svg>
-          <div data-dot style="position:relative;width:11px;height:11px;border-radius:50%;background:var(--tm-ink);border:1px solid rgba(255,255,255,.3);transition:background .4s,border-color .4s"></div>
-          <p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:var(--tm-accent);margin:26px 0 12px">04</p>
-          <h3 style="font-size:19px;font-weight:500;letter-spacing:-.01em;color:#fff;margin:0 0 12px">Operar y crecer</h3>
-          <p style="font-size:15px;line-height:1.62;color:rgba(255,255,255,.66);margin:0">Medimos resultados, evolucionamos la tecnología y encontramos nuevas oportunidades.</p>
+          <svg data-elastic style="position:absolute;top:-15px;left:0;width:100%;height:40px;overflow:visible;pointer-events:none" aria-hidden="true"><path data-track d="M0 20 L100 20" fill="none" stroke="rgba(20,20,20,.14)" stroke-width="1"></path><path data-fill d="M0 20 L100 20" fill="none" stroke="var(--tm-accent)" stroke-width="1" stroke-linecap="round"></path></svg>
+          <div data-dot style="position:relative;width:11px;height:11px;border-radius:50%;background:var(--tm-surface-quiet);border:1px solid rgba(20,20,20,.3);transition:background .4s,border-color .4s"></div>
+          <p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:var(--tm-accent-ink);margin:26px 0 12px">04</p>
+          <h3 style="font-size:19px;font-weight:500;letter-spacing:-.01em;color:var(--tm-ink);margin:0 0 12px">Operar y crecer</h3>
+          <p style="font-size:15px;line-height:1.62;color:var(--tm-text-2);margin:0">Medimos resultados, evolucionamos la tecnología y encontramos nuevas oportunidades.</p>
         </div>
       </div>
     </div>
@@ -300,11 +300,11 @@ a:hover{color:var(--tm-accent2)}
   <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
     <p data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:400;letter-spacing:.14em;color:rgba(20,20,20,.55);margin:0 0 clamp(26px,3vw,38px)">PARTNERS CON LOS QUE TRABAJAMOS</p>
     <div data-rv style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:rgba(20,20,20,.1);border:1px solid rgba(20,20,20,.1)">
-      <div style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(20,20,20,.4)">LOGO</div>
-      <div style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(20,20,20,.4)">LOGO</div>
-      <div style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(20,20,20,.4)">LOGO</div>
-      <div style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(20,20,20,.4)">LOGO</div>
-      <div style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(20,20,20,.4)">LOGO</div>
+      <div data-tooltip="AWS" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/aws-logo.svg" alt="AWS" width="110" height="66" style="width:110px;height:auto"></div>
+      <div data-tooltip="VTEX" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/vtex-logo-color.svg" alt="VTEX" width="120" height="43" style="width:120px;height:auto"></div>
+      <div data-tooltip="Claude" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/claude-logo.svg" alt="Claude" width="150" height="32" style="width:150px;height:auto"></div>
+      <div data-tooltip="Shopify" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/shopify-logo-color.svg" alt="Shopify" width="130" height="41" style="width:130px;height:auto"></div>
+      <div data-tooltip="Google Cloud" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/google-cloud-logo.svg" alt="Google Cloud" width="160" height="25" style="width:160px;height:auto"></div>
     </div>
   </div>
 </section>
@@ -320,7 +320,7 @@ a:hover{color:var(--tm-accent2)}
           <span class="v1s-plus" data-plus style="justify-self:end;font-size:22px;font-weight:200;line-height:1">+</span>
         </button>
         <div id="tm-sol-0" style="position:relative;max-height:0;overflow:hidden;background:linear-gradient(90deg,#141414 0%,#181919 100%);transition:max-height .55s cubic-bezier(.22,.61,.36,1)">
-          <svg aria-hidden="true" viewBox="0 0 420 200" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0 0 0 auto;height:100%;width:min(48%,420px);z-index:0;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 60%);mask-image:linear-gradient(90deg,transparent,#000 60%)"><g fill="none" stroke="rgba(255,255,255,.14)" stroke-width="1.2"><line x1="240" y1="80" x2="340" y2="120"/><line x1="280" y1="40" x2="340" y2="120"/><line x1="320" y1="180" x2="340" y2="120"/></g><g fill="rgba(255,255,255,.3)"><circle cx="240" cy="80" r="3"/><circle cx="280" cy="40" r="3"/><circle cx="320" cy="180" r="3"/><circle cx="360" cy="160" r="3"/></g><circle cx="340" cy="120" r="6" fill="rgba(128,229,147,.7)"/></svg>
+          <div id="tm-strategy-3d" aria-hidden="true" style="position:absolute;inset:0 0 0 auto;height:100%;width:min(40%,360px);z-index:0;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 60%);mask-image:linear-gradient(90deg,transparent,#000 60%)"></div>
           <div style="position:relative;z-index:1;display:grid;grid-template-columns:64px minmax(0,1fr);gap:clamp(16px,2.5vw,36px);padding:clamp(4px,1vw,10px) 0 clamp(30px,3.5vw,42px)">
             <span></span>
             <div style="max-width:62ch">
@@ -338,7 +338,7 @@ a:hover{color:var(--tm-accent2)}
           <span class="v1s-plus" data-plus style="justify-self:end;font-size:22px;font-weight:200;line-height:1">+</span>
         </button>
         <div id="tm-sol-1" style="position:relative;max-height:0;overflow:hidden;background:linear-gradient(90deg,#141414 0%,#181919 100%);transition:max-height .55s cubic-bezier(.22,.61,.36,1)">
-          <svg aria-hidden="true" viewBox="0 0 420 200" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0 0 0 auto;height:100%;width:min(48%,420px);z-index:0;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 60%);mask-image:linear-gradient(90deg,transparent,#000 60%)"><g fill="none" stroke="rgba(255,255,255,.14)" stroke-width="1.2"><path d="M300 100 L240 60 M300 100 L240 140 M300 100 L360 60 M300 100 L360 140 M300 100 L280 180"/></g><g fill="rgba(255,255,255,.26)"><circle cx="240" cy="60" r="3"/><circle cx="240" cy="140" r="3"/><circle cx="360" cy="60" r="3"/><circle cx="360" cy="140" r="3"/><circle cx="280" cy="180" r="3"/></g><circle cx="300" cy="100" r="6.5" fill="rgba(128,229,147,.75)"/></svg>
+          <div id="tm-ai-3d" aria-hidden="true" style="position:absolute;inset:0 0 0 auto;height:100%;width:min(40%,360px);z-index:0;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 60%);mask-image:linear-gradient(90deg,transparent,#000 60%)"></div>
           <div style="position:relative;z-index:1;display:grid;grid-template-columns:64px minmax(0,1fr);gap:clamp(16px,2.5vw,36px);padding:clamp(4px,1vw,10px) 0 clamp(30px,3.5vw,42px)">
             <span></span>
             <div style="max-width:62ch">
@@ -356,7 +356,7 @@ a:hover{color:var(--tm-accent2)}
           <span class="v1s-plus" data-plus style="justify-self:end;font-size:22px;font-weight:200;line-height:1">+</span>
         </button>
         <div id="tm-sol-2" style="position:relative;max-height:0;overflow:hidden;background:linear-gradient(90deg,#141414 0%,#181919 100%);transition:max-height .55s cubic-bezier(.22,.61,.36,1)">
-          <div id="tm-commerce-3d" aria-hidden="true" style="position:absolute;inset:0 0 0 auto;height:100%;width:min(48%,420px);z-index:0;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 60%);mask-image:linear-gradient(90deg,transparent,#000 60%)"></div>
+          <div id="tm-commerce-3d" aria-hidden="true" style="position:absolute;inset:0 0 0 auto;height:100%;width:min(40%,360px);z-index:0;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 60%);mask-image:linear-gradient(90deg,transparent,#000 60%)"></div>
           <div style="position:relative;z-index:1;display:grid;grid-template-columns:64px minmax(0,1fr);gap:clamp(16px,2.5vw,36px);padding:clamp(4px,1vw,10px) 0 clamp(30px,3.5vw,42px)">
             <span></span>
             <div style="max-width:62ch">
@@ -374,7 +374,7 @@ a:hover{color:var(--tm-accent2)}
           <span class="v1s-plus" data-plus style="justify-self:end;font-size:22px;font-weight:200;line-height:1">+</span>
         </button>
         <div id="tm-sol-3" style="position:relative;max-height:0;overflow:hidden;background:linear-gradient(90deg,#141414 0%,#181919 100%);transition:max-height .55s cubic-bezier(.22,.61,.36,1)">
-          <div id="tm-retail-3d" aria-hidden="true" style="position:absolute;inset:0 0 0 auto;height:100%;width:min(48%,420px);z-index:0;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 60%);mask-image:linear-gradient(90deg,transparent,#000 60%)"></div>
+          <div id="tm-retail-3d" aria-hidden="true" style="position:absolute;inset:0 0 0 auto;height:100%;width:min(40%,360px);z-index:0;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 60%);mask-image:linear-gradient(90deg,transparent,#000 60%)"></div>
           <div style="position:relative;z-index:1;display:grid;grid-template-columns:64px minmax(0,1fr);gap:clamp(16px,2.5vw,36px);padding:clamp(4px,1vw,10px) 0 clamp(30px,3.5vw,42px)">
             <span></span>
             <div style="max-width:62ch">
@@ -392,7 +392,7 @@ a:hover{color:var(--tm-accent2)}
           <span class="v1s-plus" data-plus style="justify-self:end;font-size:22px;font-weight:200;line-height:1">+</span>
         </button>
         <div id="tm-sol-4" style="position:relative;max-height:0;overflow:hidden;background:linear-gradient(90deg,#141414 0%,#181919 100%);transition:max-height .55s cubic-bezier(.22,.61,.36,1)">
-          <div id="tm-cloud-3d" aria-hidden="true" style="position:absolute;inset:0 0 0 auto;height:100%;width:min(48%,420px);z-index:0;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 60%);mask-image:linear-gradient(90deg,transparent,#000 60%)"></div>
+          <div id="tm-cloud-3d" aria-hidden="true" style="position:absolute;inset:0 0 0 auto;height:100%;width:min(40%,360px);z-index:0;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 60%);mask-image:linear-gradient(90deg,transparent,#000 60%)"></div>
           <div style="position:relative;z-index:1;display:grid;grid-template-columns:64px minmax(0,1fr);gap:clamp(16px,2.5vw,36px);padding:clamp(4px,1vw,10px) 0 clamp(30px,3.5vw,42px)">
             <span></span>
             <div style="max-width:62ch">
@@ -407,7 +407,7 @@ a:hover{color:var(--tm-accent2)}
   </div>
 </section>
 
-<section id="tm-pause" style="position:relative;overflow:hidden;background:#52C7CF;color:#141414;padding:clamp(90px,12vw,168px) 0">
+<section id="tm-pause" style="position:relative;overflow:hidden;background:#fff;color:#141414;padding:clamp(90px,12vw,168px) 0">
   <div id="tm-pausefield" aria-hidden="true" style="position:absolute;inset:0;z-index:0;pointer-events:none;-webkit-mask-image:linear-gradient(100deg,transparent 14%,rgba(0,0,0,.5) 50%,#000 86%);mask-image:linear-gradient(100deg,transparent 14%,rgba(0,0,0,.5) 50%,#000 86%)"></div>
   <div style="position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
     <div class="v2p-grid" style="display:grid;grid-template-columns:.9fr 1.1fr;align-items:start">
@@ -436,33 +436,36 @@ a:hover{color:var(--tm-accent2)}
   </div>
 </section>
 
-<section style="position:relative;overflow:hidden;background:var(--tm-ink-deep);padding:clamp(84px,10vw,148px) 0">
-  <div id="tm-topo" aria-hidden="true" style="position:absolute;inset:0;pointer-events:none"></div>
+<section style="position:relative;overflow:hidden;background:#BFF2C9;padding:clamp(52px,6vw,88px) 0">
+  <div id="tm-topo" aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;opacity:.45"></div>
   <div style="position:relative;max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
-    <p data-rv style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.2em;color:var(--tm-accent);margin:0 0 30px">CASO DE ÉXITO · MARIO HERNÁNDEZ</p>
-    <h2 data-split style="font-size:clamp(26px,3.4vw,44px);font-weight:300;line-height:1.14;letter-spacing:-.028em;color:#fff;margin:0;max-width:20ch;text-wrap:pretty">5 países. 7 marketplaces. 100% de las tiendas conectadas.</h2>
-    <p data-rv style="font-size:clamp(16px,1.3vw,19px);line-height:1.68;color:rgba(255,255,255,.72);margin:28px 0 0;max-width:58ch">Desde 2015 construimos y operamos junto a Mario Hernández una operación de comercio que conecta ecommerce, marketplaces y tiendas físicas.</p>
+    <p data-rv style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.2em;color:var(--tm-ink);margin:0 0 30px">CASO DE ÉXITO · MARIO HERNÁNDEZ</p>
+    <h2 data-split data-text="5 países. 7 marketplaces. | 100% de las tiendas conectadas." style="font-size:clamp(26px,3.4vw,44px);font-weight:300;line-height:1.14;letter-spacing:-.028em;color:var(--tm-ink);margin:0;max-width:none;text-wrap:pretty">5 países. 7 marketplaces. 100% de las tiendas conectadas.</h2>
+    <p data-rv style="font-size:clamp(16px,1.3vw,19px);line-height:1.68;color:rgba(20,20,20,.84);margin:28px 0 0;max-width:58ch">Desde 2015 construimos y operamos junto a Mario Hernández una operación de comercio que conecta ecommerce, marketplaces y tiendas físicas.</p>
 
-    <div data-rv style="margin:clamp(44px,5vw,68px) 0 0;aspect-ratio:21/9;border:1px solid rgba(255,255,255,.14);background-color:#101111;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.05) 0 2px,transparent 2px 10px);display:flex;align-items:center;justify-content:center">
-      <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;color:rgba(255,255,255,.5);text-align:center;padding:0 20px">FOTOGRAFÍA EDITORIAL · OPERACIÓN / TIENDA · 2400 × 1030</span>
+    <div data-rv style="margin:clamp(44px,5vw,68px) 0 0;aspect-ratio:21/9;border:1px solid var(--tm-line);background-color:#fff;background-image:repeating-linear-gradient(135deg,rgba(20,20,20,.05) 0 2px,transparent 2px 10px);display:flex;align-items:center;justify-content:center">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;color:var(--tm-text-3);text-align:center;padding:0 20px">FOTOGRAFÍA EDITORIAL · OPERACIÓN / TIENDA · 2400 × 1030</span>
     </div>
 
-    <div id="tm-stats" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:rgba(255,255,255,.1);border-top:1px solid rgba(255,255,255,.1);border-bottom:1px solid rgba(255,255,255,.1);margin:clamp(44px,5vw,68px) 0">
-      <div data-rv data-glow data-glow-base="linear-gradient(160deg,rgba(255,255,255,.12) 0%,rgba(255,255,255,.03) 55%,rgba(255,255,255,.08) 100%)" style="background:linear-gradient(160deg,rgba(255,255,255,.12) 0%,rgba(255,255,255,.03) 55%,rgba(255,255,255,.08) 100%);backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);padding:clamp(30px,4vw,48px) clamp(22px,2.5vw,32px)">
-        <b data-count="5" data-pad="2" style="display:block;font-size:clamp(34px,4.4vw,58px);font-weight:200;letter-spacing:-.03em;color:var(--tm-accent);margin-bottom:12px;line-height:1">05</b>
-        <span style="font-size:15px;color:rgba(255,255,255,.66)">ecommerce</span>
+    <div style="position:relative;margin:clamp(20px,2.4vw,32px) 0 0">
+    <div id="tm-stats-glow" aria-hidden="true"></div>
+    <div id="tm-stats" style="position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--tm-line);border:1px solid var(--tm-line)">
+      <div data-rv data-glow data-glow-rgb="128,229,147" data-glow-base="linear-gradient(160deg,rgba(255,255,255,.9) 0%,rgba(255,255,255,.5) 52%,rgba(255,255,255,.74) 100%)" style="background:linear-gradient(160deg,rgba(255,255,255,.9) 0%,rgba(255,255,255,.5) 52%,rgba(255,255,255,.74) 100%);backdrop-filter:blur(4px) saturate(170%);-webkit-backdrop-filter:blur(4px) saturate(170%);box-shadow:inset 0 1px 0 rgba(255,255,255,.9);padding:clamp(20px,2.6vw,30px) clamp(22px,2.5vw,32px)">
+        <b data-count="5" data-pad="2" style="display:block;font-size:clamp(34px,4.4vw,58px);font-weight:200;letter-spacing:-.03em;color:var(--tm-accent-ink);margin-bottom:8px;line-height:1">05</b>
+        <span style="font-size:15px;color:var(--tm-text-2)">ecommerce</span>
       </div>
-      <div data-rv data-glow data-glow-base="linear-gradient(160deg,rgba(255,255,255,.12) 0%,rgba(255,255,255,.03) 55%,rgba(255,255,255,.08) 100%)" style="background:linear-gradient(160deg,rgba(255,255,255,.12) 0%,rgba(255,255,255,.03) 55%,rgba(255,255,255,.08) 100%);backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);padding:clamp(30px,4vw,48px) clamp(22px,2.5vw,32px)">
-        <b data-count="7" data-pad="2" style="display:block;font-size:clamp(34px,4.4vw,58px);font-weight:200;letter-spacing:-.03em;color:var(--tm-accent);margin-bottom:12px;line-height:1">07</b>
-        <span style="font-size:15px;color:rgba(255,255,255,.66)">marketplaces</span>
+      <div data-rv data-glow data-glow-rgb="128,229,147" data-glow-base="linear-gradient(160deg,rgba(255,255,255,.9) 0%,rgba(255,255,255,.5) 52%,rgba(255,255,255,.74) 100%)" style="background:linear-gradient(160deg,rgba(255,255,255,.9) 0%,rgba(255,255,255,.5) 52%,rgba(255,255,255,.74) 100%);backdrop-filter:blur(4px) saturate(170%);-webkit-backdrop-filter:blur(4px) saturate(170%);box-shadow:inset 0 1px 0 rgba(255,255,255,.9);padding:clamp(20px,2.6vw,30px) clamp(22px,2.5vw,32px)">
+        <b data-count="7" data-pad="2" style="display:block;font-size:clamp(34px,4.4vw,58px);font-weight:200;letter-spacing:-.03em;color:var(--tm-accent-ink);margin-bottom:8px;line-height:1">07</b>
+        <span style="font-size:15px;color:var(--tm-text-2)">marketplaces</span>
       </div>
-      <div data-rv data-glow data-glow-base="linear-gradient(160deg,rgba(255,255,255,.12) 0%,rgba(255,255,255,.03) 55%,rgba(255,255,255,.08) 100%)" style="background:linear-gradient(160deg,rgba(255,255,255,.12) 0%,rgba(255,255,255,.03) 55%,rgba(255,255,255,.08) 100%);backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);padding:clamp(30px,4vw,48px) clamp(22px,2.5vw,32px)">
-        <b data-count="80" data-suffix="%" style="display:block;font-size:clamp(34px,4.4vw,58px);font-weight:200;letter-spacing:-.03em;color:var(--tm-accent);margin-bottom:12px;line-height:1">80%</b>
-        <span style="font-size:15px;color:rgba(255,255,255,.66)">de los envíos salen desde tienda</span>
+      <div data-rv data-glow data-glow-rgb="128,229,147" data-glow-base="linear-gradient(160deg,rgba(255,255,255,.9) 0%,rgba(255,255,255,.5) 52%,rgba(255,255,255,.74) 100%)" style="background:linear-gradient(160deg,rgba(255,255,255,.9) 0%,rgba(255,255,255,.5) 52%,rgba(255,255,255,.74) 100%);backdrop-filter:blur(4px) saturate(170%);-webkit-backdrop-filter:blur(4px) saturate(170%);box-shadow:inset 0 1px 0 rgba(255,255,255,.9);padding:clamp(20px,2.6vw,30px) clamp(22px,2.5vw,32px)">
+        <b data-count="80" data-suffix="%" style="display:block;font-size:clamp(34px,4.4vw,58px);font-weight:200;letter-spacing:-.03em;color:var(--tm-accent-ink);margin-bottom:8px;line-height:1">80%</b>
+        <span style="font-size:15px;color:var(--tm-text-2)">de los envíos salen desde tienda</span>
       </div>
     </div>
+    </div>
 
-    <a data-rv data-mag href="caso-mario-hernandez.html" data-cursor="VER CASO" style="display:inline-flex;align-items:center;gap:12px;padding:16px 30px;background:var(--tm-accent);color:#141414;font-size:15px;font-weight:500;border:1px solid var(--tm-accent)">Ver el caso →</a>
+    <a data-rv data-mag href="caso-mario-hernandez.html" data-cursor="VER CASO" style="display:inline-flex;margin-top:clamp(28px,3vw,40px);align-items:center;gap:12px;padding:16px 30px;background:var(--tm-ink);color:#fff;font-size:15px;font-weight:500;border:1px solid var(--tm-ink)" style-hover="background:#fff;color:#141414">Ver el caso →</a>
   </div>
 </section>
 
@@ -514,43 +517,43 @@ a:hover{color:var(--tm-accent2)}
 </section>
 
 </main>
-<footer style="position:relative;isolation:isolate;overflow:hidden;background:var(--tm-ink);border-top:1px solid rgba(255,255,255,.1);padding-top:clamp(60px,7vw,90px)">
+<footer style="position:relative;isolation:isolate;overflow:hidden;background:#52C7CF;padding-top:clamp(60px,7vw,90px)">
   <div id="tm-ftr-mesh" aria-hidden="true"></div>
   <div style="position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
     <div id="tm-ftr-grid" style="display:grid;grid-template-columns:1.7fr 1fr 1.25fr;gap:clamp(32px,4vw,52px);padding-bottom:clamp(44px,5vw,60px)">
       <div>
-        <a href="index.html" style="display:block;margin-bottom:20px"><img width="121" height="34" src="./images/logo-tita-media.png" alt="TITA Media" style="height:34px;width:auto;display:block"></a>
-        <p style="font-size:15.5px;line-height:1.65;color:rgba(255,255,255,.66);max-width:38ch;margin:0">Soluciones de tecnología, comercio, datos, growth e inteligencia artificial para retail.</p>
-        <div style="display:grid;gap:12px;margin-top:clamp(28px,3.5vw,38px);padding-top:clamp(24px,3vw,30px);border-top:1px solid rgba(255,255,255,.1)">
-          <p style="font-size:17px;font-weight:400;letter-spacing:-.01em;color:#fff;margin:0">Tecnología que tiene que mover un resultado.</p>
-          <p style="font-size:14.5px;color:rgba(255,255,255,.6);line-height:1.9;margin:0">Ventas.<i style="font-style:normal;color:var(--tm-accent);padding:0 5px">·</i>Conversión.<i style="font-style:normal;color:var(--tm-accent);padding:0 5px">·</i>Eficiencia.<i style="font-style:normal;color:var(--tm-accent);padding:0 5px">·</i>Disponibilidad.<i style="font-style:normal;color:var(--tm-accent);padding:0 5px">·</i>Velocidad.<i style="font-style:normal;color:var(--tm-accent);padding:0 5px">·</i>Precisión.</p>
+        <a href="index.html" style="display:block;margin-bottom:20px"><img width="182" height="51" src="./images/logo-tita-media.png" alt="TITA Media" style="height:51px;width:auto;display:block;filter:brightness(0)"></a>
+        <p style="font-size:15.5px;line-height:1.65;color:rgba(20,20,20,.84);max-width:38ch;margin:0">Soluciones de tecnología, comercio, datos, growth e inteligencia artificial para retail.</p>
+        <div style="display:grid;gap:12px;margin-top:clamp(28px,3.5vw,38px);padding-top:clamp(24px,3vw,30px);border-top:1px solid rgba(20,20,20,.22)">
+          <p style="font-size:17px;font-weight:400;letter-spacing:-.01em;color:var(--tm-ink);margin:0">Tecnología que tiene que mover un resultado.</p>
+          <p style="font-size:14.5px;color:rgba(20,20,20,.8);line-height:1.9;margin:0">Ventas.<i style="font-style:normal;color:var(--tm-ink);padding:0 5px">·</i>Conversión.<i style="font-style:normal;color:var(--tm-ink);padding:0 5px">·</i>Eficiencia.<i style="font-style:normal;color:var(--tm-ink);padding:0 5px">·</i>Disponibilidad.<i style="font-style:normal;color:var(--tm-ink);padding:0 5px">·</i>Velocidad.<i style="font-style:normal;color:var(--tm-ink);padding:0 5px">·</i>Precisión.</p>
         </div>
       </div>
       <div>
-        <h3 style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:400;letter-spacing:.14em;color:var(--tm-accent);margin:0 0 20px">SOLUCIONES</h3>
+        <h3 style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:400;letter-spacing:.14em;color:var(--tm-ink);margin:0 0 20px">SOLUCIONES</h3>
         <ul style="list-style:none;display:grid;gap:13px;margin:0;padding:0">
-          <li><a href="strategy-advisory.html" style="font-size:15px;color:rgba(255,255,255,.72)">Strategy &amp; Advisory</a></li>
-          <li><a href="ai-custom-solutions.html" style="font-size:15px;color:rgba(255,255,255,.72)">AI &amp; Custom Solutions</a></li>
-          <li><a href="commerce-solutions.html" style="font-size:15px;color:rgba(255,255,255,.72)">Commerce Solutions</a></li>
-          <li><a href="retail-growth.html" style="font-size:15px;color:rgba(255,255,255,.72)">Retail Growth</a></li>
-          <li><a href="cloud-data.html" style="font-size:15px;color:rgba(255,255,255,.72)">Cloud &amp; Data</a></li>
+          <li><a href="strategy-advisory.html" style="font-size:15px;color:rgba(20,20,20,.88)">Strategy &amp; Advisory</a></li>
+          <li><a href="ai-custom-solutions.html" style="font-size:15px;color:rgba(20,20,20,.88)">AI &amp; Custom Solutions</a></li>
+          <li><a href="commerce-solutions.html" style="font-size:15px;color:rgba(20,20,20,.88)">Commerce Solutions</a></li>
+          <li><a href="retail-growth.html" style="font-size:15px;color:rgba(20,20,20,.88)">Retail Growth</a></li>
+          <li><a href="cloud-data.html" style="font-size:15px;color:rgba(20,20,20,.88)">Cloud &amp; Data</a></li>
         </ul>
       </div>
       <div>
-        <h3 style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:400;letter-spacing:.14em;color:var(--tm-accent);margin:0 0 20px">CONTACTO</h3>
-        <p style="margin:0"><a href="mailto:cuentanos@titamedia.com" style="font-size:15px;color:var(--tm-accent)">cuentanos@titamedia.com</a></p>
-        <address style="font-style:normal;font-size:14.5px;line-height:1.62;color:rgba(255,255,255,.66);margin-top:18px">Carrera 16 #93A - 16<br>Bogotá, Colombia</address>
-        <address style="font-style:normal;font-size:14.5px;line-height:1.62;color:rgba(255,255,255,.66);margin-top:14px">Av. Paseo de la Reforma 26, col. Juárez<br>Ciudad de México D.F, México</address>
+        <h3 style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:400;letter-spacing:.14em;color:var(--tm-ink);margin:0 0 20px">CONTACTO</h3>
+        <p style="margin:0"><a href="mailto:cuentanos@titamedia.com" style="font-size:15px;color:var(--tm-ink);border-bottom:1px solid var(--tm-ink);padding-bottom:2px">cuentanos@titamedia.com</a></p>
+        <address style="font-style:normal;font-size:14.5px;line-height:1.62;color:rgba(20,20,20,.84);margin-top:18px">Carrera 16 #93A - 16<br>Bogotá, Colombia</address>
+        <address style="font-style:normal;font-size:14.5px;line-height:1.62;color:rgba(20,20,20,.84);margin-top:14px">Av. Paseo de la Reforma 26, col. Juárez<br>Ciudad de México D.F, México</address>
       </div>
     </div>
     <div style="display:flex;flex-wrap:wrap;gap:10px;padding-bottom:clamp(40px,5vw,56px)">
-      <a href="https://www.linkedin.com/company/tita-media/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" style-hover="border-color:var(--tm-accent);color:var(--tm-accent)" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.7);transition:border-color .25s ease,color .25s ease"><svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.75-2.05C20.6 8.65 22 11 22 14.4V21h-4v-5.9c0-1.4-.03-3.2-1.95-3.2s-2.25 1.52-2.25 3.1V21H9z"></path></svg></a>
-      <a href="https://www.instagram.com/titamedia/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" style-hover="border-color:var(--tm-accent);color:var(--tm-accent)" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.7);transition:border-color .25s ease,color .25s ease"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" style="width:18px;height:18px"><rect x="2.5" y="2.5" width="19" height="19" rx="5.4"></rect><circle cx="12" cy="12" r="4.2"></circle><circle cx="17.6" cy="6.4" r="1.2" fill="currentColor" stroke="none"></circle></svg></a>
-      <a href="https://www.facebook.com/titamedia/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" style-hover="border-color:var(--tm-accent);color:var(--tm-accent)" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.7);transition:border-color .25s ease,color .25s ease"><svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.45 2.89h-2.33v6.99A10 10 0 0 0 22 12z"></path></svg></a>
-      <a href="https://www.youtube.com/channel/UCahCtdiony6T4qrEzG7fDag" target="_blank" rel="noopener noreferrer" aria-label="YouTube" style-hover="border-color:var(--tm-accent);color:var(--tm-accent)" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.7);transition:border-color .25s ease,color .25s ease"><svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M23.5 6.9a3 3 0 0 0-2.12-2.13C19.5 4.25 12 4.25 12 4.25s-7.5 0-9.38.52A3 3 0 0 0 .5 6.9 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.1 3 3 0 0 0 2.12 2.13c1.88.52 9.38.52 9.38.52s7.5 0 9.38-.52a3 3 0 0 0 2.12-2.13A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.1zM9.6 15.6V8.4l6.2 3.6z"></path></svg></a>
-      <a href="https://www.tiktok.com/@titamedia" target="_blank" rel="noopener noreferrer" aria-label="TikTok" style-hover="border-color:var(--tm-accent);color:var(--tm-accent)" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.7);transition:border-color .25s ease,color .25s ease"><svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M16.3 2h-3.1v13.6a2.6 2.6 0 1 1-2.6-2.6c.27 0 .53.04.77.12v-3.2a5.9 5.9 0 0 0-.77-.05 5.8 5.8 0 1 0 5.8 5.8V9.06a7 7 0 0 0 4.1 1.32V7.24a3.94 3.94 0 0 1-4.2-4.02V2z"></path></svg></a>
+      <a href="https://www.linkedin.com/company/tita-media/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" style-hover="background:#141414;border-color:#141414;color:#fff" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(20,20,20,.3);color:rgba(20,20,20,.82);transition:border-color .25s ease,color .25s ease,background-color .25s ease,background .25s ease"><svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.75-2.05C20.6 8.65 22 11 22 14.4V21h-4v-5.9c0-1.4-.03-3.2-1.95-3.2s-2.25 1.52-2.25 3.1V21H9z"></path></svg></a>
+      <a href="https://www.instagram.com/titamedia/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" style-hover="background:#141414;border-color:#141414;color:#fff" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(20,20,20,.3);color:rgba(20,20,20,.82);transition:border-color .25s ease,color .25s ease,background-color .25s ease,background .25s ease"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" style="width:18px;height:18px"><rect x="2.5" y="2.5" width="19" height="19" rx="5.4"></rect><circle cx="12" cy="12" r="4.2"></circle><circle cx="17.6" cy="6.4" r="1.2" fill="currentColor" stroke="none"></circle></svg></a>
+      <a href="https://www.facebook.com/titamedia/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" style-hover="background:#141414;border-color:#141414;color:#fff" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(20,20,20,.3);color:rgba(20,20,20,.82);transition:border-color .25s ease,color .25s ease,background-color .25s ease,background .25s ease"><svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.45 2.89h-2.33v6.99A10 10 0 0 0 22 12z"></path></svg></a>
+      <a href="https://www.youtube.com/channel/UCahCtdiony6T4qrEzG7fDag" target="_blank" rel="noopener noreferrer" aria-label="YouTube" style-hover="background:#141414;border-color:#141414;color:#fff" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(20,20,20,.3);color:rgba(20,20,20,.82);transition:border-color .25s ease,color .25s ease,background-color .25s ease,background .25s ease"><svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M23.5 6.9a3 3 0 0 0-2.12-2.13C19.5 4.25 12 4.25 12 4.25s-7.5 0-9.38.52A3 3 0 0 0 .5 6.9 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.1 3 3 0 0 0 2.12 2.13c1.88.52 9.38.52 9.38.52s7.5 0 9.38-.52a3 3 0 0 0 2.12-2.13A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.1zM9.6 15.6V8.4l6.2 3.6z"></path></svg></a>
+      <a href="https://www.tiktok.com/@titamedia" target="_blank" rel="noopener noreferrer" aria-label="TikTok" style-hover="background:#141414;border-color:#141414;color:#fff" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(20,20,20,.3);color:rgba(20,20,20,.82);transition:border-color .25s ease,color .25s ease,background-color .25s ease,background .25s ease"><svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M16.3 2h-3.1v13.6a2.6 2.6 0 1 1-2.6-2.6c.27 0 .53.04.77.12v-3.2a5.9 5.9 0 0 0-.77-.05 5.8 5.8 0 1 0 5.8 5.8V9.06a7 7 0 0 0 4.1 1.32V7.24a3.94 3.94 0 0 1-4.2-4.02V2z"></path></svg></a>
     </div>
-    <div style="border-top:1px solid rgba(255,255,255,.1);padding:24px 0;display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;font-size:13.5px;color:rgba(255,255,255,.48)">
+    <div style="border-top:1px solid rgba(20,20,20,.22);padding:24px 0;display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;font-size:13.5px;color:rgba(20,20,20,.74)">
       <span>Colombia · Latinoamérica</span>
       <span>© 2026 TITA MEDIA · Outstanding Performance</span>
     </div>
@@ -582,7 +585,7 @@ class Component extends DCLogic {
     import('./js/mount-graphic.js').then(({ mountGraphic })=>{
       const host = document.querySelector('#tm-topo');
       this._topo = mountGraphic('#tm-topo', ()=> import('./js/topo-mesh.js'), 'initTopoMesh',
-        { accent2: this.props.accent2 || '#52C7CF', motion: this.props.motion, pointerTarget: host && host.parentElement });
+        { accent2: '#3A7479', hoverColor: '#141414', motion: this.props.motion, pointerTarget: host && host.parentElement });
     });
   }
 
@@ -740,11 +743,12 @@ class Component extends DCLogic {
       h.setAttribute('data-text', words.join(' '));
       h.textContent = '';
       const probes = words.map(w=>{
+        if(w === '|'){ h.appendChild(document.createElement('br')); return null; } /* corte de línea forzado */
         const s = document.createElement('span');
         s.textContent = w; s.style.display='inline-block';
         h.appendChild(s); h.appendChild(document.createTextNode(' '));
         return s;
-      });
+      }).filter(Boolean);
       const lines = []; let top = null;
       probes.forEach(s=>{
         const t = Math.round(s.offsetTop);
@@ -1030,7 +1034,7 @@ class Component extends DCLogic {
       const h = document.documentElement.scrollHeight - window.innerHeight;
       if(bar) bar.style.width = (h>0 ? (y/h)*100 : 0) + '%';
       if(hdr){
-        hdr.style.background = y > 40 ? 'rgba(11,12,12,.92)' : 'rgba(20,20,20,.74)';
+        hdr.style.background = y > 40 ? 'rgba(255,255,255,.94)' : 'rgba(255,255,255,1)';
         const open = this.q('#tm-nav') && this.q('#tm-nav').hasAttribute('data-open');
         hdr.style.transform = (y > 220 && y > last && !open) ? 'translateY(-100%)' : 'none';
       }
@@ -1178,7 +1182,7 @@ class Component extends DCLogic {
         document.querySelectorAll('[data-plus]').forEach(p=>{ p.style.transform='none'; });
         document.querySelectorAll('[data-sol]').forEach(b=>{ b.setAttribute('aria-expanded','false'); });
         rows.forEach(r=>{ r.style.transition='opacity .4s ease'; r.style.opacity='1'; });
-        document.querySelectorAll('[data-sol] > span:first-child').forEach(s=>{ s.style.transition='color .35s'; s.style.color='rgba(255,255,255,.62)'; });
+        document.querySelectorAll('[data-sol] > span:first-child').forEach(s=>{ s.style.transition='color .35s'; s.style.color='var(--tm-accent2)'; });
         if(!open){
           panel.style.maxHeight = panel.scrollHeight + 'px';
           panel.setAttribute('data-open','');
@@ -1186,7 +1190,7 @@ class Component extends DCLogic {
           const plus = btn.querySelector('[data-plus]');
           if(plus) plus.style.transform = 'rotate(45deg)';
           const num = btn.querySelector('span:first-child');
-          if(num) num.style.color = 'var(--tm-accent)';
+          if(num) num.style.color = 'var(--tm-accent2)';
           rows.forEach(r=>{ if(r !== btn.parentElement) r.style.opacity = '.42'; });
           this.mountSolGraphics(i);
         }
@@ -1195,19 +1199,15 @@ class Component extends DCLogic {
   }
 
   mountSolGraphics(solId){
-    const graphicMap = { 2: 'commerce', 3: 'retail', 4: 'cloud' };
-    const type = graphicMap[solId];
-    if(!type) return;
-    const containerId = 'tm-'+type+'-3d';
-    const container = document.getElementById(containerId);
-    if(!container || container.hasAttribute('data-mounted')) return;
-    container.setAttribute('data-mounted','');
+    const type = ['strategy','ai','commerce','retail','cloud'][solId];
+    const container = type && document.getElementById('tm-'+type+'-3d');
+    if(!container || container === this._solEl) return;
     const token = (this._solToken = (this._solToken || 0) + 1);
     if(this._solGraphic){ this._solGraphic(); this._solGraphic = null; }
+    this._solEl = container;
     import('./js/sol-graphics.js').then(m=>{
       if(token !== this._solToken) return;
-      const fnName = 'init'+type.charAt(0).toUpperCase()+type.slice(1)+'Graphic';
-      if(m[fnName]) this._solGraphic = m[fnName](container);
+      this._solGraphic = m.initSolGraphic(container, type, { accent: this.props.accent || '#80E593', accent2: this.props.accent2 || '#52C7CF', motion: this.props.motion });
     }).catch(err=>console.error('Failed to load sol-graphics:', err));
   }
 }

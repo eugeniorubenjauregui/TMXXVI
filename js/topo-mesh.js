@@ -77,7 +77,7 @@ export function initTopoMesh(host, opts = {}) {
     const U = {
       uTime: { value: 0 }, uIn: { value: still ? 1 : 0 },
       uMouse: { value: new THREE.Vector2(99, 99) }, uHover: { value: 0 },
-      uColor: { value: new THREE.Color(accent2) }, uWhite: { value: new THREE.Color('#ffffff') }
+      uColor: { value: new THREE.Color(accent2) }, uWhite: { value: new THREE.Color(opts.hoverColor || '#ffffff') }
     };
     const mat = new THREE.ShaderMaterial({ vertexShader: VERT, fragmentShader: FRAG, uniforms: U, transparent: true, depthWrite: false, extensions: { derivatives: true } });
     const mesh = new THREE.Mesh(geo, mat);
