@@ -26,15 +26,58 @@
   "@graph": [
     {
       "@type": "Organization",
+      "@id": "https://titamedia.com/#organization",
       "name": "Tita Media",
       "url": "https://titamedia.com/",
-      "logo": "https://titamedia.com/images/logo-tita-media.png",
-      "description": "Consultoría y tecnología para operaciones de comercio y retail: estrategia, agentes de IA y tecnología a medida, plataformas de comercio, crecimiento digital y arquitectura cloud y de datos."
+      "logo": {
+        "@type": "ImageObject",
+        "@id": "https://titamedia.com/#logo",
+        "url": "https://titamedia.com/images/logo-tita-media.png",
+        "width": 600,
+        "height": 169
+      },
+      "description": "Consultoría y tecnología para operaciones de comercio y retail: estrategia, agentes de IA y tecnología a medida, plataformas de comercio, crecimiento digital y arquitectura cloud y de datos.",
+      "sameAs": [
+        "https://www.linkedin.com/company/tita-media/",
+        "https://www.instagram.com/titamedia/",
+        "https://www.facebook.com/titamedia/",
+        "https://www.youtube.com/channel/UCahCtdiony6T4qrEzG7fDag",
+        "https://www.tiktok.com/@titamedia"
+      ],
+      "address": [
+        {
+          "@type": "PostalAddress",
+          "streetAddress": "Carrera 16 #93A - 16",
+          "addressLocality": "Bogotá",
+          "addressCountry": "CO"
+        },
+        {
+          "@type": "PostalAddress",
+          "streetAddress": "Av. Paseo de la Reforma 26, col. Juárez",
+          "addressLocality": "Ciudad de México",
+          "addressCountry": "MX"
+        }
+      ],
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "contactType": "sales",
+          "email": "cuentanos@titamedia.com",
+          "availableLanguage": [
+            "es"
+          ]
+        }
+      ]
     },
     {
       "@type": "WebSite",
+      "@id": "https://titamedia.com/#website",
       "name": "Tita Media",
-      "url": "https://titamedia.com/"
+      "url": "https://titamedia.com/",
+      "inLanguage": "es-CO",
+      "publisher": {
+        "@id": "https://titamedia.com/#organization"
+      }
     }
   ]
 }
@@ -91,54 +134,6 @@ a:hover{color:var(--tm-accent2)}
 .v2p-panel{display:grid;gap:1px;background:rgba(20,20,20,.14);border:1px solid rgba(20,20,20,.14);align-self:stretch}
 @media(max-width:1080px){.v2p-grid{grid-template-columns:minmax(0,1fr)!important}}
 </style>
-<script type="application/ld+json">
-{
- "@context": "https://schema.org",
- "@type": "FAQPage",
- "mainEntity": [
-  {
-   "@type": "Question",
-   "name": "¿Qué hace TITA Media?",
-   "acceptedAnswer": {
-    "@type": "Answer",
-    "text": "TITA Media es una compañía de consultoría y tecnología para operaciones de comercio y retail. Trabajamos cinco frentes conectados: estrategia y advisory, agentes de IA y tecnología a medida, plataformas de comercio, crecimiento en retail, y arquitectura de cloud y datos. Operamos desde Colombia con proyectos en distintos países de Latinoamérica."
-   }
-  },
-  {
-   "@type": "Question",
-   "name": "¿En qué se diferencia TITA de una agencia digital o de un integrador?",
-   "acceptedAnswer": {
-    "@type": "Answer",
-    "text": "Una agencia ejecuta campañas y contenido; un integrador implementa una plataforma y entrega. Nosotros cubrimos las tres capas: definimos la estrategia, implementamos la tecnología y acompañamos la operación una vez que está en marcha, con el mismo equipo."
-   }
-  },
-  {
-   "@type": "Question",
-   "name": "¿Cómo empieza un proyecto con TITA?",
-   "acceptedAnswer": {
-    "@type": "Answer",
-    "text": "Empieza con un diagnóstico de la operación actual: sistemas, datos, canales y procesos. De ahí sale un alcance por fases, donde la primera fase tiene entregables acotados y medibles antes de comprometer el resto."
-   }
-  },
-  {
-   "@type": "Question",
-   "name": "¿Cómo se estructura la inversión?",
-   "acceptedAnswer": {
-    "@type": "Answer",
-    "text": "Depende del tipo de trabajo. Los proyectos de implementación se cotizan por alcance cerrado y fases; el acompañamiento, la operación y el crecimiento se trabajan con un fee recurrente. Las licencias de plataforma y el consumo de nube los factura directamente cada proveedor y no van dentro de nuestro fee."
-   }
-  },
-  {
-   "@type": "Question",
-   "name": "¿Trabajan con empresas fuera de Colombia?",
-   "acceptedAnswer": {
-    "@type": "Answer",
-    "text": "Sí. Acompañamos operaciones regionales en Latinoamérica. Con Mario Hernández, por ejemplo, operamos desde 2015 una operación de comercio que conecta cinco países y siete marketplaces."
-   }
-  }
- ]
-}
-</script>
 </helmet>
 
 <template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect width="400" height="300" fill="#141414"/><g fill="none" stroke="#52C7CF" stroke-width="1.5" opacity=".75"><path d="M200 150 120 96M200 150 286 104M200 150 132 208M200 150 280 206"/></g><g fill="#80E593"><circle cx="200" cy="150" r="10"/><circle cx="120" cy="96" r="5"/><circle cx="286" cy="104" r="5"/><circle cx="132" cy="208" r="5"/><circle cx="280" cy="206" r="5"/></g><text x="200" y="258" fill="#fff" font-family="system-ui,sans-serif" font-size="19" font-weight="300" letter-spacing="7" text-anchor="middle">TITA MEDIA</text></svg></template>
@@ -497,13 +492,13 @@ a:hover{color:var(--tm-accent2)}
 
     <p data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:#2E8C52;border-bottom:1px solid #2E8C52;padding-bottom:7px;margin:0 0 clamp(26px,3vw,34px)">CUÉNTANOS SOBRE TI</p>
     <div id="tm-form" data-rv style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px">
-      <div style="display:flex;flex-direction:column;gap:9px"><label for="q1" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Nombre y apellido</label><input id="q1" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
-      <div style="display:flex;flex-direction:column;gap:9px"><label for="q2" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Empresa</label><input id="q2" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
-      <div style="display:flex;flex-direction:column;gap:9px"><label for="q3" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Cargo</label><input id="q3" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
-      <div style="display:flex;flex-direction:column;gap:9px"><label for="q4" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Correo corporativo</label><input id="q4" type="email" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
-      <div style="display:flex;flex-direction:column;gap:9px"><label for="q5" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">País</label><input id="q5" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
+      <div style="display:flex;flex-direction:column;gap:9px"><label for="q1" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Nombre y apellido</label><input id="q1" name="name" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
+      <div style="display:flex;flex-direction:column;gap:9px"><label for="q2" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Empresa</label><input id="q2" name="company" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
+      <div style="display:flex;flex-direction:column;gap:9px"><label for="q3" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Cargo</label><input id="q3" name="role" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
+      <div style="display:flex;flex-direction:column;gap:9px"><label for="q4" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Correo corporativo</label><input id="q4" name="email" type="email" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
+      <div style="display:flex;flex-direction:column;gap:9px"><label for="q5" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">País</label><input id="q5" name="country" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
       <div style="display:flex;flex-direction:column;gap:9px"><label for="q6" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">¿Cómo nos conociste?</label>
-        <select id="q6" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414">
+        <select id="q6" name="source" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414">
           <option value=""></option>
           <option>Redes sociales</option>
           <optgroup label="Motores de IA"><option>ChatGPT</option><option>Claude</option></optgroup>
@@ -512,8 +507,11 @@ a:hover{color:var(--tm-accent2)}
           <option>Otro</option>
         </select>
       </div>
-      <div style="display:flex;flex-direction:column;gap:9px;grid-column:1/-1;margin-top:8px"><label for="q7" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Cuéntanos brevemente qué necesitas resolver</label><textarea id="q7" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414;resize:vertical;min-height:150px"></textarea></div>
-      <div style="grid-column:1/-1"><button type="button" style="font:inherit;display:inline-flex;align-items:center;padding:16px 30px;background:var(--tm-accent);color:#141414;font-size:15px;font-weight:500;border:1px solid var(--tm-accent);cursor:pointer;transition:box-shadow .3s ease" style-hover="animation:tmglow 1.6s ease-in-out infinite">Enviar solicitud</button></div>
+      <div style="display:flex;flex-direction:column;gap:9px;grid-column:1/-1;margin-top:8px"><label for="q7" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Cuéntanos brevemente qué necesitas resolver</label><textarea id="q7" name="message" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414;resize:vertical;min-height:150px"></textarea></div>
+      <div style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden" aria-hidden="true"><label for="tm-cf-website">No completar este campo</label><input id="tm-cf-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+      <label style="grid-column:1/-1;display:flex;align-items:flex-start;gap:12px;cursor:pointer;font-size:13.5px;line-height:1.55;color:rgba(20,20,20,.72)"><input id="tm-cf-consent" type="checkbox" name="consent" style="accent-color:#2E8C52;width:17px;height:17px;flex:none;margin:2px 0 0"><span>Autorizo el tratamiento de mis datos personales para que Tita Media me contacte sobre esta solicitud.</span></label>
+      <p id="tm-cf-status" role="status" aria-live="polite" style="grid-column:1/-1;margin:0;min-height:1.4em;font-size:14.5px;line-height:1.5"></p>
+      <div style="grid-column:1/-1"><button id="tm-cf-submit" type="button" style="font:inherit;display:inline-flex;align-items:center;padding:16px 30px;background:var(--tm-accent);color:#141414;font-size:15px;font-weight:500;border:1px solid var(--tm-accent);cursor:pointer;transition:box-shadow .3s ease" style-hover="animation:tmglow 1.6s ease-in-out infinite">Enviar solicitud</button></div>
     </div>
   </div>
 </section>
@@ -549,11 +547,11 @@ a:hover{color:var(--tm-accent2)}
       </div>
     </div>
     <div style="display:flex;flex-wrap:wrap;gap:10px;padding-bottom:clamp(40px,5vw,56px)">
-      <a href="#" aria-label="LinkedIn" style-hover="background:#141414;border-color:#141414;color:#fff" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(20,20,20,.3);color:rgba(20,20,20,.82);transition:border-color .25s ease,color .25s ease,background-color .25s ease,background .25s ease"><svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.75-2.05C20.6 8.65 22 11 22 14.4V21h-4v-5.9c0-1.4-.03-3.2-1.95-3.2s-2.25 1.52-2.25 3.1V21H9z"></path></svg></a>
-      <a href="#" aria-label="Instagram" style-hover="background:#141414;border-color:#141414;color:#fff" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(20,20,20,.3);color:rgba(20,20,20,.82);transition:border-color .25s ease,color .25s ease,background-color .25s ease,background .25s ease"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" style="width:18px;height:18px"><rect x="2.5" y="2.5" width="19" height="19" rx="5.4"></rect><circle cx="12" cy="12" r="4.2"></circle><circle cx="17.6" cy="6.4" r="1.2" fill="currentColor" stroke="none"></circle></svg></a>
-      <a href="#" aria-label="Facebook" style-hover="background:#141414;border-color:#141414;color:#fff" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(20,20,20,.3);color:rgba(20,20,20,.82);transition:border-color .25s ease,color .25s ease,background-color .25s ease,background .25s ease"><svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.45 2.89h-2.33v6.99A10 10 0 0 0 22 12z"></path></svg></a>
-      <a href="#" aria-label="YouTube" style-hover="background:#141414;border-color:#141414;color:#fff" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(20,20,20,.3);color:rgba(20,20,20,.82);transition:border-color .25s ease,color .25s ease,background-color .25s ease,background .25s ease"><svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M23.5 6.9a3 3 0 0 0-2.12-2.13C19.5 4.25 12 4.25 12 4.25s-7.5 0-9.38.52A3 3 0 0 0 .5 6.9 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.1 3 3 0 0 0 2.12 2.13c1.88.52 9.38.52 9.38.52s7.5 0 9.38-.52a3 3 0 0 0 2.12-2.13A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.1zM9.6 15.6V8.4l6.2 3.6z"></path></svg></a>
-      <a href="#" aria-label="TikTok" style-hover="background:#141414;border-color:#141414;color:#fff" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(20,20,20,.3);color:rgba(20,20,20,.82);transition:border-color .25s ease,color .25s ease,background-color .25s ease,background .25s ease"><svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M16.3 2h-3.1v13.6a2.6 2.6 0 1 1-2.6-2.6c.27 0 .53.04.77.12v-3.2a5.9 5.9 0 0 0-.77-.05 5.8 5.8 0 1 0 5.8 5.8V9.06a7 7 0 0 0 4.1 1.32V7.24a3.94 3.94 0 0 1-4.2-4.02V2z"></path></svg></a>
+      <a href="https://www.linkedin.com/company/tita-media/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" style-hover="background:#141414;border-color:#141414;color:#fff" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(20,20,20,.3);color:rgba(20,20,20,.82);transition:border-color .25s ease,color .25s ease,background-color .25s ease,background .25s ease"><svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.75-2.05C20.6 8.65 22 11 22 14.4V21h-4v-5.9c0-1.4-.03-3.2-1.95-3.2s-2.25 1.52-2.25 3.1V21H9z"></path></svg></a>
+      <a href="https://www.instagram.com/titamedia/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" style-hover="background:#141414;border-color:#141414;color:#fff" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(20,20,20,.3);color:rgba(20,20,20,.82);transition:border-color .25s ease,color .25s ease,background-color .25s ease,background .25s ease"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" style="width:18px;height:18px"><rect x="2.5" y="2.5" width="19" height="19" rx="5.4"></rect><circle cx="12" cy="12" r="4.2"></circle><circle cx="17.6" cy="6.4" r="1.2" fill="currentColor" stroke="none"></circle></svg></a>
+      <a href="https://www.facebook.com/titamedia/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" style-hover="background:#141414;border-color:#141414;color:#fff" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(20,20,20,.3);color:rgba(20,20,20,.82);transition:border-color .25s ease,color .25s ease,background-color .25s ease,background .25s ease"><svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.45 2.89h-2.33v6.99A10 10 0 0 0 22 12z"></path></svg></a>
+      <a href="https://www.youtube.com/channel/UCahCtdiony6T4qrEzG7fDag" target="_blank" rel="noopener noreferrer" aria-label="YouTube" style-hover="background:#141414;border-color:#141414;color:#fff" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(20,20,20,.3);color:rgba(20,20,20,.82);transition:border-color .25s ease,color .25s ease,background-color .25s ease,background .25s ease"><svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M23.5 6.9a3 3 0 0 0-2.12-2.13C19.5 4.25 12 4.25 12 4.25s-7.5 0-9.38.52A3 3 0 0 0 .5 6.9 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.1 3 3 0 0 0 2.12 2.13c1.88.52 9.38.52 9.38.52s7.5 0 9.38-.52a3 3 0 0 0 2.12-2.13A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.1zM9.6 15.6V8.4l6.2 3.6z"></path></svg></a>
+      <a href="https://www.tiktok.com/@titamedia" target="_blank" rel="noopener noreferrer" aria-label="TikTok" style-hover="background:#141414;border-color:#141414;color:#fff" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(20,20,20,.3);color:rgba(20,20,20,.82);transition:border-color .25s ease,color .25s ease,background-color .25s ease,background .25s ease"><svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M16.3 2h-3.1v13.6a2.6 2.6 0 1 1-2.6-2.6c.27 0 .53.04.77.12v-3.2a5.9 5.9 0 0 0-.77-.05 5.8 5.8 0 1 0 5.8 5.8V9.06a7 7 0 0 0 4.1 1.32V7.24a3.94 3.94 0 0 1-4.2-4.02V2z"></path></svg></a>
     </div>
     <div style="border-top:1px solid rgba(20,20,20,.22);padding:24px 0;display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;font-size:13.5px;color:rgba(20,20,20,.74)">
       <span>Colombia · Latinoamérica</span>
@@ -570,7 +568,7 @@ a:hover{color:var(--tm-accent2)}
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;motion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;heroLayout&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;rhizome&quot;,&quot;solar&quot;,&quot;network&quot;,&quot;quiet&quot;],&quot;default&quot;:&quot;rhizome&quot;,&quot;tsType&quot;:&quot;'rhizome' | 'solar' | 'network' | 'quiet'&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;contextualCursor&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;options&quot;:[&quot;#80E593&quot;,&quot;#52C7CF&quot;],&quot;default&quot;:&quot;#80E593&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Color&quot;},&quot;accent2&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;options&quot;:[&quot;#52C7CF&quot;,&quot;#80E593&quot;],&quot;default&quot;:&quot;#52C7CF&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Color&quot;}}">
 class Component extends DCLogic {
-  componentDidMount(){ this._t = []; this.boot(); this.neural(); this.solar(); this.mesh(); this.ftrMesh(); this.glow(); this.topo(); }
+  componentDidMount(){ this._t = []; this.boot(); this.neural(); this.solar(); this.mesh(); this.ftrMesh(); this.glow(); this.topo(); this.contactForm(); }
 
   neural(){
     const token = (this._nToken = (this._nToken || 0) + 1);
@@ -641,7 +639,7 @@ class Component extends DCLogic {
   }
 
   componentDidUpdate(){ this.applyTheme(); this.solar(); }
-  componentWillUnmount(){ (this._t||[]).forEach(clearTimeout); (this._off||[]).forEach(f=>f()); this._neural && this._neural(); this._solar && this._solar(); this._mesh && this._mesh(); this._ftrMesh && this._ftrMesh(); this._glow && this._glow(); this._topo && this._topo(); }
+  componentWillUnmount(){ this._cfDead = true; this._cf && this._cf(); (this._t||[]).forEach(clearTimeout); (this._off||[]).forEach(f=>f()); this._neural && this._neural(); this._solar && this._solar(); this._mesh && this._mesh(); this._ftrMesh && this._ftrMesh(); this._glow && this._glow(); this._topo && this._topo(); }
 
   q(s){ return document.querySelector(s); }
   qa(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); }
@@ -1161,6 +1159,14 @@ class Component extends DCLogic {
   }
 
   /* ---------- Expand: soluciones ---------- */
+  contactForm(){
+    import('./js/contact-form.js').then(({ initContactForm })=>{
+      if(this._cfDead) return;
+      this._cf && this._cf();
+      this._cf = initContactForm(document);
+    });
+  }
+
   renderVals(){
     return {
       onSol: (e)=>{
