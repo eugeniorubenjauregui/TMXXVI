@@ -30,6 +30,34 @@
   ]
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "@id": "https://titamedia.com/cloud-data.html#service",
+  "name": "Cloud & Data",
+  "serviceType": "Infraestructura cloud y datos",
+  "description": "Diseñamos arquitecturas cloud y plataformas de datos en AWS, Azure y GCP para soportar commerce, integraciones, analítica e inteligencia artificial.",
+  "url": "https://titamedia.com/cloud-data.html",
+  "provider": {
+    "@type": "Organization",
+    "@id": "https://titamedia.com/#organization",
+    "name": "Tita Media",
+    "url": "https://titamedia.com/"
+  },
+  "areaServed": [
+    {
+      "@type": "Country",
+      "name": "Colombia"
+    },
+    {
+      "@type": "Country",
+      "name": "México"
+    },
+    "Latinoamérica"
+  ]
+}
+</script>
 <link rel="modulepreload" href="https://unpkg.com/three@0.160.0/build/three.module.js" crossorigin>
 <link rel="modulepreload" href="./js/mount-graphic.js">
 <link rel="modulepreload" href="./js/mesh-gradient.js">
@@ -59,19 +87,6 @@ a:hover{color:var(--tm-accent2)}
 #tmcur[data-on]{opacity:1;transform:scale(1)}
 @media(max-width:1080px){#tm-burger{display:block!important}#tm-nav{display:none!important;position:fixed;inset:78px 0 auto 0;flex-direction:column;align-items:stretch;gap:0;background:#0B0C0C;padding:12px clamp(24px,5vw,88px) 32px;border-bottom:1px solid rgba(255,255,255,.1);max-height:calc(100vh - 78px);overflow:auto}#tm-nav[data-open]{display:flex!important}#tm-nav>a,#tm-nav>div>button{padding:16px 0!important;border-bottom:1px solid rgba(255,255,255,.07);width:100%;text-align:left}#tm-bridge{display:none!important}#tm-drop{position:static!important;width:auto!important;border:0!important;padding:4px 0 12px!important;grid-template-columns:minmax(0,1fr)!important}#tm-cta{margin-top:18px;justify-content:center;border-bottom:0!important}#tm-ai-grid{grid-template-columns:minmax(0,1fr)!important}#tm-ftr-grid{grid-template-columns:minmax(0,1fr)!important}#tm-form{grid-template-columns:minmax(0,1fr)!important}#tm-herorow{grid-template-columns:minmax(0,1fr)!important}#tm-waves{width:112%!important;margin-left:-6%!important}}
 </style>
-<script type="application/ld+json">
-{
- "@context": "https://schema.org",
- "@type": "FAQPage",
- "mainEntity": [
-  {"@type":"Question","name":"¿Con qué proveedores de nube trabajan?","acceptedAnswer":{"@type":"Answer","text":"AWS, Azure y Google Cloud. La elección depende de lo que ya esté en operación, de las integraciones existentes y del perfil de costo de la carga de trabajo, no de una preferencia nuestra."}},
-  {"@type":"Question","name":"¿Cómo se estructura la inversión?","acceptedAnswer":{"@type":"Answer","text":"La arquitectura y la implementación se cotizan por alcance y fases. El consumo de la nube lo factura directamente el proveedor a nombre de la empresa, que mantiene la propiedad de las cuentas y de los datos."}},
-  {"@type":"Question","name":"¿Por qué TITA y no el partner del proveedor de nube?","acceptedAnswer":{"@type":"Answer","text":"Un partner de infraestructura resuelve la nube. Nosotros diseñamos la arquitectura sabiendo qué va a correr encima: comercio, integraciones, analítica y agentes de IA. Eso cambia decisiones de datos, costos y seguridad desde el principio."}},
-  {"@type":"Question","name":"¿Migran operaciones que ya están en producción?","acceptedAnswer":{"@type":"Answer","text":"Sí. Las migraciones se hacen por fases, manteniendo la operación en marcha: primero se levanta la arquitectura destino con sus integraciones, y el corte se hace por servicio, no de una sola vez."}},
-  {"@type":"Question","name":"¿Quién queda a cargo de la infraestructura?","acceptedAnswer":{"@type":"Answer","text":"Se define al contratar. Podemos dejar la operación en manos del equipo interno con documentación y transferencia, o asumir la gestión, el monitoreo y la optimización de costos con un fee recurrente."}}
- ]
-}
-</script>
 </helmet>
 
 <template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect width="400" height="300" fill="#141414"/><path d="M60 200 L110 196 L150 188 L180 120 L215 108 L260 104 L340 100" fill="none" stroke="#80E593" stroke-width="3" stroke-linejoin="round"/><g fill="rgba(128,229,147,.3)"><rect x="60" y="222" width="18" height="30"/><rect x="86" y="222" width="18" height="30"/><rect x="112" y="222" width="18" height="30"/><rect x="138" y="222" width="18" height="30"/><rect x="164" y="222" width="18" height="30"/></g><text x="340" y="252" fill="#fff" font-family="system-ui,sans-serif" font-size="20" font-weight="300" letter-spacing="6" text-anchor="end">TITA</text></svg></template>

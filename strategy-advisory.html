@@ -30,6 +30,34 @@
   ]
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "@id": "https://titamedia.com/strategy-advisory.html#service",
+  "name": "Strategy & Advisory",
+  "serviceType": "Consultoría y estrategia",
+  "description": "Diagnosticamos operación, canales, tecnología y datos para priorizar las iniciativas de mayor impacto y diseñar la estrategia de crecimiento de tu retail.",
+  "url": "https://titamedia.com/strategy-advisory.html",
+  "provider": {
+    "@type": "Organization",
+    "@id": "https://titamedia.com/#organization",
+    "name": "Tita Media",
+    "url": "https://titamedia.com/"
+  },
+  "areaServed": [
+    {
+      "@type": "Country",
+      "name": "Colombia"
+    },
+    {
+      "@type": "Country",
+      "name": "México"
+    },
+    "Latinoamérica"
+  ]
+}
+</script>
 <link rel="modulepreload" href="https://unpkg.com/three@0.160.0/build/three.module.js" crossorigin>
 <link rel="modulepreload" href="./js/mount-graphic.js">
 <link rel="modulepreload" href="./js/mesh-gradient.js">
@@ -59,19 +87,6 @@ a:hover{color:var(--tm-accent2)}
 #tmcur[data-on]{opacity:1;transform:scale(1)}
 @media(max-width:1080px){#tm-cells{grid-template-columns:minmax(0,1fr)!important}#tm-ftr-grid{grid-template-columns:minmax(0,1fr)!important}#tm-form{grid-template-columns:minmax(0,1fr)!important}#tm-herorow{grid-template-columns:minmax(0,1fr)!important}#tm-ai-grid{grid-template-columns:minmax(0,1fr)!important}#tm-burger{display:block!important}#tm-nav{display:none!important;position:fixed;inset:78px 0 auto 0;flex-direction:column;align-items:stretch;gap:0;background:#0B0C0C;padding:12px clamp(24px,5vw,88px) 32px;border-bottom:1px solid rgba(255,255,255,.1);max-height:calc(100vh - 78px);overflow:auto}#tm-nav[data-open]{display:flex!important}#tm-nav>a,#tm-nav>div>button{padding:16px 0!important;border-bottom:1px solid rgba(255,255,255,.07);width:100%;text-align:left}#tm-bridge{display:none!important}#tm-drop{position:static!important;width:auto!important;border:0!important;padding:4px 0 12px!important;grid-template-columns:minmax(0,1fr)!important}#tm-cta{margin-top:18px;justify-content:center;border-bottom:0!important}}
 </style>
-<script type="application/ld+json">
-{
- "@context": "https://schema.org",
- "@type": "FAQPage",
- "mainEntity": [
-  {"@type":"Question","name":"¿Qué incluye una consultoría de Strategy & Advisory?","acceptedAnswer":{"@type":"Answer","text":"Diagnóstico de la operación, definición de prioridades y un roadmap de iniciativas con su orden de ejecución. El entregable no es un documento suelto: queda como el plan que después ejecutan los equipos de tecnología, comercio y crecimiento."}},
-  {"@type":"Question","name":"¿Por qué contratar consultoría antes de implementar?","acceptedAnswer":{"@type":"Answer","text":"Porque el orden define el costo. Implementar una plataforma, integrar un ERP o desplegar agentes de IA sin haber definido prioridades suele llevar a rehacer trabajo. La fase de estrategia existe para decidir qué se hace primero y qué no se hace."}},
-  {"@type":"Question","name":"¿En qué se diferencian de una consultora tradicional?","acceptedAnswer":{"@type":"Answer","text":"Que ejecutamos lo que recomendamos. El mismo equipo que define el roadmap implementa las plataformas, construye las integraciones y opera el crecimiento, así que la recomendación se hace sabiendo lo que cuesta sostenerla."}},
-  {"@type":"Question","name":"¿Cómo se contrata?","acceptedAnswer":{"@type":"Answer","text":"De dos maneras: como proyecto de consultoría con alcance y entregables cerrados, o como advisory recurrente para acompañar al equipo interno en la toma de decisiones y el seguimiento del roadmap."}},
-  {"@type":"Question","name":"¿Cómo se define la inversión?","acceptedAnswer":{"@type":"Answer","text":"Por el alcance del diagnóstico y la profundidad del acompañamiento: cuántos frentes se revisan, qué sistemas están involucrados y si el trabajo termina en el roadmap o continúa durante la ejecución."}}
- ]
-}
-</script>
 </helmet>
 
 <div id="tm-root" style="background:#141414;overflow-x:clip">
