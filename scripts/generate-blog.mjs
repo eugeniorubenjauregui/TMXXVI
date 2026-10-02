@@ -278,7 +278,7 @@ function headerHtml(upBase) {
       <a href="${upBase}soluciones-ia.html" style="font-size:14px;font-weight:400;color:rgba(20,20,20,.78)">Soluciones IA</a>
       <a href="${upBase}nosotros.html" style="font-size:14px;font-weight:400;color:rgba(20,20,20,.78)">Nosotros</a>
       <a href="${upBase}noticias.html" style="font-size:14px;font-weight:400;color:rgba(20,20,20,.78)">TITA News</a>
-      <a href="#" style="font-size:14px;font-weight:400;color:rgba(20,20,20,.78)">Contacto</a>
+      <a href="${upBase}contacto.html" style="font-size:14px;font-weight:400;color:rgba(20,20,20,.78)">Contacto</a>
       <a id="tm-cta" href="#tm-contacto" style="display:inline-flex;align-items:center;padding:13px 26px;background:var(--tm-accent);color:#141414;font-size:14px;font-weight:500;border:1px solid var(--tm-accent)">Hablemos</a>
     </nav>
     <button id="tm-burger" aria-label="Menú" style="display:none;font:inherit;font-size:20px;line-height:1;color:#141414;background:none;border:0;cursor:pointer">☰</button>
@@ -840,6 +840,7 @@ function sitemapXml({ posts, totalPages, categories, categoryPageCount }) {
     { loc: `${SITE}/cloud-data.html`, lastmod: today, changefreq: 'monthly', priority: '0.8' },
     { loc: `${SITE}/soluciones-ia.html`, lastmod: today, changefreq: 'monthly', priority: '0.8' },
     { loc: `${SITE}/nosotros.html`, lastmod: today, changefreq: 'monthly', priority: '0.8' },
+    { loc: `${SITE}/contacto.html`, lastmod: today, changefreq: 'monthly', priority: '0.7' },
     { loc: `${SITE}/caso-mario-hernandez.html`, lastmod: today, changefreq: 'monthly', priority: '0.7' },
     { loc: `${SITE}/noticias.html`, lastmod: today, changefreq: 'weekly', priority: '0.8' }
   ];
