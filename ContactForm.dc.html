@@ -9,12 +9,14 @@
 <x-dc>
 <section id="tm-contacto" style="background:#fff;padding:clamp(84px,10vw,148px) 0">
   <div style="max-width:900px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
+    <sc-if value="{{ showIntro }}" hint-placeholder-val="{{ true }}">
     <h2 data-split style="font-size:clamp(28px,3.6vw,46px);font-weight:300;line-height:1.13;letter-spacing:-.028em;color:#141414;margin:0;max-width:14ch">Hablemos de tu negocio.</h2>
     <div data-rv style="margin:26px 0 clamp(44px,5vw,60px);max-width:60ch">
       <p style="font-size:clamp(16px,1.3vw,18px);line-height:1.68;color:rgba(20,20,20,.68);margin:0">Cuéntanos qué quieres resolver, mejorar o construir.</p>
       <p style="font-size:clamp(16px,1.3vw,18px);line-height:1.68;color:rgba(20,20,20,.68);margin:16px 0 0">Nuestro equipo revisará tu caso para entender el contexto y definir si podemos ayudarte y por dónde tiene sentido empezar.</p>
     </div>
 
+    </sc-if>
     <p data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:#2E8C52;border-bottom:1px solid #2E8C52;padding-bottom:7px;margin:0 0 clamp(26px,3vw,34px)">¿EN QUÉ PODEMOS AYUDARTE?</p>
     <div style="position:relative;margin-bottom:clamp(44px,5vw,60px)">
     <div id="tm-glow" aria-hidden="true"></div>
@@ -53,12 +55,28 @@
     </div>
   </div>
 </section>
+<section id="tm-datos" style="background:#141414;padding:clamp(72px,9vw,128px) 0">
+  <div style="max-width:900px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
+    <p data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:var(--tm-accent);border-bottom:1px solid var(--tm-accent);padding-bottom:7px;margin:0 0 clamp(28px,3.4vw,40px)">CONTACTO</p>
+    <p data-rv style="margin:0 0 clamp(36px,4.4vw,56px)"><a href="mailto:cuentanos@titamedia.com" data-cursor="ESCRIBIR" style="font-size:clamp(22px,3vw,38px);font-weight:300;letter-spacing:-.02em;color:#fff;border-bottom:1px solid var(--tm-accent);padding-bottom:6px;overflow-wrap:anywhere">cuentanos@titamedia.com</a></p>
+    <div data-rv style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.12)">
+      <div data-glow style="background:#141414;padding:clamp(26px,3.2vw,40px)">
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:rgba(255,255,255,.62);margin:0 0 18px">BOGOTÁ</p>
+        <address style="font-style:normal;font-size:15.5px;line-height:1.66;color:rgba(255,255,255,.78)">Carrera 16 #93A - 16<br>Bogotá, Colombia</address>
+      </div>
+      <div data-glow style="background:#141414;padding:clamp(26px,3.2vw,40px)">
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:rgba(255,255,255,.62);margin:0 0 18px">CIUDAD DE MÉXICO</p>
+        <address style="font-style:normal;font-size:15.5px;line-height:1.66;color:rgba(255,255,255,.78)">Av. Paseo de la Reforma 26, col. Juárez<br>Ciudad de México D.F, México</address>
+      </div>
+    </div>
+  </div>
+</section>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;pick&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:null,&quot;tsType&quot;:&quot;number | null&quot;,&quot;min&quot;:0,&quot;max&quot;:5}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;pick&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:null,&quot;tsType&quot;:&quot;number | null&quot;,&quot;min&quot;:0,&quot;max&quot;:5},&quot;compact&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;}}">
 class Component extends DCLogic {
-  componentDidMount(){ this.preselect(); this.glow(); this.contactForm(); }
+  componentDidMount(){ this.preselect(); this.glow(); this.contactForm(); this.cardGlow(); }
   componentDidUpdate(){ this.preselect(); }
-  componentWillUnmount(){ this._cfDead = true; this._cf && this._cf(); this._glow && this._glow(); }
+  componentWillUnmount(){ (this._glowOff||[]).forEach(f=>f()); this._cfDead = true; this._cf && this._cf(); this._glow && this._glow(); }
 
   glow(){
     const token = (this._gToken = (this._gToken || 0) + 1);
@@ -69,6 +87,36 @@ class Component extends DCLogic {
         { tone: 'inicio', opacity: 0.14 });
     });
   }
+  cardGlow(){
+    if(this._glowOff){ this._glowOff.forEach(f=>f()); }
+    this._glowOff = [];
+    const st = Array.prototype.slice.call(document.querySelectorAll('#tm-datos [data-glow]')).map(el=>({ el, x:50, y:50, k:0, tk:0 }));
+    if(!st.length) return;
+    let raf = null;
+    const paint = s => {
+      s.el.style.backgroundImage = 'radial-gradient(360px circle at '+s.x.toFixed(1)+'% '+s.y.toFixed(1)+'%,rgba(128,229,147,'+(0.16*s.k).toFixed(3)+') 0%,rgba(255,255,255,'+(0.06*s.k).toFixed(3)+') 42%,transparent 75%)';
+    };
+    const loop = () => {
+      let live = false;
+      st.forEach(s=>{
+        const d = s.tk - s.k;
+        if(Math.abs(d) > .002){ s.k += d*.07; live = true; } else s.k = s.tk;
+        paint(s);
+      });
+      raf = live ? requestAnimationFrame(loop) : null;
+    };
+    const kick = () => { if(!raf) raf = requestAnimationFrame(loop); };
+    st.forEach(s=>{
+      const move = e => { const r = s.el.getBoundingClientRect(); s.x = ((e.clientX-r.left)/r.width)*100; s.y = ((e.clientY-r.top)/r.height)*100; kick(); };
+      const enter = () => { s.tk = 1; kick(); };
+      const leave = () => { s.tk = 0; kick(); };
+      s.el.addEventListener('pointermove', move, { passive:true });
+      s.el.addEventListener('pointerenter', enter);
+      s.el.addEventListener('pointerleave', leave);
+      this._glowOff.push(()=>{ s.el.removeEventListener('pointermove', move); s.el.removeEventListener('pointerenter', enter); s.el.removeEventListener('pointerleave', leave); });
+    });
+    this._glowOff.push(()=>{ if(raf) cancelAnimationFrame(raf); });
+  }
   contactForm(){
     import('./js/contact-form.js').then(({ initContactForm })=>{
       if(this._cfDead) return;
@@ -76,6 +124,8 @@ class Component extends DCLogic {
       this._cf = initContactForm(document);
     });
   }
+
+  renderVals(){ return { showIntro: !this.props.compact }; }
 
   preselect(){
     const i = this.props.pick;

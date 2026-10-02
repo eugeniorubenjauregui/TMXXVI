@@ -166,7 +166,7 @@ a:hover{color:var(--tm-accent2)}
       <a href="soluciones-ia.html" style="font-size:14px;font-weight:400;color:rgba(20,20,20,.78)">Soluciones IA</a>
       <a href="nosotros.html" style="font-size:14px;font-weight:400;color:rgba(20,20,20,.78)">Nosotros</a>
       <a href="noticias.html" style="font-size:14px;font-weight:400;color:rgba(20,20,20,.78)">TITA News</a>
-      <a href="#" style="font-size:14px;font-weight:400;color:rgba(20,20,20,.78)">Contacto</a>
+      <a href="contacto.html" style="font-size:14px;font-weight:400;color:rgba(20,20,20,.78)">Contacto</a>
       <a id="tm-cta" href="#tm-contacto" style="display:inline-flex;align-items:center;padding:13px 26px;background:var(--tm-accent);color:#141414;font-size:14px;font-weight:500;border:1px solid var(--tm-accent);transition:box-shadow .3s ease" style-hover="animation:tmglow 1.6s ease-in-out infinite">Hablemos</a>
     </nav>
     <button id="tm-burger" aria-label="Menú" aria-expanded="false" aria-controls="tm-nav" style="display:none;width:44px;height:44px;align-items:center;justify-content:center;font:inherit;font-size:20px;line-height:1;color:#141414;background:none;border:0;cursor:pointer">☰</button>
@@ -407,31 +407,53 @@ a:hover{color:var(--tm-accent2)}
   </div>
 </section>
 
-<section id="tm-pause" style="position:relative;overflow:hidden;background:#fff;color:#141414;padding:clamp(90px,12vw,168px) 0">
-  <div id="tm-pausefield" aria-hidden="true" style="position:absolute;inset:0;z-index:0;pointer-events:none;-webkit-mask-image:linear-gradient(100deg,transparent 14%,rgba(0,0,0,.5) 50%,#000 86%);mask-image:linear-gradient(100deg,transparent 14%,rgba(0,0,0,.5) 50%,#000 86%)"></div>
+<section id="tm-pause" style="position:relative;overflow:hidden;background:#F2F4F3;color:#141414;padding:clamp(90px,12vw,168px) 0">
+  <div id="tm-aimesh" aria-hidden="true"></div>
+  <svg aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;-webkit-mask-image:linear-gradient(100deg,transparent 30%,#000 85%);mask-image:linear-gradient(100deg,transparent 30%,#000 85%)">
+    <defs>
+      <pattern id="tm-aigrid" width="56" height="56" patternUnits="userSpaceOnUse">
+        <circle cx="28" cy="28" r="1.4" fill="#141414" fill-opacity=".22"></circle>
+        <path d="M28 28L84 84M28 28L84 -28" stroke="#17747C" stroke-opacity=".14" stroke-width="1" fill="none"></path>
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#tm-aigrid)"></rect>
+  </svg>
   <div style="position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
-    <div class="v2p-grid" style="display:grid;grid-template-columns:.9fr 1.1fr;align-items:start">
-      <div class="v2p-panel">
-        <div data-rv data-glow data-glow-base="linear-gradient(160deg,rgba(255,255,255,.5) 0%,rgba(255,255,255,.2) 55%,rgba(255,255,255,.32) 100%)" style="position:relative;background:linear-gradient(160deg,rgba(255,255,255,.5) 0%,rgba(255,255,255,.2) 55%,rgba(255,255,255,.32) 100%);backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);padding:clamp(26px,3vw,32px) clamp(24px,2.6vw,32px) clamp(26px,3vw,32px) clamp(18px,2.2vw,26px)">
-          <span data-qbar style="position:absolute;left:0;top:0;bottom:0;width:2px;background:rgba(20,20,20,.18)"></span>
-          <span style="display:block;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;color:rgba(20,20,20,.5);margin-bottom:12px">NO EMPEZAMOS PREGUNTANDO:</span>
-          <span style="display:block;font-size:clamp(18px,2vw,26px);font-weight:300;line-height:1.28;letter-spacing:-.02em;color:rgba(20,20,20,.5)">“¿Dónde podemos poner IA?”</span>
+    <div style="max-width:900px">
+      <h2 data-split style="font-size:clamp(28px,3.6vw,46px);font-weight:300;line-height:1.13;letter-spacing:-.028em;color:#141414;margin:0;max-width:20ch;text-wrap:pretty">La inteligencia artificial ya es parte de cómo opera el retail.</h2>
+      <div data-rv style="margin-top:clamp(28px,3.5vw,40px);max-width:62ch;display:flex;flex-direction:column;gap:18px">
+        <p style="font-size:clamp(16px,1.3vw,19px);line-height:1.68;color:#4A524E;margin:0;text-wrap:pretty">Ya no se trata solo de generar contenido, responder preguntas o analizar información.</p>
+        <p style="font-size:clamp(16px,1.3vw,19px);line-height:1.68;color:#4A524E;margin:0;text-wrap:pretty">La inteligencia artificial empieza a asumir un papel más activo dentro del negocio. Puede entender contexto, recomendar qué hacer y ejecutar acciones bajo reglas definidas.</p>
+      </div>
+      <div id="tm-aiwrap" style="margin:clamp(44px,5vw,64px) 0 clamp(56px,6vw,80px)">
+      <div id="tm-aiviz" role="img" aria-label="Partículas que se ordenan en contexto, eligen una opción y activan tres sistemas" style="position:relative;width:100%;height:clamp(160px,18vw,220px);margin-bottom:clamp(12px,1.5vw,20px)"></div>
+      <div id="tm-aisteps" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(20px,3vw,40px)">
+        <div data-rv style="position:relative;padding:clamp(22px,2.4vw,30px) 0 0;transition:opacity .5s">
+          <span data-qbar style="position:absolute;left:0;top:0;width:100%;height:1px;background:#17747C;transform-origin:left"></span>
+          <span style="display:block;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;color:#6A716D;margin-bottom:14px">01</span>
+          <span style="display:block;font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:.16em;color:#17747C;margin-bottom:12px">ENTIENDE</span>
+          <span style="display:block;font-size:clamp(17px,1.5vw,21px);font-weight:300;line-height:1.4;letter-spacing:-.01em;color:#141414;text-wrap:pretty">Analiza información en contexto.</span>
         </div>
-        <div data-rv data-glow data-glow-base="linear-gradient(160deg,rgba(255,255,255,.5) 0%,rgba(255,255,255,.2) 55%,rgba(255,255,255,.32) 100%)" style="position:relative;background:linear-gradient(160deg,rgba(255,255,255,.5) 0%,rgba(255,255,255,.2) 55%,rgba(255,255,255,.32) 100%);backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);padding:clamp(26px,3vw,32px) clamp(24px,2.6vw,32px) clamp(26px,3vw,32px) clamp(18px,2.2vw,26px)">
-          <span data-qbar style="position:absolute;left:0;top:0;bottom:0;width:2px;background:#141414"></span>
-          <span style="display:block;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;color:#141414;margin-bottom:12px">EMPEZAMOS PREGUNTANDO:</span>
-          <span style="display:block;font-size:clamp(18px,2vw,26px);font-weight:300;line-height:1.28;letter-spacing:-.02em;color:#141414">“¿Qué parte del negocio debería funcionar mejor?”</span>
+        <div data-rv style="position:relative;padding:clamp(22px,2.4vw,30px) 0 0;transition:opacity .5s">
+          <span data-qbar style="position:absolute;left:0;top:0;width:100%;height:1px;background:#17747C;transform-origin:left"></span>
+          <span style="display:block;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;color:#6A716D;margin-bottom:14px">02</span>
+          <span style="display:block;font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:.16em;color:#17747C;margin-bottom:12px">RECOMIENDA</span>
+          <span style="display:block;font-size:clamp(17px,1.5vw,21px);font-weight:300;line-height:1.4;letter-spacing:-.01em;color:#141414;text-wrap:pretty">Propone acciones con base en reglas.</span>
+        </div>
+        <div data-rv style="position:relative;padding:clamp(22px,2.4vw,30px) 0 0;transition:opacity .5s">
+          <span data-qbar style="position:absolute;left:0;top:0;width:100%;height:1px;background:#17747C;transform-origin:left"></span>
+          <span style="display:block;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;color:#6A716D;margin-bottom:14px">03</span>
+          <span style="display:block;font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:.16em;color:#17747C;margin-bottom:12px">EJECUTA</span>
+          <span style="display:block;font-size:clamp(17px,1.5vw,21px);font-weight:300;line-height:1.4;letter-spacing:-.01em;color:#141414;text-wrap:pretty">Actúa en los sistemas del negocio.</span>
         </div>
       </div>
-      <div class="v2p-main">
-        <h2 data-split style="font-size:clamp(28px,3.6vw,46px);font-weight:300;line-height:1.13;letter-spacing:-.028em;color:#141414;margin:0;max-width:20ch;text-wrap:pretty">La IA llegó después de entender cómo funciona el retail.</h2>
-        <div data-rv style="max-width:48ch">
-          <p style="font-size:clamp(15px,1.1vw,17px);line-height:1.66;color:rgba(20,20,20,.72);margin:0">Durante más de 10 años hemos trabajado con catálogos, inventarios, pedidos, integraciones, plataformas, adquisición, conversión e infraestructura.</p>
-          <p style="font-size:clamp(15px,1.1vw,17px);line-height:1.66;color:rgba(20,20,20,.72);margin:12px 0 0">Ese conocimiento cambia la forma en que usamos inteligencia artificial.</p>
-        </div>
-        <p data-rv style="font-size:clamp(15px,1.1vw,17px);line-height:1.66;color:rgba(20,20,20,.72);max-width:48ch">A partir de ahí definimos si la respuesta necesita automatización, predicción, recomendación, ejecución autónoma o simplemente una mejor solución tecnológica.</p>
-        <a data-rv data-mag href="soluciones-ia.html" data-cursor="CONECTAR" style="display:inline-flex;align-items:center;gap:12px;padding:16px 30px;background:transparent;color:#141414;font-size:15px;font-weight:500;border:1px solid #141414">Conocer soluciones de IA</a>
       </div>
+      <h3 data-split style="font-size:clamp(22px,2.6vw,34px);font-weight:300;line-height:1.2;letter-spacing:-.024em;color:#141414;margin:0;max-width:24ch;text-wrap:pretty">Diseñamos agentes de inteligencia artificial a la medida.</h3>
+      <div data-rv style="margin:clamp(22px,2.6vw,30px) 0 clamp(36px,4vw,48px);max-width:62ch;display:flex;flex-direction:column;gap:18px">
+        <p style="font-size:clamp(16px,1.3vw,19px);line-height:1.68;color:#4A524E;margin:0;text-wrap:pretty">Partimos de una necesidad real del negocio para definir qué debe hacer el agente, con qué información necesita trabajar, a qué sistemas debe conectarse y hasta dónde puede actuar.</p>
+        <p style="font-size:clamp(16px,1.3vw,19px);line-height:1.68;color:#141414;margin:0;text-wrap:pretty">Cada agente es distinto porque cada operación también lo es.</p>
+      </div>
+      <a data-rv data-mag href="ai-custom-solutions.html" data-cursor="CONECTAR" style="display:inline-flex;align-items:center;gap:12px;padding:16px 30px;background:transparent;color:#141414;font-size:15px;font-weight:500;border:1px solid #141414">Descubre lo que estamos construyendo con inteligencia artificial →</a>
     </div>
   </div>
 </section>
@@ -443,8 +465,8 @@ a:hover{color:var(--tm-accent2)}
     <h2 data-split data-text="5 países. 7 marketplaces. | 100% de las tiendas conectadas." style="font-size:clamp(26px,3.4vw,44px);font-weight:300;line-height:1.14;letter-spacing:-.028em;color:var(--tm-ink);margin:0;max-width:none;text-wrap:pretty">5 países. 7 marketplaces. 100% de las tiendas conectadas.</h2>
     <p data-rv style="font-size:clamp(16px,1.3vw,19px);line-height:1.68;color:rgba(20,20,20,.84);margin:28px 0 0;max-width:58ch">Desde 2015 construimos y operamos junto a Mario Hernández una operación de comercio que conecta ecommerce, marketplaces y tiendas físicas.</p>
 
-    <div data-rv style="margin:clamp(44px,5vw,68px) 0 0;aspect-ratio:21/9;border:1px solid var(--tm-line);background-color:#fff;background-image:repeating-linear-gradient(135deg,rgba(20,20,20,.05) 0 2px,transparent 2px 10px);display:flex;align-items:center;justify-content:center">
-      <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;color:var(--tm-text-3);text-align:center;padding:0 20px">FOTOGRAFÍA EDITORIAL · OPERACIÓN / TIENDA · 2400 × 1030</span>
+    <div data-rv style="margin:clamp(44px,5vw,68px) 0 0;aspect-ratio:10/3;border:1px solid var(--tm-line);background-color:#fff;display:flex;align-items:center;justify-content:center">
+      <img src="./images/mario-hernandez-mark.png" alt="Mario Hernández" style="width:clamp(220px,45%,520px);height:auto">
     </div>
 
     <div style="position:relative;margin:clamp(20px,2.4vw,32px) 0 0">
@@ -568,15 +590,28 @@ a:hover{color:var(--tm-accent2)}
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;motion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;heroLayout&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;rhizome&quot;,&quot;solar&quot;,&quot;network&quot;,&quot;quiet&quot;],&quot;default&quot;:&quot;rhizome&quot;,&quot;tsType&quot;:&quot;'rhizome' | 'solar' | 'network' | 'quiet'&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;contextualCursor&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;options&quot;:[&quot;#80E593&quot;,&quot;#52C7CF&quot;],&quot;default&quot;:&quot;#80E593&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Color&quot;},&quot;accent2&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;options&quot;:[&quot;#52C7CF&quot;,&quot;#80E593&quot;],&quot;default&quot;:&quot;#52C7CF&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Color&quot;}}">
 class Component extends DCLogic {
-  componentDidMount(){ this._t = []; this.boot(); this.neural(); this.solar(); this.mesh(); this.ftrMesh(); this.glow(); this.topo(); this.contactForm(); }
+  componentDidMount(){ this._t = []; this.boot(); this.aiSteps(); this.aiMesh(); this.solar(); this.mesh(); this.ftrMesh(); this.glow(); this.topo(); this.contactForm(); }
 
-  neural(){
-    const token = (this._nToken = (this._nToken || 0) + 1);
-    if(this._neural){ this._neural(); this._neural = null; }
+  aiMesh(){
+    const token = (this._amToken = (this._amToken || 0) + 1);
+    if(this._amesh){ this._amesh(); this._amesh = null; }
     import('./js/mount-graphic.js').then(({ mountGraphic })=>{
-      if(token !== this._nToken) return;
-      this._neural = mountGraphic('#tm-pausefield', ()=> import('./js/filament-field.js'), 'initFilamentField',
-        { accent: '#141414', accent2: '#141414', blend: 'normal', motion: this.props.motion });
+      if(token !== this._amToken) return;
+      this._amesh = mountGraphic('#tm-aimesh', ()=> import('./js/mesh-gradient.js'), 'initMeshGradient',
+        { tone: 'inicio', spread: 'full', intensity: 0.75, motion: this.props.motion });
+    });
+  }
+  aiSteps(){
+    const token = (this._aiToken = (this._aiToken || 0) + 1);
+    if(this._ai){ this._ai(); this._ai = null; }
+    const onPhase = p => {
+      document.querySelectorAll('#tm-aisteps > div').forEach((el, i) => { el.style.opacity = (p < 0 || p === i) ? '1' : '.38'; });
+    };
+    import('./js/mount-graphic.js').then(({ mountGraphic })=>{
+      if(token !== this._aiToken) return;
+      this._ai = mountGraphic('#tm-aiviz', ()=> import('./js/ai-steps.js'), 'initAiSteps',
+        { accent: '#2E9A55', accent2: '#17747C', light: true, motion: this.props.motion,
+          pointerTarget: document.getElementById('tm-aiwrap') || undefined, onPhase });
     });
   }
 
@@ -638,8 +673,8 @@ class Component extends DCLogic {
     });
   }
 
-  componentDidUpdate(){ this.applyTheme(); this.solar(); }
-  componentWillUnmount(){ this._cfDead = true; this._cf && this._cf(); (this._t||[]).forEach(clearTimeout); (this._off||[]).forEach(f=>f()); this._neural && this._neural(); this._solar && this._solar(); this._mesh && this._mesh(); this._ftrMesh && this._ftrMesh(); this._glow && this._glow(); this._topo && this._topo(); }
+  componentDidUpdate(){ this.applyTheme(); this.solar(); this.aiSteps(); this.aiMesh(); }
+  componentWillUnmount(){ this._cfDead = true; this._cf && this._cf(); (this._t||[]).forEach(clearTimeout); (this._off||[]).forEach(f=>f()); this._ai && this._ai(); this._amesh && this._amesh(); this._solar && this._solar(); this._mesh && this._mesh(); this._ftrMesh && this._ftrMesh(); this._glow && this._glow(); this._topo && this._topo(); }
 
   q(s){ return document.querySelector(s); }
   qa(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); }
