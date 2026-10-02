@@ -194,6 +194,25 @@ const CATEGORY_COPY = {
   informativo: 'Actualizaciones de plataforma, novedades y contexto de la industria del retail y el ecommerce en Latinoamérica.',
   'plataformas-ecommerce': 'Comparativas de plataformas de comercio electrónico: VTEX, Shopify, commercetools y cómo elegir la correcta para tu negocio.'
 };
+// Solución de Tita Media a la que enlaza cada categoría del blog (keyed por slug de WP).
+// `file` es relativo a la raíz del sitio; se le antepone upBase al renderizar. Una
+// categoría que no está acá (p. ej. "informativo") simplemente no muestra enlace.
+const CATEGORY_SOLUTION = {
+  'agentes-ia': { file: 'soluciones-ia.html', label: 'Soluciones IA', desc: 'Agentes de IA para retail y empresas' },
+  ia: { file: 'ai-custom-solutions.html', label: 'AI & Custom Solutions', desc: 'Agentes de IA y tecnología a medida' },
+  ecommerce: { file: 'commerce-solutions.html', label: 'Commerce Solutions', desc: 'Commerce, integraciones y omnicanalidad' },
+  'plataformas-ecommerce': { file: 'commerce-solutions.html', label: 'Commerce Solutions', desc: 'Commerce, integraciones y omnicanalidad' },
+  implementaciones: { file: 'commerce-solutions.html', label: 'Commerce Solutions', desc: 'Commerce, integraciones y omnicanalidad' },
+  'expertos-ecommerce': { file: 'commerce-solutions.html', label: 'Commerce Solutions', desc: 'Commerce, integraciones y omnicanalidad' },
+  cro: { file: 'retail-growth.html', label: 'Retail Growth', desc: 'SEO, GEO, AEO, CRO y Paid Media' },
+  'estrategias-de-ventas-ecommerce': { file: 'retail-growth.html', label: 'Retail Growth', desc: 'SEO, GEO, AEO, CRO y Paid Media' },
+  'casos-de-exito': { file: 'caso-mario-hernandez.html', label: 'Caso Mario Hernández', desc: '5 ecommerce, 7 marketplaces y las tiendas físicas conectadas' }
+};
+function solutionFor(slug, upBase) {
+  const s = CATEGORY_SOLUTION[slug];
+  return s ? { ...s, href: `${upBase}${s.file}` } : null;
+}
+
 function categoryDescription(category) {
   return CATEGORY_COPY[category.slug] ||
     `Publicaciones de Tita Media sobre ${category.name}: análisis, casos y noticias de retail digital en Latinoamérica.`;
@@ -518,7 +537,9 @@ function cardHtml(post, siblingPrefix) {
   </a>
   <div data-news-body>
     <p style="margin:0;display:flex;align-items:center;gap:10px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em">
-      ${post.category ? `<span style="color:#17747C">${escapeHtml(post.category.toUpperCase())}</span><span style="color:rgba(20,20,20,.3)">·</span>` : ''}
+      ${post.category ? `${post.categorySlug && !UNCATEGORIZED_SLUGS.has(post.categorySlug)
+        ? `<a href="${siblingPrefix}categoria-${post.categorySlug}.html" style="color:#17747C">${escapeHtml(post.category.toUpperCase())}</a>`
+        : `<span style="color:#17747C">${escapeHtml(post.category.toUpperCase())}</span>`}<span style="color:rgba(20,20,20,.3)">·</span>` : ''}
       <span style="color:#5F6662">${escapeHtml(post.dateLabel)}</span>
     </p>
     <h3 style="font-size:clamp(18px,1.6vw,21px);font-weight:500;letter-spacing:-.01em;color:#141414;margin:0;line-height:1.32"><a href="${href}" data-cursor="LEER MÁS">${escapeHtml(post.title)}</a></h3>
@@ -577,10 +598,12 @@ function listingPage({ pageNum, totalPages, posts, categories, category }) {
 
   const titleBase = category ? `Noticias · ${category.name}` : 'Noticias';
   const titleSuffix = pageNum === 1 ? '' : ` — Página ${pageNum}`;
-  const title = `${titleBase}${titleSuffix} | Tita Media`;
+  const title = isRoot
+    ? 'TITA News: IA, Ecommerce y Retail en LATAM | Tita Media'
+    : `${titleBase}${titleSuffix} | Tita Media`;
   const baseDescription = category
     ? categoryDescription(category)
-    : 'Noticias, análisis y casos sobre IA, ecommerce y transformación digital del retail en Latinoamérica. Todas las publicaciones del blog de Tita Media.';
+    : 'Análisis y casos sobre IA, ecommerce, marketing digital y transformación digital del retail en Latinoamérica, por el equipo de Tita Media.';
   // Meta description distinta por página paginada — si no, Google ve el mismo
   // texto en las 16+ páginas de "todas" (y en cada tanda de categoría).
   const description = pageNum > 1 ? `${baseDescription} Página ${pageNum}.` : baseDescription;
@@ -634,7 +657,11 @@ ${preloadLinks(upBase, isRoot ? 'antenna' : 'mesh')}
   let heroCopy;
   if (category && pageNum === 1) {
     heroCopy = `<h1 data-split style="font-size:clamp(30px,3.9vw,50px);font-weight:300;line-height:1.1;letter-spacing:-.03em;color:#fff;margin:0;max-width:20ch;text-wrap:pretty">${escapeHtml(category.name)}</h1>
-    <p data-rv style="font-size:clamp(15.5px,1.2vw,18px);line-height:1.68;color:rgba(255,255,255,.72);margin:22px 0 0;max-width:62ch">${escapeHtml(categoryDescription(category))}</p>`;
+    <p data-rv style="font-size:clamp(15.5px,1.2vw,18px);line-height:1.68;color:rgba(255,255,255,.72);margin:22px 0 0;max-width:62ch">${escapeHtml(categoryDescription(category))}</p>${(() => {
+      const sol = solutionFor(category.slug, upBase);
+      return sol ? `
+    <p data-rv style="margin:26px 0 0"><a href="${sol.href}" data-cursor="VER" style="font-size:15px;font-weight:500;color:var(--tm-accent);border-bottom:1px solid var(--tm-accent);padding-bottom:4px">Conoce ${escapeHtml(sol.label)} →</a></p>` : '';
+    })()}`;
   } else if (category) {
     heroCopy = `<h1 data-split style="font-size:clamp(28px,3.6vw,44px);font-weight:300;line-height:1.1;letter-spacing:-.028em;color:#fff;margin:0;max-width:20ch;text-wrap:pretty">${escapeHtml(category.name)} — página ${pageNum}</h1>`;
   } else if (isRoot) {
@@ -807,7 +834,7 @@ ${preloadLinks(upBase, 'mesh')}
   <div id="tm-mesh" aria-hidden="true"></div>
   <div style="max-width:900px;margin:0 auto;padding:0 clamp(24px,5vw,88px);position:relative;z-index:1">
     <nav aria-label="Ruta" data-rv style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.58);margin:0 0 30px"><a href="${upBase}index.html" style="color:rgba(255,255,255,.58)">INICIO</a> <span style="padding:0 8px;color:var(--tm-accent)">/</span> <a href="${upBase}noticias.html" style="color:rgba(255,255,255,.58)">NOTICIAS</a></nav>
-    <p data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.18em;color:var(--tm-accent);margin:0 0 22px">${escapeHtml(post.categoryLabel.toUpperCase())} · ${escapeHtml(post.dateLabel)}</p>
+    <p data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.18em;color:var(--tm-accent);margin:0 0 22px">${post.category && post.categorySlug && !UNCATEGORIZED_SLUGS.has(post.categorySlug) ? `<a href="categoria-${post.categorySlug}.html" style="color:var(--tm-accent)">${escapeHtml(post.categoryLabel.toUpperCase())}</a>` : escapeHtml(post.categoryLabel.toUpperCase())} · ${escapeHtml(post.dateLabel)}</p>
     <h1 data-split style="font-size:clamp(28px,3.6vw,46px);font-weight:300;line-height:1.16;letter-spacing:-.026em;color:#fff;margin:0;text-wrap:pretty">${escapeHtml(post.title)}</h1>
   </div>
 </section>
@@ -820,6 +847,14 @@ ${post.heroImage ? `<div data-rv style="max-width:1100px;margin:0 auto;padding:c
     <article class="tm-post-body">
       ${post.contentHtml}
     </article>
+    ${(() => {
+      const sol = solutionFor(post.categorySlug, upBase);
+      return sol ? `<div data-rv style="margin-top:clamp(40px,5vw,56px);border:1px solid rgba(20,20,20,.14);padding:clamp(22px,2.6vw,32px)">
+      <p style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;color:#17747C;margin:0 0 12px">SOLUCIÓN RELACIONADA</p>
+      <p style="font-size:15.5px;line-height:1.6;color:#3E4541;margin:0 0 16px">${escapeHtml(sol.label)} · ${escapeHtml(sol.desc)}</p>
+      <a href="${sol.href}" data-cursor="VER" style="font-size:14.5px;font-weight:500;color:#17747C;border-bottom:1px solid #17747C;padding-bottom:3px">Conoce ${escapeHtml(sol.label)} →</a>
+    </div>` : '';
+    })()}
     <div data-rv style="margin-top:clamp(40px,5vw,56px);padding-top:clamp(24px,3vw,32px);border-top:1px solid rgba(20,20,20,.14)">
       <a href="${upBase}noticias.html" style="font-size:14px;font-weight:500;color:#141414;border-bottom:1px solid rgba(20,20,20,.35);padding-bottom:3px">← Volver a Noticias</a>
     </div>
