@@ -47,6 +47,13 @@
 ~^/en/podcast/?$ /;
 ~^/en/careers/?$ /nosotros.html;
 ~^/en/?$ /;
+~^/content-cards/composable-commerce/?$ /commerce-solutions.html;
+~^/content-cards/customize-cloud/?$ /cloud-data.html;
+~^/content-cards/performance-data/?$ /retail-growth.html;
+~^/logos-clientes/mario-hernandez/?$ /caso-mario-hernandez.html;
+~^/job-openings/?$ /nosotros.html;
+~^/podcast-titamedia/?$ /noticias.html;
+~^/vtex-2/?$ /commerce-solutions.html;
 ~^/category/agentes-ia/page/(?<n>\d+)/?$ /noticias/categoria-agentes-ia-pagina-$n.html;
 ~^/category/agentes-ia/?$ /noticias/categoria-agentes-ia.html;
 ~^/category/casos-de-exito/page/(?<n>\d+)/?$ /noticias/categoria-casos-de-exito-pagina-$n.html;
@@ -73,6 +80,12 @@
 ~^/casos_exito/ /noticias/categoria-casos-de-exito.html;
 ~^/tag/ /noticias.html;
 ~^/author/ /noticias.html;
+~^/content-cards/ /;
+~^/logos-clientes/ /nosotros.html;
+~^/partners/ /nosotros.html;
+~^/pilares_ecommerce/ /commerce-solutions.html;
+~^/pilares_ux/ /retail-growth.html;
+~^/soluciones_ux/ /retail-growth.html;
 ~^/en/soluciones/ /commerce-solutions.html;
 ~^/en/casos_exito/ /noticias/categoria-casos-de-exito.html;
 ~^/en/ /;

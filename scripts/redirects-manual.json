@@ -168,6 +168,34 @@
     {
       "from": "/en",
       "to": "/"
+    },
+    {
+      "from": "/content-cards/composable-commerce",
+      "to": "/commerce-solutions.html"
+    },
+    {
+      "from": "/content-cards/customize-cloud",
+      "to": "/cloud-data.html"
+    },
+    {
+      "from": "/content-cards/performance-data",
+      "to": "/retail-growth.html"
+    },
+    {
+      "from": "/logos-clientes/mario-hernandez",
+      "to": "/caso-mario-hernandez.html"
+    },
+    {
+      "from": "/job-openings",
+      "to": "/nosotros.html"
+    },
+    {
+      "from": "/podcast-titamedia",
+      "to": "/noticias.html"
+    },
+    {
+      "from": "/vtex-2",
+      "to": "/commerce-solutions.html"
     }
   ],
   "prefix": [
@@ -194,6 +222,30 @@
     {
       "from": "/author/",
       "to": "/noticias.html"
+    },
+    {
+      "from": "/content-cards/",
+      "to": "/"
+    },
+    {
+      "from": "/logos-clientes/",
+      "to": "/nosotros.html"
+    },
+    {
+      "from": "/partners/",
+      "to": "/nosotros.html"
+    },
+    {
+      "from": "/pilares_ecommerce/",
+      "to": "/commerce-solutions.html"
+    },
+    {
+      "from": "/pilares_ux/",
+      "to": "/retail-growth.html"
+    },
+    {
+      "from": "/soluciones_ux/",
+      "to": "/retail-growth.html"
     },
     {
       "from": "/en/soluciones/",
