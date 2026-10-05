@@ -22,7 +22,7 @@ cp <DOCROOT>/.htaccess ~/htaccess.bak-$(date +%F)
 Desde `<REPO>`, subir solo lo público (no `scripts/`, `deploy/`, `wp/`, `.git`, `CLAUDE.md`, `dev.sh`):
 ```bash
 rsync -av --itemize-changes \
-  --include='*.html' --include='support.js' --include='robots.txt' --include='sitemap.xml' \
+  --include='*.html' --include='support.js' --include='favicon.ico' --include='robots.txt' --include='sitemap.xml' \
   --include='js/***' --include='images/***' --include='noticias/***' \
   --exclude='*' ./ <usuario>@<host>:<DOCROOT>/
 ```
