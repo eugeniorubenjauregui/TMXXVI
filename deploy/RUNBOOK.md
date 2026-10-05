@@ -29,8 +29,11 @@ rsync -av --itemize-changes \
 Luego, **una sola vez**, anteponer el bloque al `.htaccess` (conserva lo existente: WordPress, Wordfence):
 ```bash
 cd <DOCROOT>
-grep -q 'BEGIN titamedia-front' .htaccess && echo "YA APLICADO, no repetir" || \
-  cat <(cat ~/deploy-htaccess-titamedia) .htaccess > .htaccess.new && mv .htaccess.new .htaccess
+if grep -q 'BEGIN titamedia-front' .htaccess; then
+  echo "YA APLICADO, no repetir"
+else
+  cat ~/deploy-htaccess-titamedia .htaccess > .htaccess.new && mv .htaccess.new .htaccess
+fi
 ```
 (`deploy/htaccess-titamedia` se sube antes a `~/deploy-htaccess-titamedia`.) Si el sitio da 500: ver el error log de DreamHost, o restaurar al instante: `cp ~/htaccess.bak-<fecha> <DOCROOT>/.htaccess`.
 
