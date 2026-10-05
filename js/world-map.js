@@ -16,10 +16,15 @@ export const COUNTRIES = [
   { id: '170', name: 'Colombia',        lon: -74.07, lat: 4.71,   year: 2016, n: 70, dx: 12,  dy: -4,  al: 'start' },
   { id: '218', name: 'Ecuador',         lon: -78.47, lat: -0.18,  year: 2017, n: 18, dx: -12, dy: -2,  al: 'end' },
   { id: '604', name: 'Perú',            lon: -77.04, lat: -12.05, year: 2018, n: 20, dx: -12, dy: 10,  al: 'end' },
+  { id: '591', name: 'Panamá',          lon: -79.52, lat: 8.98,   year: 2018, n: 10, dx: -12, dy: -22, al: 'end' },
+  { id: '862', name: 'Venezuela',       lon: -66.90, lat: 10.48,  year: 2019, n: 8,  dx: 12,  dy: -18, al: 'start' },
   { id: '484', name: 'México',          lon: -99.13, lat: 19.43,  year: 2019, n: 30, dx: -12, dy: -8,  al: 'end' },
   { id: '840', name: 'USA',             lon: -80.19, lat: 25.76,  year: 2020, n: 20, dx: 12,  dy: -12, al: 'start' },
+  { id: '188', name: 'Costa Rica',      lon: -84.09, lat: 9.93,   year: 2020, n: 8,  dx: -12, dy: -4,  al: 'end' },
   { id: '724', name: 'España',          lon: -3.70,  lat: 40.42,  year: 2021, n: 14, dx: -12, dy: -8,  al: 'end' },
+  { id: '124', name: 'Canadá',          lon: -79.38, lat: 43.65,  year: 2022, n: 8,  dx: -12, dy: -8,  al: 'end' },
   { id: '784', name: 'Emiratos Árabes', lon: 55.27,  lat: 25.20,  year: 2022, n: 8,  dx: 12,  dy: -8,  al: 'start' },
+  { id: '858', name: 'Uruguay',         lon: -56.16, lat: -34.90, year: 2023, n: 6,  dx: 12,  dy: 6,   al: 'start' },
   { id: '036', name: 'Australia',       lon: 151.21, lat: -33.87, year: 2023, n: 8,  dx: -12, dy: 12,  al: 'end' },
   { id: '554', name: 'Nueva Zelanda',   lon: 174.76, lat: -36.85, year: 2024, n: 5,  dx: -6,  dy: 22,  al: 'end' },
   { id: '764', name: 'Tailandia',       lon: 100.50, lat: 13.75,  year: 2025, n: 7,  dx: 12,  dy: -6,  al: 'start' }
@@ -56,8 +61,8 @@ const rel = lon => ((((lon - LON_C) + 540) % 360) - 180);
 const P = (lon, lat) => { const p = eeFwd(rel(lon), lat); return [p[0] * SC, (p[1] - Y_C) * SC]; };
 
 const ACT_FN = `
-uniform float uAct[10];
-float actOf(float k){ float r = 0.0; for(int j = 0; j < 10; j++){ if(abs(float(j) - k) < 0.5) r = uAct[j]; } return r; }
+uniform float uAct[15];
+float actOf(float k){ float r = 0.0; for(int j = 0; j < 15; j++){ if(abs(float(j) - k) < 0.5) r = uAct[j]; } return r; }
 `;
 
 const LAND_VERT = ACT_FN + `
@@ -195,7 +200,7 @@ function rasterize(countries, W, H) {
   countries.forEach(c => {
     if (c.id === '010') return;                      // Antártida fuera del encuadre
     const ti = target[c.id];
-    ctx.fillStyle = ti === undefined ? 'rgb(8,0,0)' : 'rgb(' + (40 + ti * 20) + ',0,0)';
+    ctx.fillStyle = ti === undefined ? 'rgb(8,0,0)' : 'rgb(' + (40 + ti * 15) + ',0,0)';
     [-W, 0, W].forEach(shift => {
       c.polys.forEach(poly => { ctx.beginPath(); trace(poly, shift); ctx.fill('evenodd'); });
     });
@@ -258,7 +263,7 @@ export function initWorldMap(host, opts = {}) {
         if (data[i + 3] < 160) continue;
         const r = data[i];
         let ci = -1;
-        if (r >= 30) { const k = Math.round((r - 40) / 20); if (k >= 0 && k < NC) ci = k; }
+        if (r >= 30) { const k = Math.round((r - 40) / 15); if (k >= 0 && k < NC) ci = k; }
         lP.push(...P(lon, lat), 0);
         lC.push(ci); lS.push(Math.random());
         if (ci >= 0) byCountry[ci].push([lon, lat]);

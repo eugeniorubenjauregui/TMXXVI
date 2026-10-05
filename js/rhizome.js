@@ -31,16 +31,17 @@ const LINE_VERT = `
 attribute float aA;                  // alfa base del filamento
 attribute float aT;                  // 0..1 a lo largo del filamento
 attribute float aS;                  // solución a la que pertenece (-1 neutro)
-uniform float uTime, uActive, uBuild;
+uniform float uTime, uActive, uBuild, uGrow;
 varying float vA;
 void main(){
+  float rev = clamp((uBuild * 1.35 - length(position.xy) / 1.15) * 3.2, 0.0, 1.0);
   float pulse = fract(uTime * 0.16 + aS * 0.21 + aA * 3.7);
   float d = abs(aT - pulse);
   d = min(d, 1.0 - d);
   float glow = exp(-pow(d / 0.13, 2.0));
   float sel = (uActive < -0.5) ? 1.0 : ((abs(uActive - aS) < 0.5) ? 1.35 : 0.3);
-  vA = aA * (0.85 + glow * 1.5) * sel * uBuild;
-  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  vA = aA * (0.85 + glow * 1.5) * sel * rev;
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(position.xy * uGrow, position.z, 1.0);
 }`;
 
 const LINE_FRAG = `
@@ -56,13 +57,14 @@ const PT_VERT = `
 attribute float aA;
 attribute float aS;
 attribute float aK;                  // 0 maraña de núcleo, 1 nodo de la red
-uniform float uTime, uActive, uBuild, uSize;
+uniform float uTime, uActive, uBuild, uSize, uGrow;
 varying float vA, vK;
 void main(){
   float sel = (uActive < -0.5) ? 1.0 : ((abs(uActive - aS) < 0.5) ? 1.4 : 0.34);
-  vA = aA * sel * uBuild;
+  float rev = clamp((uBuild * 1.35 - length(position.xy) / 1.15) * 3.2, 0.0, 1.0);
+  vA = aA * sel * rev;
   vK = aK;
-  vec4 mv = modelViewMatrix * vec4(position, 1.0);
+  vec4 mv = modelViewMatrix * vec4(position.xy * uGrow, position.z, 1.0);
   gl_Position = projectionMatrix * mv;
   gl_PointSize = uSize * (aK > 0.5 ? 1.25 : 0.92);
 }`;
@@ -164,8 +166,8 @@ export function initRhizome(host, opts = {}) {
 
   import(/* webpackIgnore: true */ THREE_URL).then(THREE => {
     if (stopped) return;
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true, powerPreference: 'low-power' });
-    const pix = Math.min(window.devicePixelRatio || 1, 2);
+    const renderer = new THREE.WebGLRenderer({ antialias: !narrow, alpha: true, preserveDrawingBuffer: true, powerPreference: 'low-power' });
+    const pix = Math.min(window.devicePixelRatio || 1, narrow ? 1.5 : 2);
     renderer.setPixelRatio(pix);
     renderer.setClearAlpha(0);
     const canvas = renderer.domElement;
@@ -213,13 +215,13 @@ export function initRhizome(host, opts = {}) {
         const j = addNode(nodes[hi].x + Math.cos(th) * r, nodes[hi].y + Math.sin(th) * r, 2, si, 1);
         addEdge(hi, j, si, 0.3);
         junctions.push(j);
-        const tips = 2 + Math.floor(Math.random() * 3);
+        const tips = narrow ? 2 : 2 + Math.floor(Math.random() * 3);
         for (let q = 0; q < tips; q++) {
           const tth = th + (Math.random() - 0.5) * 2.1;
           const tr = 0.12 + Math.random() * 0.18;
           const tp = addNode(nodes[j].x + Math.cos(tth) * tr, nodes[j].y + Math.sin(tth) * tr, 3, si, 0.55);
           addEdge(j, tp, si, 0.22);
-          for (let hh = 0; hh < 2; hh++) {
+          for (let hh = 0; hh < (narrow ? 1 : 2); hh++) {
             const hth = tth + (Math.random() - 0.5) * 2.4;
             const hr = 0.05 + Math.random() * 0.09;
             const hp = addNode(nodes[tp].x + Math.cos(hth) * hr, nodes[tp].y + Math.sin(hth) * hr, 4, si, 0.3);
@@ -257,7 +259,7 @@ export function initRhizome(host, opts = {}) {
     lineGeo.setAttribute('aS', new THREE.BufferAttribute(lS, 1));
     lineGeo.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 4);
     const lineU = {
-      uTime: { value: 0 }, uActive: { value: -1 }, uBuild: { value: still ? 1 : 0 },
+      uTime: { value: 0 }, uActive: { value: -1 }, uBuild: { value: still ? 1 : 0 }, uGrow: { value: still ? 1 : 0.4 },
       uColor: { value: new THREE.Color(accent) }
     };
     const lineMat = new THREE.ShaderMaterial({
@@ -268,9 +270,9 @@ export function initRhizome(host, opts = {}) {
 
     /* ---------- marañas y nodos ---------- */
     const tangle = [];                       // puntos que orbitan su núcleo
-    const per = narrow ? 260 : 460;
-    const coreTangle = narrow ? 380 : 680;
-    [[core, coreTangle, 0.125]].concat(hubs.map(h => [h, per, 0.095])).forEach(([ni, cnt, rad]) => {
+    const per = narrow ? 120 : 260;
+    const coreTangle = narrow ? 90 : 180;
+    [[core, coreTangle, 0.1]].concat(hubs.map(h => [h, per, 0.085])).forEach(([ni, cnt, rad]) => {
       for (let k = 0; k < cnt; k++) {
         tangle.push({ n: ni, r: (0.35 + Math.pow(Math.random(), 0.7) * 0.65) * rad,
           th: Math.random() * Math.PI * 2,
@@ -297,7 +299,7 @@ export function initRhizome(host, opts = {}) {
     ptGeo.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 4);
     const coreColor = new THREE.Color('#52C7CF');
     const ptU = {
-      uTime: { value: 0 }, uActive: { value: -1 }, uBuild: { value: still ? 1 : 0 },
+      uTime: { value: 0 }, uActive: { value: -1 }, uBuild: { value: still ? 1 : 0 }, uGrow: lineU.uGrow,
       uSize: { value: Math.max(1.9, pix * 1.4) },
       uColor: { value: new THREE.Color(accent) },
       uColor2: { value: coreColor }
@@ -359,10 +361,15 @@ export function initRhizome(host, opts = {}) {
       const p = toWorld(e.clientX, e.clientY);
       if (!p) return;
       mouseW = { x: p.x, y: p.y };
-      if (drag) { drag.tx = p.x + drag.dx; drag.ty = p.y + drag.dy; }
+      if (drag) setTarget(p);
       else canvas.style.cursor = pick(p) >= 0 ? 'grab' : 'default';
     };
     const onUp = () => { drag = null; canvas.style.cursor = 'grab'; };
+    const DBX = 0.9, DBY = 0.62;
+    const setTarget = p => {
+      drag.tx = Math.max(-DBX, Math.min(DBX, p.x + drag.dx));
+      drag.ty = Math.max(-DBY, Math.min(DBY, p.y + drag.dy));
+    };
     const onLeave = () => { overHost = false; mouseW = null; };
 
     // los chips también arrastran su núcleo
@@ -378,13 +385,17 @@ export function initRhizome(host, opts = {}) {
     marks.forEach(m => m.b.addEventListener('pointermove', e => {
       if (!drag) return;
       const p = toWorld(e.clientX, e.clientY);
-      if (p) { drag.tx = p.x + drag.dx; drag.ty = p.y + drag.dy; }
+      if (p) setTarget(p);
     }));
+    marks.forEach(m => ['pointercancel', 'lostpointercapture'].forEach(ev =>
+      m.b.addEventListener(ev, () => { drag = null; m.b.style.cursor = 'grab'; })));
 
     /* ---------- física ---------- */
     const K = 0.12, DAMP = 0.88, CENTER = 0.022, REPEL = 0.022;
+    const VMAX = 0.06;
+    const snap = nodes.map(n => [n.x, n.y]);
     const step = (dt, t) => {
-      const f = Math.min(2.4, dt * 60);
+      const f = 1;
       nodes.forEach(n => { n.fx = 0; n.fy = 0; });
       edges.forEach(e => {
         const A = nodes[e.a], B = nodes[e.b];
@@ -418,14 +429,8 @@ export function initRhizome(host, opts = {}) {
         n.fx += -n.x * CENTER * n.m;
         n.fy += -n.y * CENTER * n.m;
         const BX = 1.04, BY = 0.74;
-        // el correctivo de borde es proporcional al desborde: si algo (una caída
-        // de fps, un frame con dt grande) empuja un nodo bien lejos del límite,
-        // la fuerza de vuelta también crece sin techo y con el integrador
-        // explícito eso diverge (rebota cada vez más lejos en vez de asentarse).
-        // Se limita cuánto desborde "cuenta" para que el correctivo nunca supere
-        // un empujón razonable, sea cual sea la distancia real.
-        if (Math.abs(n.x) > BX) n.fx -= Math.sign(n.x) * Math.min(Math.abs(n.x) - BX, 0.3) * 0.9 * n.m;
-        if (Math.abs(n.y) > BY) n.fy -= Math.sign(n.y) * Math.min(Math.abs(n.y) - BY, 0.3) * 0.9 * n.m;
+        if (Math.abs(n.x) > BX) n.fx -= Math.sign(n.x) * (Math.abs(n.x) - BX) * 0.9 * n.m;
+        if (Math.abs(n.y) > BY) n.fy -= Math.sign(n.y) * (Math.abs(n.y) - BY) * 0.9 * n.m;
         // deriva lenta: el trazo nunca queda del todo quieto
         if (n.kind >= 2) {
           n.fx += Math.sin(t * 0.5 + i * 1.7) * 0.0022;
@@ -433,6 +438,9 @@ export function initRhizome(host, opts = {}) {
         }
         n.vx = (n.vx + n.fx / n.m * f) * DAMP;
         n.vy = (n.vy + n.fy / n.m * f) * DAMP;
+        if (n.vx > VMAX) n.vx = VMAX; else if (n.vx < -VMAX) n.vx = -VMAX;
+        if (n.vy > VMAX) n.vy = VMAX; else if (n.vy < -VMAX) n.vy = -VMAX;
+        if (!(n.vx === n.vx && n.vy === n.vy)) { n.vx = 0; n.vy = 0; n.x = snap[i][0]; n.y = snap[i][1]; }
         n.x += n.vx * f;
         n.y += n.vy * f;
       });
@@ -447,16 +455,12 @@ export function initRhizome(host, opts = {}) {
         const len = Math.hypot(dx, dy) || 1e-4;
         const nx = -dy / len, ny = dx / len;
         const amp = Math.min(len * e.wob, 0.075);
-        const pt = f => {
-          const bend = Math.sin(f * Math.PI) * Math.sin(e.seed + t * 0.35 + f * 3.4) * amp;
-          const bend2 = Math.sin(f * Math.PI * 2) * Math.cos(e.seed * 1.7 + t * 0.22) * amp * 0.45;
-          return [A.x + dx * f + nx * (bend + bend2), A.y + dy * f + ny * (bend + bend2),
-            A.z + (B.z - A.z) * f];
-        };
+        const c2 = Math.cos(e.seed * 1.7 + t * 0.22) * amp * 0.45, ph = e.seed + t * 0.35, dz = B.z - A.z;
         for (let s = 0; s < SEG; s++) {
-          for (const f of [s / SEG, (s + 1) / SEG]) {
-            const p = pt(f);
-            lPos[k * 3] = p[0]; lPos[k * 3 + 1] = p[1]; lPos[k * 3 + 2] = p[2];
+          for (let q = 0; q < 2; q++) {
+            const f = (s + q) / SEG;
+            const b = Math.sin(f * Math.PI) * Math.sin(ph + f * 3.4) * amp + Math.sin(f * Math.PI * 2) * c2;
+            lPos[k * 3] = A.x + dx * f + nx * b; lPos[k * 3 + 1] = A.y + dy * f + ny * b; lPos[k * 3 + 2] = A.z + dz * f;
             k++;
           }
         }
@@ -484,7 +488,8 @@ export function initRhizome(host, opts = {}) {
 
     const v3 = new THREE.Vector3();
     const toScreen = (x, y, z) => {
-      v3.set(x, y, z).project(camera);
+      const g = lineU.uGrow.value;
+      v3.set(x * g, y * g, z).project(camera);
       return [(v3.x * 0.5 + 0.5) * w, (-v3.y * 0.5 + 0.5) * h];
     };
 
@@ -558,16 +563,20 @@ export function initRhizome(host, opts = {}) {
       return clamp01((vh * 0.98 - r.top) / (vh * 0.5));
     };
 
+    let acc = 0, bornAt = -1;
     const draw = (t, dt) => {
       if (!still) {
-        const b = buildTarget();
-        lineU.uBuild.value += (b - lineU.uBuild.value) * 0.06;
-        ptU.uBuild.value = lineU.uBuild.value;
+        if (bornAt < 0 && buildTarget() > 0.15) bornAt = t;
+        const k = bornAt < 0 ? 0 : clamp01((t - bornAt) / 1.8);
+        const e = 1 - Math.pow(1 - k, 3);
+        lineU.uBuild.value = e; ptU.uBuild.value = e;
+        lineU.uGrow.value = 0.4 + 0.6 * e;
       }
       lineU.uTime.value = t; ptU.uTime.value = t;
       const act = hover ? hover.i : -1;
       lineU.uActive.value = act; ptU.uActive.value = act;
-      step(dt, t);
+      acc = Math.min(acc + dt * 60, 3);
+      while (acc >= 1) { step(1 / 60, t); acc -= 1; }
       writeLines(t);
       writePoints(t);
       renderer.render(scene, camera);
@@ -597,10 +606,13 @@ export function initRhizome(host, opts = {}) {
       draw(1.4, 0);
     } else {
       for (let k = 0; k < 40; k++) step(1 / 60, 0);   // asienta la red antes del primer frame
+      nodes.forEach((n, i) => { snap[i][0] = n.x; snap[i][1] = n.y; });
       raf = requestAnimationFrame(loop);
       host.addEventListener('pointerdown', onDown);
       host.addEventListener('pointermove', onMove, { passive: true });
       window.addEventListener('pointerup', onUp);
+      window.addEventListener('pointercancel', onUp);
+      host.addEventListener('lostpointercapture', onUp);
       host.addEventListener('pointerleave', onLeave);
     }
 
@@ -609,6 +621,8 @@ export function initRhizome(host, opts = {}) {
       host.removeEventListener('pointerdown', onDown);
       host.removeEventListener('pointermove', onMove);
       window.removeEventListener('pointerup', onUp);
+      window.removeEventListener('pointercancel', onUp);
+      host.removeEventListener('lostpointercapture', onUp);
       host.removeEventListener('pointerleave', onLeave);
       window.removeEventListener('resize', resize);
       lineGeo.dispose(); lineMat.dispose(); ptGeo.dispose(); ptMat.dispose(); renderer.dispose();

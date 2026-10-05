@@ -2,6 +2,10 @@
 // Compartido por index.html y ContactForm.dc.html; se carga con import('./js/contact-form.js').
 // Sobre-escribible en staging con window.TM_LEADS_ENDPOINT antes de que monte el formulario.
 const LEADS_ENDPOINT = 'https://titamedia.com/wp-json/tita/v1/leads';
+// reCAPTCHA v3 (invisible). La site key es pública; vacía = desactivado. Sobre-escribible con window.TM_RECAPTCHA_SITE_KEY.
+// La secret key vive SOLO en WordPress (TITA_RECAPTCHA_SECRET), nunca aquí.
+const RECAPTCHA_SITE_KEY = '';
+const RECAPTCHA_ACTION = 'lead';
 const TIMEOUT_MS = 15000;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -11,12 +15,40 @@ const MSG = {
   sending: 'Enviando…',
   ok: 'Gracias. Recibimos tu solicitud y nuestro equipo te contactará pronto.',
   rate: 'Enviaste varias solicitudes seguidas. Intenta de nuevo en un rato o escríbenos a cuentanos@titamedia.com.',
+  captcha: 'No pudimos verificar que eres una persona. Recarga la página e intenta de nuevo o escríbenos a cuentanos@titamedia.com.',
   error: 'No pudimos enviar tu solicitud. Intenta de nuevo o escríbenos a cuentanos@titamedia.com.',
 };
 
 function cookie(name){
   const m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
   return m ? decodeURIComponent(m[1]) : '';
+}
+
+let recaptchaLoading = null;
+function loadRecaptcha(key){
+  if(window.grecaptcha && window.grecaptcha.execute) return Promise.resolve();
+  if(!recaptchaLoading){
+    recaptchaLoading = new Promise((resolve, reject)=>{
+      // El badge flotante choca con el botón de WhatsApp; el aviso legal va en el formulario.
+      const st = document.createElement('style'); st.textContent = '.grecaptcha-badge{visibility:hidden}'; document.head.appendChild(st);
+      const el = document.createElement('script');
+      el.src = 'https://www.google.com/recaptcha/api.js?render=' + encodeURIComponent(key);
+      el.async = true; el.onload = resolve; el.onerror = ()=>{ recaptchaLoading = null; reject(new Error('recaptcha')); };
+      document.head.appendChild(el);
+    });
+  }
+  return recaptchaLoading;
+}
+
+// Devuelve el token o '' si no hay key / falla la carga (el servidor decide qué hacer sin token).
+async function recaptchaToken(){
+  const key = window.TM_RECAPTCHA_SITE_KEY || RECAPTCHA_SITE_KEY;
+  if(!key) return '';
+  try{
+    await loadRecaptcha(key);
+    await new Promise((r)=> window.grecaptcha.ready(r));
+    return await window.grecaptcha.execute(key, { action: RECAPTCHA_ACTION });
+  }catch(e){ return ''; }
 }
 
 export function initContactForm(root){
@@ -68,6 +100,7 @@ export function initContactForm(root){
     const ctrl = new AbortController();
     const timer = setTimeout(()=> ctrl.abort(), TIMEOUT_MS);
     try{
+      data.recaptcha_token = await recaptchaToken();
       const res = await fetch(window.TM_LEADS_ENDPOINT || LEADS_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -75,6 +108,7 @@ export function initContactForm(root){
         signal: ctrl.signal,
       });
       if(res.status === 429) return say(MSG.rate, 'error');
+      if(res.status === 403) return say(MSG.captcha, 'error');
       if(!res.ok) return say(MSG.error, 'error');
       say(MSG.ok, 'ok');
       reset();
@@ -87,6 +121,11 @@ export function initContactForm(root){
       btn.disabled = false; btn.style.opacity = '';
     }
   }
+
+  // Precarga el script al interactuar con el formulario (no al cargar la página).
+  const warm = ()=>{ const k = window.TM_RECAPTCHA_SITE_KEY || RECAPTCHA_SITE_KEY; if(k) loadRecaptcha(k).catch(()=>{}); };
+  const form = root.querySelector('#tm-contacto');
+  if(form) form.addEventListener('focusin', warm, { once: true });
 
   btn.addEventListener('click', onClick);
   return function(){ btn.removeEventListener('click', onClick); };

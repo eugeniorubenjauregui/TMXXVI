@@ -4,7 +4,36 @@
 const qa = s => Array.prototype.slice.call(document.querySelectorAll(s));
 const q  = s => document.querySelector(s);
 
+/* Header/footer en mobile (≤1080px): Soluciones siempre visible y footer sin desborde.
+   Se inyecta aquí para cubrir las 7 páginas con dc-import y las generadas de /noticias/. */
+const MOBILE_CHROME_CSS = `
+@media(max-width:1080px){
+#tm-dd{background:var(--tm-surface-quiet,#F2F4F3);margin:4px 0;padding:14px 16px 4px;width:100%;box-sizing:border-box}
+#tm-ddbtn{pointer-events:none;cursor:default;font-family:'IBM Plex Mono',monospace!important;font-size:11.5px!important;letter-spacing:.14em;color:var(--tm-accent-ink,#17747C)!important;min-height:0!important;padding:0 0 10px!important;border-bottom:1px solid rgba(20,20,20,.12)!important}
+#tm-ddbtn span{display:none}
+#tm-ddbtn::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--tm-accent,#80E593);margin-right:2px}
+#tm-drop{display:grid!important;gap:0!important;padding:0!important;box-shadow:none!important;background:transparent!important}
+#tm-drop>a{padding:10px 0!important;border-bottom:1px solid rgba(20,20,20,.07)}
+#tm-drop>a strong{font-size:15px!important;font-weight:500!important;margin-bottom:1px!important}#tm-drop>a span{font-size:12.5px!important;line-height:1.4!important}#tm-drop>a:last-of-type{border-bottom:0!important}
+#tm-drop>div{display:none!important}
+#tm-ftr-grid{grid-template-columns:minmax(0,1fr)!important}
+#tm-ftr-grid>div:first-child>div{grid-template-columns:minmax(0,1fr)!important}
+#tm-ftr-grid>div:first-child>div p{max-width:100%;overflow-wrap:anywhere}
+}`;
+if (typeof document !== 'undefined' && !document.getElementById('tm-mobile-chrome')) {
+  const st = document.createElement('style');
+  st.id = 'tm-mobile-chrome';
+  st.textContent = MOBILE_CHROME_CSS;
+  document.head.appendChild(st);
+}
+
+/* Las páginas pueden llamar initMotion más de una vez (componentDidUpdate corre antes de que
+   resuelva el import y _stop aún es null). Sin desmontar la instancia previa los listeners se
+   duplican y el toggle del menú se anula a sí mismo (abre y cierra en el mismo clic). */
+let activeCleanup = null;
+
 export function initMotion(opts = {}) {
+  if (activeCleanup) { try { activeCleanup(); } catch (e) {} activeCleanup = null; }
   const off = [], timers = [];
   const on = (el, ev, fn, o) => { if (!el) return; el.addEventListener(ev, ev === 'scroll' || ev === 'mousemove' ? fn : fn, o); off.push(() => el.removeEventListener(ev, fn, o)); };
   const wait = (fn, ms) => { timers.push(setTimeout(fn, ms)); };
@@ -223,7 +252,9 @@ export function initMotion(opts = {}) {
     wait(check, 3600);
   }
 
-  return () => { timers.forEach(clearTimeout); off.forEach(f => f()); };
+  const cleanup = () => { timers.forEach(clearTimeout); off.forEach(f => f()); if (activeCleanup === cleanup) activeCleanup = null; };
+  activeCleanup = cleanup;
+  return cleanup;
 }
 
 /* ---- Expand: filas de capacidades ---- */

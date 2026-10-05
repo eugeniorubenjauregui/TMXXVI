@@ -2,6 +2,18 @@
   "_nota": "Mapeos manuales URL vieja (WordPress) -> URL nueva. Son propuestas: requieren revisión humana (SEO/comercial) y priorizarse con datos de GSC. 'exact' acepta con y sin barra final; 'prefix' cubre todo lo que cuelga de esa ruta. El orden importa: gana la primera coincidencia.",
   "exact": [
     {
+      "from": "/informativo/consejos-para-el-cyber-wow-compras-exitosas-en-linea",
+      "to": "/noticias/consejos-para-el-cyber-wow-compras-seguras-tita-media.html"
+    },
+    {
+      "from": "/informativo/tita-media-obtiene-certificacion-en-sistema-de-gestion-bureau-veritas",
+      "to": "/noticias/tita-media-obtiene-recertificacion-en-sistema-de-gestion-bureau-veritas.html"
+    },
+    {
+      "from": "/ecommerce/como-disminuir-la-taza-de-abandono-en-e-commerce",
+      "to": "/noticias/como-disminuir-la-tasa-de-abandono-en-e-commerce.html"
+    },
+    {
       "from": "/politica-para-el-tratamiento-de-datos-personales-v2",
       "to": "/politica-datos.html"
     },
@@ -168,6 +180,78 @@
     {
       "from": "/en",
       "to": "/"
+    },
+    {
+      "from": "/content-cards/composable-commerce",
+      "to": "/commerce-solutions.html"
+    },
+    {
+      "from": "/content-cards/customize-cloud",
+      "to": "/cloud-data.html"
+    },
+    {
+      "from": "/content-cards/performance-data",
+      "to": "/retail-growth.html"
+    },
+    {
+      "from": "/logos-clientes/mario-hernandez",
+      "to": "/caso-mario-hernandez.html"
+    },
+    {
+      "from": "/job-openings",
+      "to": "/nosotros.html"
+    },
+    {
+      "from": "/podcast-titamedia",
+      "to": "/noticias.html"
+    },
+    {
+      "from": "/vtex-2",
+      "to": "/commerce-solutions.html"
+    },
+    {
+      "from": "/home",
+      "to": "/"
+    },
+    {
+      "from": "/carrers",
+      "to": "/nosotros.html"
+    },
+    {
+      "from": "/ecommerce",
+      "to": "/noticias/categoria-ecommerce.html"
+    },
+    {
+      "from": "/aviso-legal",
+      "to": "/politica-datos.html"
+    },
+    {
+      "from": "/privacy-policy",
+      "to": "/politica-datos.html"
+    },
+    {
+      "from": "/privacy",
+      "to": "/politica-datos.html"
+    },
+    {
+      "from": "/terms",
+      "to": "/politica-datos.html"
+    },
+    {
+      "from": "/politica-de-privacidad",
+      "to": "/politica-datos.html"
+    },
+    {
+      "from": "/terminos-y-condiciones",
+      "to": "/politica-datos.html"
+    },
+    {
+      "from": "/estrategias-de-ventas-ecommerce/como-planificar-una-estrategia-de-marketing-para-black-friday",
+      "to": "/noticias/como-planificar-una-estrategia-para-black-friday-en-ecommerce.html"
+    },
+    {
+      "from": "/estrategias-de-ventas-ecommerce/como-planificar-una-estrategia-de-marketing-para-black-friday-2024",
+      "to": "/noticias/como-planificar-una-estrategia-para-black-friday-en-ecommerce.html"
     }
   ],
   "prefix": [
@@ -196,6 +280,30 @@
       "to": "/noticias.html"
     },
     {
+      "from": "/content-cards/",
+      "to": "/"
+    },
+    {
+      "from": "/logos-clientes/",
+      "to": "/nosotros.html"
+    },
+    {
+      "from": "/partners/",
+      "to": "/nosotros.html"
+    },
+    {
+      "from": "/pilares_ecommerce/",
+      "to": "/commerce-solutions.html"
+    },
+    {
+      "from": "/pilares_ux/",
+      "to": "/retail-growth.html"
+    },
+    {
+      "from": "/soluciones_ux/",
+      "to": "/retail-growth.html"
+    },
+    {
       "from": "/en/soluciones/",
       "to": "/commerce-solutions.html"
     },
@@ -213,6 +321,7 @@
     "/register",
     "/profile",
     "/thankyou",
-    "/pagina-de-tests"
+    "/pagina-de-tests",
+    "/checkout"
   ]
 }
