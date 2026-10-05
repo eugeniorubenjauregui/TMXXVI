@@ -1,0 +1,26 @@
+# Tita Media
+
+> Tita Media conecta estrategia, tecnología, commerce, growth e inteligencia artificial para marcas de retail en Latinoamérica. Gold Partner de VTEX, con experiencia también en Shopify y soluciones de IA a medida. Más de 10 años de trabajo en más de 10 países.
+
+## Servicios
+
+- [Strategy & Advisory](https://titamedia.com/strategy-advisory.html): diagnóstico de operación, canales, tecnología y datos para priorizar iniciativas de mayor impacto y diseñar la estrategia de crecimiento.
+- [Commerce Solutions](https://titamedia.com/commerce-solutions.html): implementación y operación de plataformas de comercio B2C, B2B, marketplaces y omnicanalidad conectadas con inventario, pagos y logística.
+- [Retail Growth](https://titamedia.com/retail-growth.html): SEO, GEO, AEO, CRO y Paid Media conectados para encontrar la siguiente oportunidad de crecimiento digital.
+- [Cloud & Data](https://titamedia.com/cloud-data.html): arquitecturas cloud y plataformas de datos en AWS, Azure y GCP para commerce, integraciones, analítica e IA.
+- [AI & Custom Solutions](https://titamedia.com/ai-custom-solutions.html): agentes de IA conectados con los sistemas y datos de la empresa para automatizar tareas, analizar información y ejecutar procesos.
+- [Soluciones IA](https://titamedia.com/soluciones-ia.html): agentes de IA a la medida para retail, con control, trazabilidad y seguridad.
+
+## Empresa y casos
+
+- [Nosotros](https://titamedia.com/nosotros.html): quiénes somos y dónde trabajamos.
+- [Caso de éxito: Mario Hernández](https://titamedia.com/caso-mario-hernandez.html): desde 2015, 5 ecommerce, 7 marketplaces y el 100% de las tiendas físicas conectadas en 5 países de Latinoamérica.
+- [Contacto](https://titamedia.com/contacto.html): formulario para contarnos qué quieres resolver, mejorar o construir.
+
+## Blog
+
+- [Noticias](https://titamedia.com/noticias.html): análisis y casos sobre IA, ecommerce y transformación digital del retail en Latinoamérica.
+
+## Legal
+
+- [Política de tratamiento de datos personales](https://titamedia.com/politica-datos.html)
