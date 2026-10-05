@@ -521,12 +521,16 @@ export function initRhizome(host, opts = {}) {
         // empuja hacia abajo hasta no chocar con ninguna chip ya ubicada — un solo
         // pase con un salto menor a la altura real de la chip (23px) dejaba
         // superposiciones residuales cuando 2+ etiquetas caían cerca; ahora repite
-        // hasta estabilizar y el salto (28px) sí excede esa altura.
-        let yy = m.sy, moved = true;
-        while (moved) {
+        // hasta estabilizar y el salto sí excede esa altura.
+        // El salto es 29 y el umbral 28: con salto == umbral, un p.y fraccional (siempre
+        // en móvil) hace que (p.y + 28) - p.y dé 27.999…, el chequeo "< 28" siga siendo
+        // cierto, yy no cambie y el while no termine nunca — congelaba la página entera.
+        // El tope de pases es red de seguridad: nunca debe colgar el hilo principal.
+        let yy = m.sy, moved = true, guard = 0;
+        while (moved && guard++ < 24) {
           moved = false;
           for (const p of seen) {
-            if (Math.abs(yy - p.y) < 28 && Math.abs(m.sx - p.x) < 210) { yy = p.y + 28; moved = true; }
+            if (Math.abs(yy - p.y) < 28 && Math.abs(m.sx - p.x) < 210) { yy = p.y + 29; moved = true; }
           }
         }
         seen.push({ x: m.sx, y: yy });
