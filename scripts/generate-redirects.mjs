@@ -109,6 +109,22 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ - [R=404,L]
 </IfModule>
+
+# --- Caché ---
+# Sin nombres de archivo versionados, un JS viejo cacheado rompe a los visitantes tras un deploy:
+# los .js se revalidan siempre (ETag → 304); HTML/XML/TXT 10 min; imágenes 1 día.
+# Se limita a archivos del front: no toca respuestas PHP ni /wp-*.
+<IfModule mod_headers.c>
+  <If "%{REQUEST_URI} =~ m#\\.js$# && %{REQUEST_URI} !~ m#^/wp-#">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </If>
+  <ElseIf "(%{REQUEST_URI} == '/' || %{REQUEST_URI} =~ m#\\.(html|xml|txt)$#) && %{REQUEST_URI} !~ m#^/wp-#">
+    Header set Cache-Control "public, max-age=600"
+  </ElseIf>
+  <ElseIf "%{REQUEST_URI} =~ m#^/images/# || %{REQUEST_URI} == '/favicon.ico'">
+    Header set Cache-Control "public, max-age=86400"
+  </ElseIf>
+</IfModule>
 # END titamedia-front
 `;
 await writeFile(OUT, out);

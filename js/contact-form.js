@@ -4,7 +4,7 @@
 const LEADS_ENDPOINT = 'https://titamedia.com/wp-json/tita/v1/leads';
 // reCAPTCHA v3 (invisible). La site key es pública; vacía = desactivado. Sobre-escribible con window.TM_RECAPTCHA_SITE_KEY.
 // La secret key vive SOLO en WordPress (TITA_RECAPTCHA_SECRET), nunca aquí.
-const RECAPTCHA_SITE_KEY = '';
+const RECAPTCHA_SITE_KEY = '6LfFA-EtAAAAAMn29NCOP65lczurUCWGGX1pIIlN';
 const RECAPTCHA_ACTION = 'lead';
 const TIMEOUT_MS = 15000;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
