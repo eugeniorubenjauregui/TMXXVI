@@ -141,7 +141,7 @@ a:hover{color:var(--tm-accent2)}
 [data-tooltip]:hover::after,[data-tooltip]:hover::before{opacity:1;transform:translate(-50%,0) rotate(0)}
 [data-tooltip]:hover::before{transform:translate(-50%,0) rotate(45deg)}
 @media(max-width:1080px){#tm-hero-grid{grid-template-columns:minmax(0,1fr)!important}#tm-rhizome{width:112%!important;margin-left:-6%!important}#tm-steps{grid-template-columns:repeat(2,minmax(0,1fr))!important}#tm-stats{grid-template-columns:minmax(0,1fr)!important}#tm-ftr-grid{grid-template-columns:minmax(0,1fr)!important}#tm-form{grid-template-columns:minmax(0,1fr)!important}#tm-herorow{grid-template-columns:minmax(0,1fr)!important}#tm-burger{display:flex!important}#tm-nav{display:none!important;position:fixed;inset:78px 0 auto 0;flex-direction:column;align-items:stretch;gap:0;background:#fff;padding:12px clamp(24px,5vw,88px) 32px;border-bottom:1px solid rgba(20,20,20,.12);max-height:calc(100vh - 78px);overflow:auto}#tm-nav[data-open]{display:flex!important}#tm-nav>a,#tm-nav>div>button{padding:16px 0!important;border-bottom:1px solid rgba(20,20,20,.08);width:100%;text-align:left}#tm-bridge{display:none!important}#tm-drop{position:static!important;width:auto!important;border:0!important;padding:4px 0 12px!important;grid-template-columns:minmax(0,1fr)!important}#tm-cta{margin-top:18px;justify-content:center;border-bottom:0!important}}
-@media(max-width:640px){#tm-steps{grid-template-columns:minmax(0,1fr)!important}#tm-solrow-n{display:none!important}}
+@media(max-width:640px){#tm-steps{grid-template-columns:minmax(0,1fr)!important}}
 .v1s-eyebrow{color:var(--tm-accent);border-bottom-color:var(--tm-accent)}
 .v1s-list{border-top-color:rgba(255,255,255,.12)}
 .v1s-row{border-bottom-color:rgba(255,255,255,.12)}
@@ -150,6 +150,39 @@ a:hover{color:var(--tm-accent2)}
 .v1s-sub{color:rgba(255,255,255,.6)}
 .v1s-plus{color:var(--tm-accent);transition:transform .4s cubic-bezier(.22,.61,.36,1);display:inline-block}
 .v1s-btn{padding:clamp(26px,3vw,38px) 0;background:none;border:0;width:100%;text-align:left;font:inherit;cursor:pointer;color:inherit}
+@media(min-width:641px){.tm-logos[data-cols="4"]{grid-template-columns:repeat(4,minmax(0,1fr))!important}}
+.tm-dup{display:none!important}
+@media(max-width:1080px){#tm-dd{background:var(--tm-surface-quiet);margin:4px 0;padding:14px 16px 4px;width:100%;box-sizing:border-box}#tm-ddbtn{pointer-events:none;cursor:default;font-family:'IBM Plex Mono',monospace!important;font-size:11.5px!important;letter-spacing:.14em;color:var(--tm-accent-ink)!important;min-height:0!important;padding:0 0 10px!important;border-bottom:1px solid rgba(20,20,20,.12)!important}#tm-ddbtn span{display:none}#tm-ddbtn::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--tm-accent);margin-right:2px}#tm-drop{display:grid!important;gap:0!important;padding:0!important;box-shadow:none!important;background:transparent!important}#tm-drop>a{padding:10px 0!important;border-bottom:1px solid rgba(20,20,20,.07)}#tm-drop>a strong{font-size:15px!important;font-weight:500!important;margin-bottom:1px!important}#tm-drop>a span{font-size:12.5px!important;line-height:1.4!important}#tm-drop>a:last-of-type{border-bottom:0!important}#tm-drop>div{display:none!important}}
+@media(max-width:640px){
+#tm-hero{padding-bottom:110px!important}
+.tm-marq{overflow:hidden;border:1px solid rgba(20,20,20,.1);-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.tm-logos{display:flex!important;width:max-content;background:none!important;border:0!important;animation:tmmarq 32s linear infinite}
+.tm-logos>div{flex:0 0 156px;min-height:88px!important;border-right:1px solid rgba(20,20,20,.1)}
+.tm-logos>.tm-dup{display:flex!important}
+.tm-logos>div::before,.tm-logos>div::after{display:none!important}
+.tm-logos img{max-width:112px}
+.v1s-num{display:none!important}
+.v1s-btn{grid-template-columns:minmax(0,1fr) 28px!important;gap:14px!important;padding:22px 0!important;align-items:start!important}
+.v1s-plus{padding-top:2px}
+[id^="tm-sol-"] div[style*="64px"]{grid-template-columns:minmax(0,1fr)!important}
+[id^="tm-sol-"] div[style*="64px"]>span:empty{display:none}
+[id^="tm-sol-"]>[aria-hidden="true"]{opacity:.3}
+#tm-ftr-tag p{max-width:100%}
+}
+@keyframes tmmarq{to{transform:translateX(-50%)}}
+/* Franja "Marcas que han confiado": slider continuo también en escritorio (en móvil ya lo era) */
+@media(min-width:641px){
+.tm-marq:has(.tm-logos[data-cols]){overflow:hidden;border:1px solid rgba(20,20,20,.1);-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+.tm-logos[data-cols]{display:flex!important;width:max-content;background:none!important;border:0!important;animation:tmmarq 40s linear infinite}
+.tm-logos[data-cols]>div{flex:0 0 200px;min-height:104px!important;border-right:1px solid rgba(20,20,20,.1)}
+.tm-logos[data-cols]>.tm-dup{display:flex!important}
+.tm-marq:has(.tm-logos[data-cols]):hover .tm-logos{animation-play-state:paused}
+/* el overflow del slider recorta tooltips que salen de la celda: aquí van dentro, abajo */
+.tm-logos[data-cols]>div::after{bottom:8px;max-width:calc(100% - 16px);overflow:hidden;text-overflow:ellipsis;padding:6px 10px}
+.tm-logos[data-cols]>div::before{display:none}
+}
+@media(min-width:641px) and (prefers-reduced-motion:reduce){.tm-marq:has(.tm-logos[data-cols]){overflow-x:auto;-webkit-mask-image:none;mask-image:none}.tm-logos[data-cols]{animation:none}.tm-logos[data-cols]>.tm-dup{display:none!important}}
+@media(max-width:640px) and (prefers-reduced-motion:reduce){.tm-marq{overflow-x:auto;-webkit-mask-image:none;mask-image:none}.tm-logos{animation:none}.tm-logos>.tm-dup{display:none!important}}
 .v2p-grid{gap:56px}
 .v2p-main>*+*{margin-top:22px}
 .v2p-panel{display:grid;gap:1px;background:rgba(20,20,20,.14);border:1px solid rgba(20,20,20,.14);align-self:stretch}
@@ -195,7 +228,7 @@ a:hover{color:var(--tm-accent2)}
 </header>
 <main id="tm-main">
 
-<section style="padding:clamp(64px,9vw,116px) 0 clamp(210px,19vw,280px);position:relative;isolation:isolate;overflow:hidden">
+<section id="tm-hero" style="padding:clamp(64px,9vw,116px) 0 clamp(210px,19vw,280px);position:relative;isolation:isolate;overflow:hidden">
   <div id="tm-mesh" aria-hidden="true"></div>
   <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px);position:relative;z-index:1">
     <div id="tm-hero-grid" style="display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(40px,5vw,72px);align-items:center">
@@ -268,14 +301,24 @@ a:hover{color:var(--tm-accent2)}
 <section style="padding:clamp(44px,5vw,66px) 0;background:#fff">
   <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
     <p data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:400;letter-spacing:.14em;color:rgba(20,20,20,.55);margin:0 0 clamp(26px,3vw,38px)">MARCAS QUE HAN CONFIADO EN TITA</p>
-    <div data-rv style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:rgba(20,20,20,.1);border:1px solid rgba(20,20,20,.1)">
-      <div data-tooltip="Nike" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center;color:rgba(20,20,20,.4)"><img src="./images/nike-logo.svg" alt="Nike" width="120" height="43" style="width:120px;height:auto;opacity:.6"></div>
-      <div data-tooltip="Keralty" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/keralty-logo.svg" alt="Keralty" width="120" height="42" style="width:120px;height:auto;filter:grayscale(1)"></div>
+    <div class="tm-marq"><div class="tm-logos" data-cols="4" data-rv style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:rgba(20,20,20,.1);border:1px solid rgba(20,20,20,.1)">
       <div data-tooltip="Mario Hernández" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/mario-hernandez-logo.svg" alt="Mario Hernández" width="150" height="14" style="width:150px;height:auto"></div>
+      <div data-tooltip="Nike" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/nike-logo.svg" alt="Nike" width="120" height="43" style="width:120px;height:auto;opacity:.6"></div>
+      <div data-tooltip="Keralty" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/keralty-logo.svg" alt="Keralty" width="120" height="42" style="width:120px;height:auto;filter:grayscale(1)"></div>
       <div data-tooltip="Nissan" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/nissan-logo.svg" alt="Nissan" width="92" height="77" style="width:92px;height:auto"></div>
       <div data-tooltip="Universidad de los Andes" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/universidad-de-los-andes-logo.svg" alt="Universidad de los Andes" width="100" height="30" style="width:100px;height:auto"></div>
       <div data-tooltip="Nespresso" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/nespresso-logo.svg" alt="Nespresso" width="120" height="28" style="width:120px;height:auto"></div>
-    </div>
+      <div data-tooltip="Juan Valdez" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/juan-valdez-logo.png" alt="Juan Valdez" width="130" height="20" style="width:130px;height:auto;filter:brightness(0);opacity:.5"></div>
+      <div data-tooltip="Comfenalco Antioquia" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/comfenalco-antioquia-logo.webp" alt="Comfenalco Antioquia" width="120" height="43" style="width:120px;height:auto;filter:grayscale(1);opacity:.8"></div>
+      <div class="tm-dup" aria-hidden="true" data-tooltip="Mario Hernández" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/mario-hernandez-logo.svg" alt="" data-n="Mario Hernández" width="150" height="14" style="width:150px;height:auto"></div>
+      <div class="tm-dup" aria-hidden="true" data-tooltip="Nike" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/nike-logo.svg" alt="" data-n="Nike" width="120" height="43" style="width:120px;height:auto;opacity:.6"></div>
+      <div class="tm-dup" aria-hidden="true" data-tooltip="Keralty" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/keralty-logo.svg" alt="" data-n="Keralty" width="120" height="42" style="width:120px;height:auto;filter:grayscale(1)"></div>
+      <div class="tm-dup" aria-hidden="true" data-tooltip="Nissan" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/nissan-logo.svg" alt="" data-n="Nissan" width="92" height="77" style="width:92px;height:auto"></div>
+      <div class="tm-dup" aria-hidden="true" data-tooltip="Universidad de los Andes" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/universidad-de-los-andes-logo.svg" alt="" data-n="Universidad de los Andes" width="100" height="30" style="width:100px;height:auto"></div>
+      <div class="tm-dup" aria-hidden="true" data-tooltip="Nespresso" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/nespresso-logo.svg" alt="" data-n="Nespresso" width="120" height="28" style="width:120px;height:auto"></div>
+      <div class="tm-dup" aria-hidden="true" data-tooltip="Juan Valdez" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/juan-valdez-logo.png" alt="" data-n="Juan Valdez" width="130" height="20" style="width:130px;height:auto;filter:brightness(0);opacity:.5"></div>
+      <div class="tm-dup" aria-hidden="true" data-tooltip="Comfenalco Antioquia" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/comfenalco-antioquia-logo.webp" alt="" data-n="Comfenalco Antioquia" width="120" height="43" style="width:120px;height:auto;filter:grayscale(1);opacity:.8"></div>
+    </div></div>
   </div>
 </section>
 
@@ -320,13 +363,22 @@ a:hover{color:var(--tm-accent2)}
 <section style="padding:clamp(44px,5vw,66px) 0;background:#fff">
   <div style="max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
     <p data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:400;letter-spacing:.14em;color:rgba(20,20,20,.55);margin:0 0 clamp(26px,3vw,38px)">PARTNERS CON LOS QUE TRABAJAMOS</p>
-    <div data-rv style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:rgba(20,20,20,.1);border:1px solid rgba(20,20,20,.1)">
-      <div data-tooltip="AWS" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/aws-logo.svg" alt="AWS" width="110" height="66" style="width:110px;height:auto"></div>
+    <div class="tm-marq"><div class="tm-logos" data-cols="slider" data-rv style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:rgba(20,20,20,.1);border:1px solid rgba(20,20,20,.1)">
+      <div data-tooltip="AWS" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/aws-logo.svg" alt="AWS" width="88" height="53" style="width:88px;height:auto"></div>
+      <div data-tooltip="Google Cloud" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/google-cloud-logo.svg" alt="Google Cloud" width="128" height="20" style="width:128px;height:auto"></div>
+      <div data-tooltip="Claude" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/claude-logo.svg" alt="Claude" width="124" height="26" style="width:124px;height:auto"></div>
+      <div data-tooltip="Azure" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/azure-logo.svg" alt="Azure" width="56" height="56" style="width:56px;height:auto"></div>
+      <div data-tooltip="OpenAI" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/openai-logo.svg" alt="OpenAI" width="130" height="35" style="width:130px;height:auto"></div>
       <div data-tooltip="VTEX" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/vtex-logo-color.svg" alt="VTEX" width="120" height="43" style="width:120px;height:auto"></div>
-      <div data-tooltip="Claude" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/claude-logo.svg" alt="Claude" width="150" height="32" style="width:150px;height:auto"></div>
       <div data-tooltip="Shopify" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/shopify-logo-color.svg" alt="Shopify" width="130" height="41" style="width:130px;height:auto"></div>
-      <div data-tooltip="Google Cloud" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/google-cloud-logo.svg" alt="Google Cloud" width="160" height="25" style="width:160px;height:auto"></div>
-    </div>
+      <div class="tm-dup" aria-hidden="true" data-tooltip="AWS" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/aws-logo.svg" alt="" data-n="AWS" width="88" height="53" style="width:88px;height:auto"></div>
+      <div class="tm-dup" aria-hidden="true" data-tooltip="Google Cloud" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/google-cloud-logo.svg" alt="" data-n="Google Cloud" width="128" height="20" style="width:128px;height:auto"></div>
+      <div class="tm-dup" aria-hidden="true" data-tooltip="Claude" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/claude-logo.svg" alt="" data-n="Claude" width="124" height="26" style="width:124px;height:auto"></div>
+      <div class="tm-dup" aria-hidden="true" data-tooltip="Azure" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/azure-logo.svg" alt="" data-n="Azure" width="56" height="56" style="width:56px;height:auto"></div>
+      <div class="tm-dup" aria-hidden="true" data-tooltip="OpenAI" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/openai-logo.svg" alt="" data-n="OpenAI" width="130" height="35" style="width:130px;height:auto"></div>
+      <div class="tm-dup" aria-hidden="true" data-tooltip="VTEX" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/vtex-logo-color.svg" alt="" data-n="VTEX" width="120" height="43" style="width:120px;height:auto"></div>
+      <div class="tm-dup" aria-hidden="true" data-tooltip="Shopify" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/shopify-logo-color.svg" alt="" data-n="Shopify" width="130" height="41" style="width:130px;height:auto"></div>
+    </div></div>
   </div>
 </section>
 
@@ -568,9 +620,9 @@ a:hover{color:var(--tm-accent2)}
       <div>
         <a href="index.html" style="display:block;margin-bottom:20px"><img width="182" height="51" src="./images/logo-tita-media.png" alt="TITA Media" style="height:51px;width:auto;display:block;filter:brightness(0)"></a>
         <p style="font-size:15.5px;line-height:1.65;color:rgba(20,20,20,.84);max-width:38ch;margin:0">Soluciones de tecnología, comercio, datos, growth e inteligencia artificial para retail.</p>
-        <div style="display:grid;gap:12px;margin-top:clamp(28px,3.5vw,38px);padding-top:clamp(24px,3vw,30px);border-top:1px solid rgba(20,20,20,.22)">
+        <div id="tm-ftr-tag" style="display:grid;grid-template-columns:minmax(0,1fr);gap:12px;margin-top:clamp(28px,3.5vw,38px);padding-top:clamp(24px,3vw,30px);border-top:1px solid rgba(20,20,20,.22)">
           <p style="font-size:17px;font-weight:400;letter-spacing:-.01em;color:var(--tm-ink);margin:0">Tecnología que tiene que mover un resultado.</p>
-          <p style="font-size:14.5px;color:rgba(20,20,20,.8);line-height:1.9;margin:0">Ventas.<i style="font-style:normal;color:var(--tm-ink);padding:0 5px">·</i>Conversión.<i style="font-style:normal;color:var(--tm-ink);padding:0 5px">·</i>Eficiencia.<i style="font-style:normal;color:var(--tm-ink);padding:0 5px">·</i>Disponibilidad.<i style="font-style:normal;color:var(--tm-ink);padding:0 5px">·</i>Velocidad.<i style="font-style:normal;color:var(--tm-ink);padding:0 5px">·</i>Precisión.</p>
+          <p class="tm-ftr-words" style="font-size:14.5px;color:rgba(20,20,20,.8);line-height:1.9;margin:0;overflow-wrap:anywhere">Ventas.<i style="font-style:normal;color:var(--tm-ink);padding:0 5px">·</i>Conversión.<i style="font-style:normal;color:var(--tm-ink);padding:0 5px">·</i>Eficiencia.<i style="font-style:normal;color:var(--tm-ink);padding:0 5px">·</i>Disponibilidad.<i style="font-style:normal;color:var(--tm-ink);padding:0 5px">·</i>Velocidad.<i style="font-style:normal;color:var(--tm-ink);padding:0 5px">·</i>Precisión.</p>
         </div>
       </div>
       <div>

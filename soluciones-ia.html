@@ -93,6 +93,19 @@ a:hover{color:var(--tm-accent2)}
 [data-tooltip]::before{content:'';position:absolute;bottom:calc(100% + 7px);left:50%;width:8px;height:8px;background:#0B0C0C;opacity:0;pointer-events:none;transform:translate(-50%,4px) rotate(45deg);transition:opacity .25s cubic-bezier(.22,.61,.36,1),transform .25s cubic-bezier(.22,.61,.36,1);z-index:20}
 [data-tooltip]:hover::after,[data-tooltip]:hover::before{opacity:1;transform:translate(-50%,0) rotate(0)}
 [data-tooltip]:hover::before{transform:translate(-50%,0) rotate(45deg)}
+.tm-marq{margin-top:clamp(44px,5vw,64px)}
+.tm-logos{margin-top:0!important}
+.tm-dup{display:none!important}
+@media(max-width:640px){
+.tm-marq{overflow:hidden;border:1px solid rgba(20,20,20,.1);-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.tm-logos{display:flex!important;width:max-content;background:none!important;border:0!important;animation:tmmarq 32s linear infinite}
+.tm-logos>div{flex:0 0 156px;min-height:88px!important;border-right:1px solid rgba(20,20,20,.1)}
+.tm-logos>.tm-dup{display:flex!important}
+.tm-logos>div::before,.tm-logos>div::after{display:none!important}
+.tm-logos img{max-width:112px}
+}
+@keyframes tmmarq{to{transform:translateX(-50%)}}
+@media(max-width:640px) and (prefers-reduced-motion:reduce){.tm-marq{overflow-x:auto;-webkit-mask-image:none;mask-image:none}.tm-logos{animation:none}.tm-logos>.tm-dup{display:none!important}}
 @media(max-width:1080px){#tm-cells{grid-template-columns:minmax(0,1fr)!important}#tm-ftr-grid{grid-template-columns:minmax(0,1fr)!important}#tm-herorow{grid-template-columns:minmax(0,1fr)!important}#tm-red-grid{grid-template-columns:minmax(0,1fr)!important}#tm-net{width:100%!important;margin:0!important}#tm-ctl{grid-template-columns:minmax(0,1fr)!important}[data-lvl]{grid-template-columns:minmax(0,1fr)!important}#tm-burger{display:block!important}#tm-nav{display:none!important;position:fixed;inset:78px 0 auto 0;flex-direction:column;align-items:stretch;gap:0;background:#fff;padding:12px clamp(24px,5vw,88px) 32px;border-bottom:1px solid rgba(20,20,20,.12);max-height:calc(100vh - 78px);overflow:auto}#tm-nav[data-open]{display:flex!important}#tm-nav>a,#tm-nav>div>button{padding:16px 0!important;border-bottom:1px solid rgba(20,20,20,.08);width:100%;text-align:left}#tm-bridge{display:none!important}#tm-drop{position:static!important;width:auto!important;border:0!important;padding:4px 0 12px!important;grid-template-columns:minmax(0,1fr)!important}#tm-cta{margin-top:18px;justify-content:center;border-bottom:0!important}}
 </style>
 </helmet>
@@ -254,13 +267,18 @@ a:hover{color:var(--tm-accent2)}
     <p data-rv style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:#17747C;margin:0 0 22px">PARTNERS</p>
     <h2 data-split style="font-size:clamp(26px,3.2vw,42px);font-weight:300;line-height:1.16;letter-spacing:-.028em;color:#141414;margin:0;max-width:22ch;text-wrap:pretty">Trabajamos con tecnología de clase mundial.</h2>
     <p data-rv style="font-size:15.5px;line-height:1.68;color:#3E4541;margin:22px 0 0;max-width:54ch;text-wrap:pretty">Seleccionamos e integramos la tecnología según la arquitectura, los datos y las necesidades de cada operación.</p>
-    <div data-rv style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:rgba(20,20,20,.1);border:1px solid rgba(20,20,20,.1);margin-top:clamp(44px,5vw,64px)">
+    <div class="tm-marq">    <div class="tm-logos" data-rv style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:rgba(20,20,20,.1);border:1px solid rgba(20,20,20,.1);margin-top:clamp(44px,5vw,64px)">
       <div data-tooltip="AWS" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/aws-logo.svg" alt="AWS" width="110" height="66" style="width:110px;height:auto"></div>
       <div data-tooltip="VTEX" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/vtex-logo-color.svg" alt="VTEX" width="120" height="43" style="width:120px;height:auto"></div>
       <div data-tooltip="Claude" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/claude-logo.svg" alt="Claude" width="150" height="32" style="width:150px;height:auto"></div>
       <div data-tooltip="Shopify" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/shopify-logo-color.svg" alt="Shopify" width="130" height="41" style="width:130px;height:auto"></div>
       <div data-tooltip="Google Cloud" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/google-cloud-logo.svg" alt="Google Cloud" width="160" height="25" style="width:160px;height:auto"></div>
-    </div>
+      <div class="tm-dup" aria-hidden="true" data-tooltip="AWS" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/aws-logo.svg" alt="" data-n="AWS" width="110" height="66" style="width:110px;height:auto"></div>
+      <div class="tm-dup" aria-hidden="true" data-tooltip="VTEX" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/vtex-logo-color.svg" alt="" data-n="VTEX" width="120" height="43" style="width:120px;height:auto"></div>
+      <div class="tm-dup" aria-hidden="true" data-tooltip="Claude" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/claude-logo.svg" alt="" data-n="Claude" width="150" height="32" style="width:150px;height:auto"></div>
+      <div class="tm-dup" aria-hidden="true" data-tooltip="Shopify" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/shopify-logo-color.svg" alt="" data-n="Shopify" width="130" height="41" style="width:130px;height:auto"></div>
+      <div class="tm-dup" aria-hidden="true" data-tooltip="Google Cloud" style="background:#fff;min-height:104px;display:flex;align-items:center;justify-content:center"><img src="./images/google-cloud-logo.svg" alt="" data-n="Google Cloud" width="160" height="25" style="width:160px;height:auto"></div>
+    </div></div>
   </div>
 </section>
 
