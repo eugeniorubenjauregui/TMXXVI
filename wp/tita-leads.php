@@ -10,6 +10,9 @@
  *   TITA_HUBSPOT_TOKEN      Private App token de HubSpot (scope: forms)
  *   TITA_HUBSPOT_PORTAL_ID  ID de la cuenta de HubSpot
  *   TITA_HUBSPOT_FORM_GUID  GUID del formulario "no-HubSpot" que recibe los envíos
+ * Opcional (reCAPTCHA v3; si TITA_RECAPTCHA_SECRET no está definida, la verificación queda desactivada):
+ *   TITA_RECAPTCHA_SECRET     secret key de reCAPTCHA v3 (la site key va en js/contact-form.js)
+ *   TITA_RECAPTCHA_MIN_SCORE  umbral 0-1 (por defecto 0.5)
  * Opcional:
  *   TITA_LEADS_ALLOWED_ORIGINS  array de orígenes permitidos para CORS
  *   TITA_LEADS_TRUSTED_IP_HEADER  p. ej. 'HTTP_CF_CONNECTING_IP' si WP está detrás de Cloudflare
@@ -105,6 +108,30 @@ function tita_leads_client_ip() {
     return filter_var($ip, FILTER_VALIDATE_IP) ? $ip : '0.0.0.0';
 }
 
+/**
+ * reCAPTCHA v3. Devuelve true si pasa o está desactivado; false si el token falta o es inválido/bajo.
+ * Si Google no responde (error de red) se deja pasar y se registra: el honeypot y el rate limit siguen activos.
+ */
+function tita_leads_recaptcha_ok($token, $ip) {
+    $secret = tita_leads_conf('TITA_RECAPTCHA_SECRET');
+    if (!$secret) return true;
+    if (!is_string($token) || $token === '' || strlen($token) > 4096) return false;
+    $res = wp_remote_post('https://www.google.com/recaptcha/api/siteverify', [
+        'timeout' => 5,
+        'body' => ['secret' => $secret, 'response' => $token, 'remoteip' => $ip],
+    ]);
+    if (is_wp_error($res) || wp_remote_retrieve_response_code($res) !== 200) {
+        error_log('tita-leads: reCAPTCHA no disponible, se omite verificación');
+        return true;
+    }
+    $d = json_decode(wp_remote_retrieve_body($res), true);
+    if (!is_array($d) || empty($d['success'])) return false;
+    if (($d['action'] ?? '') !== 'lead') return false;
+    if (!in_array($d['hostname'] ?? '', ['titamedia.com', 'www.titamedia.com'], true)) return false;
+    $min = (float) (tita_leads_conf('TITA_RECAPTCHA_MIN_SCORE') ?: 0.5);
+    return (float) ($d['score'] ?? 0) >= $min;
+}
+
 function tita_leads_text($v, $max) {
     return mb_substr(sanitize_text_field(is_string($v) ? $v : ''), 0, $max);
 }
@@ -125,6 +152,10 @@ function tita_leads_handle(WP_REST_Request $req) {
     $n = (int) get_transient($rl);
     if ($n >= TITA_LEADS_RATE_LIMIT) return new WP_Error('rate_limited', 'Demasiadas solicitudes', ['status' => 429]);
     set_transient($rl, $n + 1, HOUR_IN_SECONDS);
+
+    if (!tita_leads_recaptcha_ok($p['recaptcha_token'] ?? '', $ip)) {
+        return new WP_Error('captcha', 'Verificación fallida', ['status' => 403]);
+    }
 
     $email = sanitize_email(is_string($p['email'] ?? null) ? $p['email'] : '');
     $name = tita_leads_text($p['name'] ?? '', 190);
