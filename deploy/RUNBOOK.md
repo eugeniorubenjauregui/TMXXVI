@@ -1,5 +1,7 @@
 # Runbook: corte del front nuevo en el VPS (Apache, mismo docroot que WordPress)
 
+> Camino recomendado: `deploy/deploy-prod.sh` (ensayo por defecto, `APPLY=1` para aplicar, subcomando `rollback`). Guarda en `~/backups-prod/<sello>/` el `.htaccess`, los archivos sobrescritos y la lista de nuevos. Los pasos manuales de abajo son el equivalente y la referencia.
+
 Placeholders: `<DOCROOT>` (carpeta de titamedia.com en el VPS, la que contiene `wp-config.php`), `<REPO>` (checkout local del repo en la rama a desplegar). No pegar credenciales aquí: usar `~/.my.cnf` o variables de entorno.
 
 ## 0. Antes (sin tocar el sitio)
