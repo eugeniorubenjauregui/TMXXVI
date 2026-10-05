@@ -196,6 +196,50 @@
     {
       "from": "/vtex-2",
       "to": "/commerce-solutions.html"
+    },
+    {
+      "from": "/home",
+      "to": "/"
+    },
+    {
+      "from": "/carrers",
+      "to": "/nosotros.html"
+    },
+    {
+      "from": "/ecommerce",
+      "to": "/noticias/categoria-ecommerce.html"
+    },
+    {
+      "from": "/aviso-legal",
+      "to": "/politica-datos.html"
+    },
+    {
+      "from": "/privacy-policy",
+      "to": "/politica-datos.html"
+    },
+    {
+      "from": "/privacy",
+      "to": "/politica-datos.html"
+    },
+    {
+      "from": "/terms",
+      "to": "/politica-datos.html"
+    },
+    {
+      "from": "/politica-de-privacidad",
+      "to": "/politica-datos.html"
+    },
+    {
+      "from": "/terminos-y-condiciones",
+      "to": "/politica-datos.html"
+    },
+    {
+      "from": "/estrategias-de-ventas-ecommerce/como-planificar-una-estrategia-de-marketing-para-black-friday",
+      "to": "/noticias/como-planificar-una-estrategia-para-black-friday-en-ecommerce.html"
+    },
+    {
+      "from": "/estrategias-de-ventas-ecommerce/como-planificar-una-estrategia-de-marketing-para-black-friday-2024",
+      "to": "/noticias/como-planificar-una-estrategia-para-black-friday-en-ecommerce.html"
     }
   ],
   "prefix": [
@@ -265,6 +309,7 @@
     "/register",
     "/profile",
     "/thankyou",
-    "/pagina-de-tests"
+    "/pagina-de-tests",
+    "/checkout"
   ]
 }

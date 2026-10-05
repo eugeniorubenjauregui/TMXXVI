@@ -62,7 +62,7 @@ for (const { from, to } of manual.prefix) add(prefixRe(from), to);
 
 // 5) Posts: una sola regex con los slugs reales (evita redirigir a archivos inexistentes)
 const alt = postSlugs.map(esc).join('|');
-add(`~^/(?:${POST_CATEGORIES.map(esc).join('|')})/(?<s>${alt})/?$`, '/noticias/$s.html',
+add(`~^/(?:${POST_CATEGORIES.map(esc).join('|')})/+(?<s>${alt})/?$`, '/noticias/$s.html',
   `${postSlugs.length} posts`);
 
 await writeFile(OUT, lines.join('\n') + '\n');
