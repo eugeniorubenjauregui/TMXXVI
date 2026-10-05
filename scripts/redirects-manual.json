@@ -1,0 +1,218 @@
+{
+  "_nota": "Mapeos manuales URL vieja (WordPress) -> URL nueva. Son propuestas: requieren revisión humana (SEO/comercial) y priorizarse con datos de GSC. 'exact' acepta con y sin barra final; 'prefix' cubre todo lo que cuelga de esa ruta. El orden importa: gana la primera coincidencia.",
+  "exact": [
+    {
+      "from": "/politica-para-el-tratamiento-de-datos-personales-v2",
+      "to": "/politica-datos.html"
+    },
+    {
+      "from": "/blog-es",
+      "to": "/noticias.html"
+    },
+    {
+      "from": "/nosotros",
+      "to": "/nosotros.html"
+    },
+    {
+      "from": "/contacto",
+      "to": "/contacto.html"
+    },
+    {
+      "from": "/composable-commerce",
+      "to": "/commerce-solutions.html"
+    },
+    {
+      "from": "/customize-cloud",
+      "to": "/cloud-data.html"
+    },
+    {
+      "from": "/performance-data",
+      "to": "/retail-growth.html"
+    },
+    {
+      "from": "/nosotros/ecommerce",
+      "to": "/commerce-solutions.html"
+    },
+    {
+      "from": "/nosotros/ux",
+      "to": "/retail-growth.html"
+    },
+    {
+      "from": "/nosotros/paid-media",
+      "to": "/retail-growth.html"
+    },
+    {
+      "from": "/mario-hernandez-es",
+      "to": "/caso-mario-hernandez.html"
+    },
+    {
+      "from": "/carvajal-es",
+      "to": "/noticias/categoria-casos-de-exito.html"
+    },
+    {
+      "from": "/panamericana-es",
+      "to": "/noticias/categoria-casos-de-exito.html"
+    },
+    {
+      "from": "/cro",
+      "to": "/noticias/categoria-cro.html"
+    },
+    {
+      "from": "/category/ia-retail",
+      "to": "/noticias/categoria-ia.html"
+    },
+    {
+      "from": "/category/seo-ia",
+      "to": "/noticias/categoria-ia.html"
+    },
+    {
+      "from": "/category/tips",
+      "to": "/noticias.html"
+    },
+    {
+      "from": "/category/tita-news",
+      "to": "/noticias.html"
+    },
+    {
+      "from": "/category/sin-categoria",
+      "to": "/noticias.html"
+    },
+    {
+      "from": "/sitemap_index.xml",
+      "to": "/sitemap.xml"
+    },
+    {
+      "from": "/wp-sitemap.xml",
+      "to": "/sitemap.xml"
+    },
+    {
+      "from": "/post-sitemap.xml",
+      "to": "/sitemap.xml"
+    },
+    {
+      "from": "/page-sitemap.xml",
+      "to": "/sitemap.xml"
+    },
+    {
+      "from": "/category-sitemap.xml",
+      "to": "/sitemap.xml"
+    },
+    {
+      "from": "/alejandro-lima-country-manager-mexico",
+      "to": "/nosotros.html"
+    },
+    {
+      "from": "/brenda-esparza-marketing-manager",
+      "to": "/nosotros.html"
+    },
+    {
+      "from": "/nathalie-castro-head-of-sales",
+      "to": "/nosotros.html"
+    },
+    {
+      "from": "/inscripcion-evento-fashion-beauty-experience",
+      "to": "/contacto.html"
+    },
+    {
+      "from": "/inscripcion-evento-fashion-beauty-experience-peru",
+      "to": "/contacto.html"
+    },
+    {
+      "from": "/the-wine-taste",
+      "to": "/contacto.html"
+    },
+    {
+      "from": "/contacto-invitacion-grill-experience-mexico",
+      "to": "/contacto.html"
+    },
+    {
+      "from": "/en/blog",
+      "to": "/noticias.html"
+    },
+    {
+      "from": "/en/about",
+      "to": "/nosotros.html"
+    },
+    {
+      "from": "/en/contact",
+      "to": "/contacto.html"
+    },
+    {
+      "from": "/en/vtex",
+      "to": "/commerce-solutions.html"
+    },
+    {
+      "from": "/en/mario-hernandez",
+      "to": "/caso-mario-hernandez.html"
+    },
+    {
+      "from": "/en/carvajal",
+      "to": "/noticias/categoria-casos-de-exito.html"
+    },
+    {
+      "from": "/en/panamericana",
+      "to": "/noticias/categoria-casos-de-exito.html"
+    },
+    {
+      "from": "/en/inkanta",
+      "to": "/noticias/categoria-casos-de-exito.html"
+    },
+    {
+      "from": "/en/podcast",
+      "to": "/"
+    },
+    {
+      "from": "/en/careers",
+      "to": "/nosotros.html"
+    },
+    {
+      "from": "/en",
+      "to": "/"
+    }
+  ],
+  "prefix": [
+    {
+      "from": "/contacto-mexico",
+      "to": "/contacto.html"
+    },
+    {
+      "from": "/soluciones/",
+      "to": "/commerce-solutions.html"
+    },
+    {
+      "from": "/casos_exito/mario-hernandez",
+      "to": "/caso-mario-hernandez.html"
+    },
+    {
+      "from": "/casos_exito/",
+      "to": "/noticias/categoria-casos-de-exito.html"
+    },
+    {
+      "from": "/tag/",
+      "to": "/noticias.html"
+    },
+    {
+      "from": "/author/",
+      "to": "/noticias.html"
+    },
+    {
+      "from": "/en/soluciones/",
+      "to": "/commerce-solutions.html"
+    },
+    {
+      "from": "/en/casos_exito/",
+      "to": "/noticias/categoria-casos-de-exito.html"
+    },
+    {
+      "from": "/en/",
+      "to": "/"
+    }
+  ],
+  "gone": [
+    "/login",
+    "/register",
+    "/profile",
+    "/thankyou",
+    "/pagina-de-tests"
+  ]
+}

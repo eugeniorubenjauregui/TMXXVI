@@ -468,8 +468,14 @@ function pageShell({ headHtml, bodyHtml, heroMeshTone, heroGraphic = 'mesh' }) {
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@200;300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 ${headHtml}
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-NF8PBL9');</script>
+<!-- End Google Tag Manager -->
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NF8PBL9" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 <x-dc>
 <helmet data-dc-atomics="">
 <style>
@@ -841,6 +847,7 @@ function sitemapXml({ posts, totalPages, categories, categoryPageCount }) {
     { loc: `${SITE}/soluciones-ia.html`, lastmod: today, changefreq: 'monthly', priority: '0.8' },
     { loc: `${SITE}/nosotros.html`, lastmod: today, changefreq: 'monthly', priority: '0.8' },
     { loc: `${SITE}/contacto.html`, lastmod: today, changefreq: 'monthly', priority: '0.7' },
+    { loc: `${SITE}/politica-datos.html`, lastmod: today, changefreq: 'yearly', priority: '0.3' },
     { loc: `${SITE}/caso-mario-hernandez.html`, lastmod: today, changefreq: 'monthly', priority: '0.7' },
     { loc: `${SITE}/noticias.html`, lastmod: today, changefreq: 'weekly', priority: '0.8' }
   ];
