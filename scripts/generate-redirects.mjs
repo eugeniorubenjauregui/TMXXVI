@@ -53,11 +53,24 @@ for (const c of [...catSlugs].sort()) {                                         
 
 for (const { from, to } of manual.prefix) add(prefix(from), to);                      // 4) Prefijos manuales
 
+// 4b) Títulos de posts usados como ruta (/Título del post), vistos en el log de 404 de WP (Redirection).
+//     scripts/redirects-titulos.json: { "/Título": "slug-del-post" }; se ignora si el slug ya no existe.
+const titulos = JSON.parse(await readFile(path.join(ROOT, 'scripts/redirects-titulos.json'), 'utf8'));
+let nTitulos = 0;
+for (const [from, slug] of Object.entries(titulos)) {
+  if (!postSlugs.includes(slug)) continue;
+  add(exact(from), `/noticias/${slug}.html`, 'titulo'); nTitulos++;
+}
+
 const alt = postSlugs.map(esc).join('|');                                             // 5) Posts (solo slugs reales)
 add(`^(?:${POST_CATEGORIES.map(esc).join('|')})/+(${alt})/?$`, '/noticias/$1.html', `${postSlugs.length} posts`);
 
-const rule = ([pat, to, note]) =>
-  (note ? `# ${note}\n` : '') + (to === '410' ? `RewriteRule ${pat} - [G,L]` : `RewriteRule ${pat} ${to} [R=301,L]`);
+const rule = ([pat, to, note]) => {
+  const p = pat.replace(/ /g, '\\ ');                       // los espacios separan argumentos en RewriteRule
+  const nc = note === 'titulo' ? 'NC,' : '';                  // títulos de posts usados como ruta: sin distinguir mayúsculas
+  return (note && note !== 'titulo' ? `# ${note}\n` : '') +
+    (to === '410' ? `RewriteRule ${p} - [G,L]` : `RewriteRule ${p} ${to} [${nc}R=301,L]`);
+};
 
 const out = `# BEGIN titamedia-front
 # GENERADO por scripts/generate-redirects.mjs — no editar a mano. Pegar al PRINCIPIO del .htaccess,
@@ -99,4 +112,4 @@ RewriteRule ^ - [R=404,L]
 # END titamedia-front
 `;
 await writeFile(OUT, out);
-console.log(`OK: ${path.relative(ROOT, OUT)} (${postSlugs.length} posts, ${catSlugs.size} categorías, ${manual.exact.length} exactos, ${manual.prefix.length} prefijos)`);
+console.log(`OK: ${path.relative(ROOT, OUT)} (${postSlugs.length} posts, ${catSlugs.size} categorías, ${manual.exact.length} exactos, ${manual.prefix.length} prefijos, ${nTitulos} títulos)`);

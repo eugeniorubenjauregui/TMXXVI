@@ -3,7 +3,7 @@
 Placeholders: `<DOCROOT>` (carpeta de titamedia.com en el VPS, la que contiene `wp-config.php`), `<REPO>` (checkout local del repo en la rama a desplegar). No pegar credenciales aquí: usar `~/.my.cnf` o variables de entorno.
 
 ## 0. Antes (sin tocar el sitio)
-1. En WP admin → Herramientas → **Redirection** → Import/Export: exportar los redirects actuales (JSON) y revisarlos; los útiles se añaden a `scripts/redirects-manual.json` (el bloque nuevo los deja de ejecutar).
+1. ~~Exportar los redirects de **Redirection**~~ (hecho: 3 redirects de slug y el log de 404, ya incorporados en `scripts/redirects-manual.json` y `scripts/redirects-titulos.json`).
 2. Confirmar que el plugin de leads está instalado: `curl -s https://titamedia.com/wp-json/ | grep -o '"tita/v1"'` (hoy aparece) y que `wp-content/mu-plugins/tita-leads.php` es la versión de este repo (copiar la nueva si no: trae el reCAPTCHA). Constantes en `wp-config.php`: `TITA_HUBSPOT_TOKEN`, `TITA_HUBSPOT_PORTAL_ID`, `TITA_HUBSPOT_FORM_GUID` y, al activar reCAPTCHA, `TITA_RECAPTCHA_SECRET`.
 3. Regenerar y revisar: `node scripts/generate-blog.mjs && node scripts/generate-redirects.mjs && git status`.
 4. (Recomendado) Probar en un subdominio gratuito del panel de DreamHost (`staging.titamedia.com`, directorio propio, con `noindex` y clave básica): copiar allí los archivos del paso 3 de abajo, un `.htaccess` con el bloque generado y correr `TM_BASIC_AUTH=usuario:clave node scripts/verify-redirects.mjs https://staging.titamedia.com`.
