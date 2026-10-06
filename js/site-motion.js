@@ -74,33 +74,10 @@ export function initMotion(opts = {}) {
 
   /* ---- Reveal por líneas ---- */
   const heads = qa('[data-split]');
-  const build = h => {
-    if (h.getAttribute('data-done') !== null) return;
-    const words = (h.getAttribute('data-text') || h.textContent).trim().split(/\s+/);
-    h.setAttribute('data-text', words.join(' '));
-    h.textContent = '';
-    const probes = words.map(w => {
-      const s = document.createElement('span');
-      s.textContent = w; s.style.display = 'inline-block';
-      h.appendChild(s); h.appendChild(document.createTextNode(' '));
-      return s;
-    });
-    const lines = []; let top = null;
-    probes.forEach(s => {
-      const t = Math.round(s.offsetTop);
-      if (top === null || t > top + 2) { lines.push([]); top = t; }
-      lines[lines.length - 1].push(s.textContent);
-    });
-    h.textContent = '';
-    lines.forEach((ws, i) => {
-      const outer = document.createElement('span');
-      outer.setAttribute('data-ln', '');
-      const inner = document.createElement('span');
-      inner.textContent = ws.join(' ');
-      inner.style.transitionDelay = (i * 95) + 'ms';
-      outer.appendChild(inner); h.appendChild(outer);
-    });
-    h.setAttribute('data-done', '');
+  // Muestra las líneas del título cuando entra en pantalla. Se registra en CADA initMotion (aunque el
+  // título ya esté dividido): los watchers del init anterior se pierden al limpiar, y si la página se
+  // vuelve a montar (componentDidUpdate) un título aún no visto quedaba oculto para siempre.
+  const reveal = h => {
     watch(h, () => {
       h.querySelectorAll('[data-ln]').forEach(l => {
         l.setAttribute('data-in', '');
@@ -110,17 +87,56 @@ export function initMotion(opts = {}) {
     }, .10);
     startPump();
   };
+  const build = h => {
+    if (h.getAttribute('data-done') === null) {
+      const words = (h.getAttribute('data-text') || h.textContent).trim().split(/\s+/);
+      h.setAttribute('data-text', words.join(' '));
+      h.textContent = '';
+      const probes = words.map(w => {
+        const s = document.createElement('span');
+        s.textContent = w; s.style.display = 'inline-block';
+        h.appendChild(s); h.appendChild(document.createTextNode(' '));
+        return s;
+      });
+      const lines = []; let top = null;
+      probes.forEach(s => {
+        const t = Math.round(s.offsetTop);
+        if (top === null || t > top + 2) { lines.push([]); top = t; }
+        lines[lines.length - 1].push(s.textContent);
+      });
+      h.textContent = '';
+      lines.forEach((ws, i) => {
+        const outer = document.createElement('span');
+        outer.setAttribute('data-ln', '');
+        const inner = document.createElement('span');
+        inner.textContent = ws.join(' ');
+        inner.style.transitionDelay = (i * 95) + 'ms';
+        outer.appendChild(inner); h.appendChild(outer);
+      });
+      h.setAttribute('data-done', '');
+    }
+    reveal(h);
+  };
   if (!motion) heads.forEach(h => h.setAttribute('data-in', ''));
   else {
     const run = () => heads.forEach(build);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(run).catch(run);
     else wait(run, 120);
-    let rt;
+    let rt, lastW = window.innerWidth;
     on(window, 'resize', () => {
+      if (window.innerWidth === lastW) return;   // solo cambia el alto (barra del navegador en móvil): los saltos de línea no cambian
+      lastW = window.innerWidth;
       clearTimeout(rt);
       rt = setTimeout(() => {
+        const shown = heads.filter(h => h.querySelector('[data-ln][data-in]'));
         heads.forEach(h => { h.removeAttribute('data-done'); h.textContent = h.getAttribute('data-text') || h.textContent; });
         heads.forEach(build);
+        // lo que ya estaba visible se muestra de inmediato, sin volver a animar ni parpadear
+        shown.forEach(h => h.querySelectorAll('[data-ln]').forEach(l => {
+          l.setAttribute('data-in', '');
+          const sp = l.firstElementChild;
+          if (sp) { sp.style.transition = 'none'; sp.style.transform = 'none'; }
+        }));
       }, 260);
     });
   }
@@ -235,21 +251,35 @@ export function initMotion(opts = {}) {
   }));
 
   /* ---- Plan B: si las transiciones CSS no avanzan, mostrar todo ---- */
+  // "Trabado" = con frames que SÍ se están pintando, el transform de una línea ya revelada no cambia
+  // entre dos muestras tomadas dentro de requestAnimationFrame y separadas ≥ 250 ms (en NINGUNA línea: las que
+  // esperan su transition-delay también se ven quietas). Antes bastaba con
+  // "transform ≠ none", y eso también describe una transición en curso (título revelado hace <1 s) o
+  // una página con el hilo principal ocupado (React/Babel/GTM): apagaba TODAS las animaciones según
+  // la velocidad de carga, por eso los títulos animaban unas veces y otras no. Con la pestaña oculta
+  // no se evalúa (las transiciones no avanzan); se reintenta al volver.
   if (motion && root) {
-    const check = () => {
-      const stuck = qa('[data-ln][data-in]').some(l => {
-        const sp = l.firstElementChild;
-        if (!sp) return false;
-        const t = getComputedStyle(sp).transform;
-        return t !== 'none' && t !== 'matrix(1, 0, 0, 1, 0, 0)';
-      });
-      if (!stuck) return;
+    const moving = t => t !== 'none' && t !== 'matrix(1, 0, 0, 1, 0, 0)';
+    const sample = () => qa('[data-ln][data-in]').map(l => l.firstElementChild).filter(Boolean).map(sp => getComputedStyle(sp).transform);
+    const frame = () => new Promise(r => requestAnimationFrame(t => r(t)));
+    let dead = false; off.push(() => { dead = true; });
+    const check = async () => {
+      if (dead || document.visibilityState !== 'visible') return;
+      const t1 = await frame(); if (dead) return;
+      const a = sample();
+      if (!a.some(moving)) return;
+      await new Promise(r => wait(r, 300));
+      const t2 = await frame(); if (dead || document.visibilityState !== 'visible') return;
+      if (t2 - t1 < 250) return;                 // no hubo frames reales entre las dos muestras: no se puede concluir
+      const b = sample();
+      if (a.some((t, i) => b[i] !== t)) return;   // alguna línea avanzó (las demás pueden estar esperando su transition-delay): no está trabado
       root.removeAttribute('data-motion');
       qa('[data-ln] > span').forEach(sp => { sp.style.transition = 'none'; sp.style.transform = 'none'; });
       qa('[data-rv]').forEach(el => { el.setAttribute('data-in', ''); el.style.transition = 'none'; el.style.opacity = '1'; el.style.transform = 'none'; });
     };
     wait(check, 1800);
     wait(check, 3600);
+    on(document, 'visibilitychange', () => { if (document.visibilityState === 'visible') wait(check, 1200); });
   }
 
   const cleanup = () => { timers.forEach(clearTimeout); off.forEach(f => f()); if (activeCleanup === cleanup) activeCleanup = null; };
