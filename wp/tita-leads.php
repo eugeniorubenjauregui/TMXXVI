@@ -4,7 +4,9 @@
  * Description: Recibe los leads del formulario de contacto del sitio, los guarda en MySQL y los envía a HubSpot.
  * Version: 1.0.0
  *
- * Instalación: copiar a wp-content/mu-plugins/tita-leads.php
+ * Instalación: UNA sola copia, en wp-content/plugins/wp/tita-leads.php (como hoy en producción) o en
+ * wp-content/mu-plugins/tita-leads.php, nunca en las dos (PHP: Cannot redeclare tita_leads_conf()).
+ * Actualizar con deploy/install-leads-plugin.sh, que detecta dónde está.
  *
  * Configuración (wp-config.php o variables de entorno; nunca en este archivo):
  *   TITA_HUBSPOT_TOKEN      Private App token de HubSpot (scope: forms)
