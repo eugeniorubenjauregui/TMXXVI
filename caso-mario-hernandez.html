@@ -135,12 +135,17 @@ a:hover{color:var(--tm-accent2)}
 .tl-row[data-cur] .tl-dot::after{animation:tlpulse 2.2s cubic-bezier(.19,.72,.28,1) infinite}
 @keyframes tlpulse{from{transform:scale(1);opacity:.8}to{transform:scale(3.2);opacity:0}}
 .tl-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-.tl-chips span{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.12em;padding:8px 12px;border:1px solid #17747C;color:#17747C;transition:opacity .5s cubic-bezier(.19,.72,.28,1),transform .5s cubic-bezier(.19,.72,.28,1),background .25s,color .25s}
-.tl-chips span:hover{background:#17747C;color:#F2F4F3}
-#tm-tl[data-live] .tl-chips span{opacity:0;transform:translateY(8px)}
-#tm-tl[data-live] .tl-row[data-act] .tl-chips span{opacity:1;transform:none}
-.tl-chips span:nth-child(2){transition-delay:.08s,.08s,0s,0s}.tl-chips span:nth-child(3){transition-delay:.16s,.16s,0s,0s}.tl-chips span:nth-child(4){transition-delay:.24s,.24s,0s,0s}.tl-chips span:nth-child(5){transition-delay:.32s,.32s,0s,0s}
-@media(prefers-reduced-motion:reduce){.tl-row[data-cur] .tl-dot::after{animation:none}.tl-year,.tl-node::after,.tl-dot,.tl-chips span{transition:none}}
+.tl-chips a{font-family:'IBM Plex Mono',monospace;text-decoration:none;font-size:10.5px;letter-spacing:.12em;padding:8px 12px;border:1px solid #17747C;color:#17747C;transition:opacity .5s cubic-bezier(.19,.72,.28,1),transform .5s cubic-bezier(.19,.72,.28,1),background .25s,color .25s}
+.tl-chips a:hover,.tl-chips a:focus-visible{background:#17747C;color:#F2F4F3}
+#tm-tl[data-live] .tl-chips a{opacity:0;transform:translateY(8px)}
+#tm-tl[data-live] .tl-row[data-act] .tl-chips a{opacity:1;transform:none}
+.tl-chips a:nth-child(2){transition-delay:.08s,.08s,0s,0s}.tl-chips a:nth-child(3){transition-delay:.16s,.16s,0s,0s}.tl-chips a:nth-child(4){transition-delay:.24s,.24s,0s,0s}.tl-chips a:nth-child(5){transition-delay:.32s,.32s,0s,0s}
+/* Botón de la fila de 2026 (vincula a AI & Custom Solutions) */
+.tl-cta{display:inline-flex;align-items:center;gap:10px;margin-top:8px;padding:13px 22px;background:var(--tm-accent);color:#141414;font-size:14px;font-weight:500;border:1px solid var(--tm-accent);text-decoration:none;transition:opacity .5s cubic-bezier(.19,.72,.28,1),transform .5s cubic-bezier(.19,.72,.28,1),background .25s,color .25s,border-color .25s}
+.tl-cta:hover,.tl-cta:focus-visible{background:#141414;color:#fff;border-color:#141414}
+#tm-tl[data-live] .tl-cta{opacity:0;transform:translateY(8px)}
+#tm-tl[data-live] .tl-row[data-act] .tl-cta{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.tl-row[data-cur] .tl-dot::after{animation:none}.tl-year,.tl-node::after,.tl-dot,.tl-chips a,.tl-cta{transition:none}}
 @media(max-width:760px){
 #tm-tl{--yh:clamp(40px,12vw,52px)}
 .tl-head{display:none}
@@ -244,9 +249,12 @@ a:hover{color:var(--tm-accent2)}
               <sc-if value="{{ y.hasList }}" hint-placeholder-val="{{ false }}">
                 <div class="tl-chips">
                   <sc-for list="{{ y.list }}" as="li" hint-placeholder-count="5">
-                    <span>{{ li }}</span>
+                    <a href="commerce-solutions.html">{{ li }}</a>
                   </sc-for>
                 </div>
+              </sc-if>
+              <sc-if value="{{ y.hasCta }}" hint-placeholder-val="{{ false }}">
+                <a class="tl-cta" href="ai-custom-solutions.html" data-cursor="EXPLORAR">Conoce AI &amp; Custom Solutions <span aria-hidden="true">→</span></a>
               </sc-if>
             </div>
           </div>
@@ -407,7 +415,7 @@ class Component extends DCLogic {
     if(tries < 60) requestAnimationFrame(()=>this.start(tries+1));
   }
   renderVals(){
-    const Y = (year, mh, tita, list) => ({ year, mh, tita, list: list || [], hasList: !!list, ms: (year === '2021' || year === '2026') ? '1' : '' });
+    const Y = (year, mh, tita, list, cta) => ({ year, mh, tita, list: list || [], hasList: !!list, hasCta: !!cta, ms: (year === '2021' || year === '2026') ? '1' : '' });
     return {
       two: 2,
       years: [
@@ -421,7 +429,7 @@ class Component extends DCLogic {
         Y('2022','Consolida sus canales y desarrolla nuevas experiencias de venta.',['Centralizamos catálogo, inventario y órdenes para que los distintos canales trabajen sobre la misma operación.']),
         Y('2023','Fortalece su estrategia de CRM y conocimiento del cliente.',['Integramos commerce y CRM para tener una visión más completa de las interacciones y ventas del cliente.']),
         Y('2024','Lanza su aplicación móvil.',['Desarrollamos la app sobre el mismo núcleo transaccional del ecommerce para evitar duplicar catálogo, inventarios, precios y reglas comerciales.']),
-        Y('2026','Opera cinco ecommerce y siete marketplaces en cinco países.',['Seguimos operando y evolucionando el ecosistema digital y acompañamos el inicio de nuevos proyectos de inteligencia artificial.'])
+        Y('2026','Opera cinco ecommerce y siete marketplaces en cinco países.',['Seguimos operando y evolucionando el ecosistema digital y acompañamos el inicio de nuevos proyectos de inteligencia artificial.'], null, true)
       ]
     };
   }
