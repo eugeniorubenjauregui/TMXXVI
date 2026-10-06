@@ -6,7 +6,7 @@ Placeholders: `<DOCROOT>` (carpeta de titamedia.com en el VPS, la que contiene `
 
 ## 0. Antes (sin tocar el sitio)
 1. ~~Exportar los redirects de **Redirection**~~ (hecho: 3 redirects de slug y el log de 404, ya incorporados en `scripts/redirects-manual.json` y `scripts/redirects-titulos.json`).
-2. Confirmar que el plugin de leads está instalado: `curl -s https://titamedia.com/wp-json/ | grep -o '"tita/v1"'` (hoy aparece) y que `wp-content/mu-plugins/tita-leads.php` es la versión de este repo (copiar la nueva si no: trae el reCAPTCHA). Constantes en `wp-config.php`: `TITA_HUBSPOT_TOKEN`, `TITA_HUBSPOT_PORTAL_ID`, `TITA_HUBSPOT_FORM_GUID` y, al activar reCAPTCHA, `TITA_RECAPTCHA_SECRET`.
+2. Plugin de leads: se actualiza con `deploy/install-leads-plugin.sh <usuario@host> <docroot>` (busca la copia existente en `plugins/` o `mu-plugins/`, se niega a crear duplicados, respalda y restaura solo si el sitio deja de responder). En producción vive en `wp-content/plugins/wp/tita-leads.php`. Constantes en `wp-config.php`: `TITA_HUBSPOT_TOKEN`, `TITA_HUBSPOT_PORTAL_ID`, `TITA_HUBSPOT_FORM_GUID` y, al activar reCAPTCHA, `TITA_RECAPTCHA_SECRET`.
 3. Regenerar y revisar: `node scripts/generate-blog.mjs && node scripts/generate-redirects.mjs && git status`.
 4. Staging en `https://xxvi.titamedia.xyz` (mismo servidor DreamHost/Apache, solo para este proyecto): `DRY_RUN=1 deploy/deploy-staging.sh usuario@host /ruta/docroot` para ver qué sube; sin `DRY_RUN` respalda, sube, escribe `.htaccess` con noindex y `robots.txt` restrictivo. Luego `node scripts/verify-redirects.mjs https://xxvi.titamedia.xyz`. El formulario NO se prueba ahí (enviaría a HubSpot/MySQL reales y el CORS de WP rechaza ese origen): se prueba en producción tras el corte con un lead de prueba.
 
