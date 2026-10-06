@@ -282,6 +282,11 @@ export function initMotion(opts = {}) {
     on(document, 'visibilitychange', () => { if (document.visibilityState === 'visible') wait(check, 1200); });
   }
 
+  // Arrastre táctil de los sliders de logos (.tm-marq): módulo aparte, carga bajo demanda.
+  let sliderOff = null, sliderDead = false;
+  import('./logo-slider.js').then(m => { if (!sliderDead) sliderOff = m.initLogoSliders(); }).catch(() => {});
+  off.push(() => { sliderDead = true; if (sliderOff) sliderOff(); });
+
   const cleanup = () => { timers.forEach(clearTimeout); off.forEach(f => f()); if (activeCleanup === cleanup) activeCleanup = null; };
   activeCleanup = cleanup;
   return cleanup;

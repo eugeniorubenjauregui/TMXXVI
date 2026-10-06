@@ -665,7 +665,8 @@ a:hover{color:var(--tm-accent2)}
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;motion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;heroLayout&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;rhizome&quot;,&quot;solar&quot;,&quot;network&quot;,&quot;quiet&quot;],&quot;default&quot;:&quot;rhizome&quot;,&quot;tsType&quot;:&quot;'rhizome' | 'solar' | 'network' | 'quiet'&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;contextualCursor&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;options&quot;:[&quot;#80E593&quot;,&quot;#52C7CF&quot;],&quot;default&quot;:&quot;#80E593&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Color&quot;},&quot;accent2&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;options&quot;:[&quot;#52C7CF&quot;,&quot;#80E593&quot;],&quot;default&quot;:&quot;#52C7CF&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Color&quot;}}">
 class Component extends DCLogic {
-  componentDidMount(){ this._t = []; this.boot(); this.aiSteps(); this.aiMesh(); this.solar(); this.mesh(); this.ftrMesh(); this.glow(); this.topo(); this.contactForm(); }
+  componentDidMount(){ this._t = []; this.boot(); this.aiSteps(); this.aiMesh(); this.solar(); this.mesh(); this.ftrMesh(); this.glow(); this.topo(); this.contactForm(); this.logoSlider(); }
+  logoSlider(){ import('./js/logo-slider.js').then(m=>{ if(!this._sliderDead) this._slider = m.initLogoSliders(); }).catch(()=>{}); }
 
   aiMesh(){
     const token = (this._amToken = (this._amToken || 0) + 1);
@@ -749,7 +750,7 @@ class Component extends DCLogic {
   }
 
   componentDidUpdate(){ this.applyTheme(); this.solar(); this.aiSteps(); this.aiMesh(); }
-  componentWillUnmount(){ this._cfDead = true; this._cf && this._cf(); (this._t||[]).forEach(clearTimeout); (this._off||[]).forEach(f=>f()); this._ai && this._ai(); this._amesh && this._amesh(); this._solar && this._solar(); this._mesh && this._mesh(); this._ftrMesh && this._ftrMesh(); this._glow && this._glow(); this._topo && this._topo(); }
+  componentWillUnmount(){ this._sliderDead = true; this._slider && this._slider(); this._cfDead = true; this._cf && this._cf(); (this._t||[]).forEach(clearTimeout); (this._off||[]).forEach(f=>f()); this._ai && this._ai(); this._amesh && this._amesh(); this._solar && this._solar(); this._mesh && this._mesh(); this._ftrMesh && this._ftrMesh(); this._glow && this._glow(); this._topo && this._topo(); }
 
   q(s){ return document.querySelector(s); }
   qa(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); }
