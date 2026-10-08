@@ -21,7 +21,7 @@
  */
 defined('ABSPATH') || exit;
 
-const TITA_LEADS_DB_VERSION = '1';
+const TITA_LEADS_DB_VERSION = '2';
 const TITA_LEADS_MAX_ATTEMPTS = 5;
 const TITA_LEADS_RATE_LIMIT = 5;        // envíos por hora por IP
 const TITA_LEADS_MAX_BODY = 20000;      // bytes
@@ -52,7 +52,9 @@ add_action('init', function () {
       company VARCHAR(190) NOT NULL DEFAULT '',
       role VARCHAR(190) NOT NULL DEFAULT '',
       email VARCHAR(190) NOT NULL,
+      phone VARCHAR(40) NOT NULL DEFAULT '',
       country VARCHAR(100) NOT NULL DEFAULT '',
+      city VARCHAR(100) NOT NULL DEFAULT '',
       source VARCHAR(100) NOT NULL DEFAULT '',
       needs TEXT NULL,
       message TEXT NOT NULL,
@@ -138,6 +140,14 @@ function tita_leads_text($v, $max) {
     return mb_substr(sanitize_text_field(is_string($v) ? $v : ''), 0, $max);
 }
 
+// Teléfono: solo dígitos, espacios, +, paréntesis, puntos y guiones; si no trae 7-15 dígitos se descarta (campo opcional).
+function tita_leads_phone($v) {
+    $v = trim(preg_replace('/[^0-9+()\s.\-]/', '', is_string($v) ? $v : ''));
+    $v = mb_substr($v, 0, 40);
+    $digits = strlen(preg_replace('/\D/', '', $v));
+    return ($digits >= 7 && $digits <= 15) ? $v : '';
+}
+
 function tita_leads_handle(WP_REST_Request $req) {
     if (strlen($req->get_body()) > TITA_LEADS_MAX_BODY) {
         return new WP_Error('too_large', 'Solicitud demasiado grande', ['status' => 413]);
@@ -185,7 +195,9 @@ function tita_leads_handle(WP_REST_Request $req) {
         'company'    => tita_leads_text($p['company'] ?? '', 190),
         'role'       => tita_leads_text($p['role'] ?? '', 190),
         'email'      => $email,
+        'phone'      => tita_leads_phone($p['phone'] ?? ''),
         'country'    => tita_leads_text($p['country'] ?? '', 100),
+        'city'       => tita_leads_text($p['city'] ?? '', 100),
         'source'     => tita_leads_text($p['source'] ?? '', 100),
         'needs'      => wp_json_encode($needs),
         'message'    => $message,
@@ -229,7 +241,9 @@ function tita_leads_sync_hubspot($id) {
             'email'              => $lead['email'],
             'company'            => $lead['company'],
             'jobtitle'           => $lead['role'],
+            'phone'              => $lead['phone'],
             'country'            => $lead['country'],
+            'city'               => $lead['city'],
             'como_nos_conociste' => $lead['source'],
             'necesidad'          => implode(';', (array) json_decode($lead['needs'] ?: '[]', true)),
             'message'            => $lead['message'],
