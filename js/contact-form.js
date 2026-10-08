@@ -8,10 +8,13 @@ const RECAPTCHA_SITE_KEY = '6LfFA-EtAAAAAMn29NCOP65lczurUCWGGX1pIIlN';
 const RECAPTCHA_ACTION = 'lead';
 const TIMEOUT_MS = 15000;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+// Teléfono opcional: dígitos, espacios, +, paréntesis, puntos y guiones; entre 7 y 15 dígitos.
+const phoneOk = (v)=> !v || (/^[+\d][\d\s().-]{5,28}$/.test(v) && v.replace(/\D/g, '').length >= 7 && v.replace(/\D/g, '').length <= 15);
 
 const MSG = {
   required: 'Completa nombre, correo, cuéntanos qué necesitas y acepta el tratamiento de datos.',
   email: 'Revisa el correo: no parece válido.',
+  phone: 'Revisa el teléfono: usa solo números, espacios, + o guiones (mínimo 7 dígitos).',
   sending: 'Enviando…',
   ok: 'Gracias. Recibimos tu solicitud y nuestro equipo te contactará pronto.',
   rate: 'Enviaste varias solicitudes seguidas. Intenta de nuevo en un rato o escríbenos a cuentanos@titamedia.com.',
@@ -73,8 +76,8 @@ export function initContactForm(root){
       .map((el)=>{ const s = el.parentElement && el.parentElement.querySelector('span'); return s ? s.textContent.trim() : ''; })
       .filter(Boolean);
     return {
-      name: val('q1'), company: val('q2'), role: val('q3'), email: val('q4'),
-      country: val('q5'), source: val('q6'), message: val('q7'),
+      name: val('q1'), company: val('q2'), role: val('q3'), email: val('q4'), phone: val('q8'),
+      country: val('q5'), city: val('q9'), source: val('q6'), message: val('q7'),
       needs: needs,
       consent: !!(root.querySelector('#tm-cf-consent') || {}).checked,
       website: val('tm-cf-website'), // honeypot: debe ir vacío
@@ -85,7 +88,7 @@ export function initContactForm(root){
   }
 
   function reset(){
-    Array.prototype.forEach.call(root.querySelectorAll('#tm-contacto input[type="text"], #tm-contacto input[type="email"], #tm-contacto textarea, #tm-contacto select'), (el)=>{ el.value = ''; });
+    Array.prototype.forEach.call(root.querySelectorAll('#tm-contacto input[type="text"], #tm-contacto input[type="email"], #tm-contacto input[type="tel"], #tm-contacto textarea, #tm-contacto select'), (el)=>{ el.value = ''; });
     Array.prototype.forEach.call(root.querySelectorAll('input[name="need"], #tm-cf-consent'), (el)=>{ el.checked = false; });
   }
 
@@ -94,6 +97,7 @@ export function initContactForm(root){
     const data = collect();
     if(!data.name || !data.email || !data.message || !data.consent) return say(MSG.required, 'error');
     if(!EMAIL_RE.test(data.email)) return say(MSG.email, 'error');
+    if(!phoneOk(data.phone)) return say(MSG.phone, 'error');
 
     btn.disabled = true; btn.style.opacity = '.6';
     say(MSG.sending, 'ok');

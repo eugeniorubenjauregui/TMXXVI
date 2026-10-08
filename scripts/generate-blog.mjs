@@ -305,7 +305,7 @@ function headerHtml(upBase) {
 </header>`;
 }
 
-function contactSectionHtml() {
+function contactSectionHtml(upBase) {
   return `<section id="tm-contacto" style="background:#fff;border-top:1px solid rgba(20,20,20,.1);padding:clamp(84px,10vw,148px) 0">
   <div style="max-width:900px;margin:0 auto;padding:0 clamp(24px,5vw,88px)">
     <h2 data-split style="font-size:clamp(28px,3.6vw,46px);font-weight:300;line-height:1.13;letter-spacing:-.028em;color:#141414;margin:0;max-width:14ch">Hablemos de tu negocio.</h2>
@@ -331,7 +331,9 @@ function contactSectionHtml() {
       <div style="display:flex;flex-direction:column;gap:9px"><label for="q2" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Empresa</label><input id="q2" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
       <div style="display:flex;flex-direction:column;gap:9px"><label for="q3" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Cargo</label><input id="q3" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
       <div style="display:flex;flex-direction:column;gap:9px"><label for="q4" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Correo corporativo</label><input id="q4" type="email" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
+      <div style="display:flex;flex-direction:column;gap:9px"><label for="q8" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Teléfono</label><input id="q8" type="tel" inputmode="tel" autocomplete="tel" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
       <div style="display:flex;flex-direction:column;gap:9px"><label for="q5" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">País</label><input id="q5" type="text" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
+      <div style="display:flex;flex-direction:column;gap:9px"><label for="q9" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Ciudad</label><input id="q9" type="text" autocomplete="address-level2" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414"></div>
       <div style="display:flex;flex-direction:column;gap:9px"><label for="q6" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">¿Cómo nos conociste?</label>
         <select id="q6" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414">
           <option value=""></option>
@@ -343,7 +345,11 @@ function contactSectionHtml() {
         </select>
       </div>
       <div style="display:flex;flex-direction:column;gap:9px;grid-column:1/-1;margin-top:8px"><label for="q7" style="font-size:13.5px;font-weight:500;color:rgba(20,20,20,.8)">Cuéntanos brevemente qué necesitas resolver</label><textarea id="q7" style="font:inherit;font-size:15px;padding:14px 15px;background:#fff;border:1px solid rgba(20,20,20,.18);color:#141414;resize:vertical;min-height:150px"></textarea></div>
-      <div style="grid-column:1/-1"><button type="button" style="font:inherit;display:inline-flex;align-items:center;padding:16px 30px;background:var(--tm-accent);color:#141414;font-size:15px;font-weight:500;border:1px solid var(--tm-accent);cursor:pointer;transition:box-shadow .3s ease" style-hover="animation:tmglow 1.6s ease-in-out infinite">Enviar solicitud</button></div>
+      <div style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden" aria-hidden="true"><label for="tm-cf-website">No completar este campo</label><input id="tm-cf-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+      <label style="grid-column:1/-1;display:flex;align-items:flex-start;gap:12px;cursor:pointer;font-size:13.5px;line-height:1.55;color:rgba(20,20,20,.72)"><input id="tm-cf-consent" type="checkbox" name="consent" style="accent-color:#2E8C52;width:17px;height:17px;flex:none;margin:2px 0 0"><span>Autorizo el tratamiento de mis datos personales, conforme a la <a href="${upBase}politica-datos.html" target="_blank" rel="noopener" style="text-decoration:underline">política de tratamiento de datos</a>, para que Tita Media me contacte sobre esta solicitud.</span></label>
+      <p style="grid-column:1/-1;margin:0;font-size:12px;line-height:1.5;color:rgba(20,20,20,.55)">Este sitio está protegido por reCAPTCHA y aplican la <a href="https://policies.google.com/privacy" target="_blank" rel="noopener" style="text-decoration:underline">Política de privacidad</a> y los <a href="https://policies.google.com/terms" target="_blank" rel="noopener" style="text-decoration:underline">Términos de servicio</a> de Google.</p>
+      <p id="tm-cf-status" role="status" aria-live="polite" style="grid-column:1/-1;margin:0;min-height:1.4em;font-size:14.5px;line-height:1.5"></p>
+      <div style="grid-column:1/-1"><button id="tm-cf-submit" data-mag type="button" style="font:inherit;display:inline-flex;align-items:center;padding:16px 30px;background:var(--tm-accent);color:#141414;font-size:15px;font-weight:500;border:1px solid var(--tm-accent);cursor:pointer">Enviar solicitud</button></div>
     </div>
   </div>
 </section>`;
@@ -419,9 +425,17 @@ function componentScript({ heroMeshTone, heroGraphic = 'mesh' }) {
   const antennaMount = heroGraphic === 'antenna' ? ' this.antenna();' : '';
   const antennaUnmount = heroGraphic === 'antenna' ? ' this._antenna && this._antenna();' : '';
   return `class Component extends DCLogic {
-  componentDidMount(){ this.start(0); this.mesh(); this.ftrMesh(); this.glow();${antennaMount} }
+  componentDidMount(){ this.start(0); this.mesh(); this.ftrMesh(); this.glow(); this.contactForm();${antennaMount} }
   componentDidUpdate(){ if(this._stop){ this._stop(); this._stop = null; } this.start(0); }
-  componentWillUnmount(){ this._stop && this._stop(); this._mesh && this._mesh(); this._ftrMesh && this._ftrMesh(); this._glow && this._glow();${antennaUnmount} }
+  componentWillUnmount(){ this._cfDead = true; this._cf && this._cf(); this._stop && this._stop(); this._mesh && this._mesh(); this._ftrMesh && this._ftrMesh(); this._glow && this._glow();${antennaUnmount} }
+
+  contactForm(){
+    import('./js/contact-form.js').then(({ initContactForm })=>{
+      if(this._cfDead) return;
+      this._cf && this._cf();
+      this._cf = initContactForm(document);
+    });
+  }
 
   mesh(){
     const token = (this._mToken = (this._mToken || 0) + 1);
@@ -738,7 +752,7 @@ ${heroSection}
   </div>
 </section>
 
-${contactSectionHtml()}
+${contactSectionHtml(upBase)}
 </main>
 ${footerHtml(upBase)}`;
 
@@ -863,7 +877,7 @@ ${post.heroImage ? `<div data-rv style="max-width:1100px;margin:0 auto;padding:c
 
 ${relatedPostsHtml(related)}
 </div>
-${contactSectionHtml()}
+${contactSectionHtml(upBase)}
 </main>
 ${footerHtml(upBase)}`;
 
