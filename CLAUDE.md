@@ -92,7 +92,7 @@ The 7 other pages each lazy-load their own set of graphic modules the same way: 
 
 **Post body HTML.** `support.js`'s `{{ }}` template mini-language has no raw-HTML/`dangerouslySetInnerHTML` equivalent — it only interpolates escaped text (confirmed by reading `resolve()`/`walkText` in `support.js`). That's fine here because the post body isn't a reactive template binding: the script sanitizes WordPress's `content.rendered` (strips `<script>`, `on*` handlers, `javascript:` URLs) and pastes the result as literal HTML directly into the generated file, the same way any other static block of markup on this site is authored by hand.
 
-**Publishing workflow:** publish/edit in WordPress → run `node scripts/generate-blog.mjs` → review the diff (`git status`/`git diff`) → commit → deploy. This is a manual step, not automated — if that becomes a problem (e.g. a scheduled job that runs the script and opens a PR), that's a separate, later piece of work.
+**Publishing workflow:** publish/edit in WordPress → run `node scripts/generate-blog.mjs` → review the diff (`git status`/`git diff`) → commit → deploy. The regeneration is automated by `.github/workflows/blog-sync.yml` (daily 12:00 UTC + manual `workflow_dispatch`): it runs `generate-blog.mjs` and `generate-redirects.mjs` and opens/updates the PR on branch `auto/blog-sync` when there is a diff. It never deploys — merge the PR, then run `deploy/deploy-prod.sh` by hand. Requires the repo setting *Actions → General → Allow GitHub Actions to create and approve pull requests*. The generator does not delete files of posts removed from WP; check the diff.
 
 ## Formulario de contacto — WordPress + HubSpot
 
