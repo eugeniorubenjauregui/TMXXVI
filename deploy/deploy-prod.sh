@@ -59,7 +59,7 @@ echo ">> APLICANDO (sello $STAMP). Respaldos en ~/backups-prod/$STAMP"
 rssh "$TARGET" "set -e; B=\$HOME/backups-prod/$STAMP; mkdir -p \"\$B/files\"; cp -p '$DOCROOT/.htaccess' \"\$B/htaccess.antes\""
 printf '%s\n' "$NEW" | rssh "$TARGET" "cat > \$HOME/backups-prod/$STAMP/new-files.txt"
 rsync -a --itemize-changes --backup --backup-dir="/home/${TARGET%@*}/backups-prod/$STAMP/files" \
-  -e "ssh ${SSH_OPTS[*]}" "${INCLUDES[@]}" ./ "$TARGET:$DOCROOT/" | grep '^<f' | wc -l | xargs echo "   archivos subidos:"
+  -e "ssh ${SSH_OPTS[*]}" "${INCLUDES[@]}" ./ "$TARGET:$DOCROOT/" | { grep '^<f' || true; } | wc -l | xargs echo "   archivos subidos:"
 
 echo ">> .htaccess: instalando bloque titamedia-front al principio"
 rssh "$TARGET" "cat > /tmp/tm-block.$STAMP" < deploy/htaccess-titamedia
