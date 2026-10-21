@@ -62,8 +62,13 @@ for (const [from, slug] of Object.entries(titulos)) {
   add(exact(from), `/noticias/${slug}.html`, 'titulo'); nTitulos++;
 }
 
-const alt = postSlugs.map(esc).join('|');                                             // 5) Posts (solo slugs reales)
-add(`^(?:${POST_CATEGORIES.map(esc).join('|')})/+(${alt})/?$`, '/noticias/$1.html', `${postSlugs.length} posts`);
+// 5) Posts (solo slugs reales). Apache rechaza directivas de más de 8192 bytes (500 en todo el sitio),
+//    así que se parten en varias reglas de POSTS_POR_REGLA slugs.
+const POSTS_POR_REGLA = 40;
+for (let i = 0; i < postSlugs.length; i += POSTS_POR_REGLA) {
+  const alt = postSlugs.slice(i, i + POSTS_POR_REGLA).map(esc).join('|');
+  add(`^(?:${POST_CATEGORIES.map(esc).join('|')})/+(${alt})/?$`, '/noticias/$1.html', i === 0 ? `${postSlugs.length} posts` : '');
+}
 
 const rule = ([pat, to, note]) => {
   const p = pat.replace(/ /g, '\\ ');                       // los espacios separan argumentos en RewriteRule
@@ -127,5 +132,7 @@ RewriteRule ^ - [R=404,L]
 </IfModule>
 # END titamedia-front
 `;
+const larga = out.split('\n').find(l => Buffer.byteLength(l) > 7000);
+if (larga) throw new Error(`Línea de ${Buffer.byteLength(larga)} bytes (límite de Apache: 8192): ${larga.slice(0, 80)}…`);
 await writeFile(OUT, out);
 console.log(`OK: ${path.relative(ROOT, OUT)} (${postSlugs.length} posts, ${catSlugs.size} categorías, ${manual.exact.length} exactos, ${manual.prefix.length} prefijos, ${nTitulos} títulos)`);
