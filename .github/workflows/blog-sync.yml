@@ -1,0 +1,53 @@
+# Sincroniza el blog estático con WordPress: regenera noticias/ + sitemap + redirects
+# y abre (o actualiza) un PR "auto/blog-sync" si hay cambios. No despliega nada.
+name: Sincronizar blog desde WordPress
+
+on:
+  schedule:
+    - cron: '0 12 * * *'   # diario, 12:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency: blog-sync
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Regenerar blog y redirects
+        run: |
+          node scripts/generate-blog.mjs
+          node scripts/generate-redirects.mjs
+
+      - name: Abrir o actualizar PR si hay cambios
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "Sin cambios: el blog ya está al día."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B auto/blog-sync
+          git add -A
+          git commit -m "Blog: sincronizar posts desde WordPress"
+          git push --force origin auto/blog-sync
+          if [ -z "$(gh pr list --head auto/blog-sync --state open --json number --jq '.[].number')" ]; then
+            gh pr create --base main --head auto/blog-sync \
+              --title "Blog: sincronizar posts desde WordPress" \
+              --body "Regenerado automáticamente con \`generate-blog.mjs\` y \`generate-redirects.mjs\`. Revisa el diff (posts nuevos/editados, listados, sitemap), haz merge y despliega con \`deploy/deploy-prod.sh\`."
+          else
+            echo "Ya hay un PR abierto; se actualizó con force-push."
+          fi
