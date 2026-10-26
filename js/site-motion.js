@@ -235,7 +235,7 @@ export function initMotion(opts = {}) {
 
   /* ---- 06 · Transición entre páginas ---- */
   const ov = q('#tm-trans'), ln = q('#tm-transline');
-  if (ov && ln) qa('a[href="#"], a[href$=".html"]').forEach(a => on(a, 'click', e => {
+  if (ov && ln) qa('a[href="#"], a[href="/"], a[href$=".html"]').forEach(a => on(a, 'click', e => {
     const href = a.getAttribute('href');
     const goes = href && href !== '#';
     if (goes && (e.metaKey || e.ctrlKey || e.shiftKey || a.target === '_blank')) return;
