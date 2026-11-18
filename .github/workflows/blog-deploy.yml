@@ -1,0 +1,65 @@
+# Sube el blog (noticias/, noticias.html, sitemap.xml) a producción. No toca .htaccess ni el resto del front.
+# Se dispara al llegar a main un cambio del blog, o a mano (con ensayo opcional). Ver deploy/ci-deploy-blog.sh.
+name: Desplegar blog a producción
+
+on:
+  push:
+    branches: [main]
+    paths: ['noticias/**', 'noticias.html', 'sitemap.xml']
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Ensayo: lista lo que subiría, sin subir'
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency: blog-deploy
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Instalar lftp
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp
+
+      - name: Subir blog
+        env:
+          DEPLOY_PROTO: ${{ secrets.DEPLOY_PROTO }}
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PASS: ${{ secrets.DEPLOY_PASS }}
+          DEPLOY_DIR: ${{ secrets.DEPLOY_DIR }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+          DEPLOY_DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && '1' || '' }}
+        run: deploy/ci-deploy-blog.sh
+
+      - name: Guardar respaldo de lo que había (7 días)
+        if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.dry_run) }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: respaldo-blog-${{ github.sha }}
+          path: backup
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: Verificar producción
+        if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.dry_run) }}
+        run: |
+          set -e
+          for u in / /noticias.html /sitemap.xml; do
+            c=$(curl -s -o /dev/null -w '%{http_code}' "https://titamedia.com$u"); echo "$u $c"
+            [ "$c" = 200 ] || { echo "::error::$u respondió $c tras el despliegue"; exit 1; }
+          done
+          # el post más reciente del listado debe existir
+          p=$(grep -o 'noticias/[a-z0-9-]*\.html' noticias.html | head -1)
+          c=$(curl -s -o /dev/null -w '%{http_code}' "https://titamedia.com/$p"); echo "/$p $c"
+          [ "$c" = 200 ] || { echo "::error::/$p respondió $c"; exit 1; }

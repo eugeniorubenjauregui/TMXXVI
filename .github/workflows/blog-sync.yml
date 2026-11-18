@@ -10,6 +10,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  actions: write
 
 concurrency: blog-sync
 
@@ -51,3 +52,19 @@ jobs:
           else
             echo "Ya hay un PR abierto; se actualizó con force-push."
           fi
+
+      - name: Merge automático y despliegue (solo si BLOG_AUTOMERGE=true)
+        if: ${{ vars.BLOG_AUTOMERGE == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          pr=$(gh pr list --head auto/blog-sync --state open --json number --jq '.[0].number')
+          [ -n "$pr" ] || { echo "Sin PR abierto: nada que mergear."; exit 0; }
+          # Solo se mergea solo si el PR toca únicamente archivos del blog (+ el .htaccess generado, que no se despliega solo).
+          fuera=$(gh pr diff "$pr" --name-only | grep -v -E '^(noticias/|noticias\.html$|sitemap\.xml$|deploy/htaccess-titamedia$)' || true)
+          if [ -n "$fuera" ]; then
+            echo "::warning::El PR toca archivos fuera del blog; no se mergea solo:"; echo "$fuera"; exit 0
+          fi
+          gh pr merge "$pr" --squash
+          # El merge con GITHUB_TOKEN no dispara el workflow de despliegue por push: se lanza explícitamente.
+          gh workflow run blog-deploy.yml --ref main -f dry_run=false
