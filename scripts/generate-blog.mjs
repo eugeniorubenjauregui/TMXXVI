@@ -33,13 +33,34 @@ const LOGO_URL = `${SITE}/images/logo-tita-media.png`;
 // WordPress fetch
 // ---------------------------------------------------------------------------
 
+// El runner de GitHub a veces no llega a titamedia.com (timeout de conexión).
+// Reintenta con espera creciente antes de rendirse.
+async function fetchConReintentos(url, intentos = 4) {
+  let ultimo;
+  for (let i = 1; i <= intentos; i++) {
+    try {
+      const res = await fetch(url, { signal: AbortSignal.timeout(30000) });
+      if (res.status < 500 && res.status !== 429) return res;
+      ultimo = new Error(`HTTP ${res.status}`);
+    } catch (e) {
+      ultimo = e;
+    }
+    if (i < intentos) {
+      const espera = 5000 * 2 ** (i - 1);
+      console.warn(`WP no respondió (intento ${i}/${intentos}: ${ultimo.cause?.code || ultimo.message}); reintento en ${espera / 1000}s`);
+      await new Promise((r) => setTimeout(r, espera));
+    }
+  }
+  throw ultimo;
+}
+
 async function fetchAllPosts() {
   const posts = [];
   let page = 1;
   let totalPages = 1;
   do {
     const url = `${WP_API}?per_page=100&_embed=1&page=${page}`;
-    const res = await fetch(url);
+    const res = await fetchConReintentos(url);
     if (!res.ok) throw new Error(`WP fetch falló (${res.status}) en ${url}`);
     totalPages = parseInt(res.headers.get('x-wp-totalpages') || '1', 10) || 1;
     posts.push(...(await res.json()));
